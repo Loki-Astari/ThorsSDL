@@ -13,7 +13,7 @@ AC_CONFIG_SRCDIR([src/ThorsSDL/ThorsSDL.cpp])
 AC_PROG_CXX
 AX_CHECK_COMPILE_FLAG([-ansi], [AC_SUBST([CXXFLAGS], [" -ansi"])])
 # Check what version of the C++ language is supported
-AX_THOR_FUNC_LANG_FLAG(17)
+AX_THOR_FUNC_LANG_FLAG(20)
 
 # Find the code coverage tool.
 # All the testing will depend on this.
@@ -26,6 +26,7 @@ LT_INIT
 #
 # Add your defintions in here.
 # Note there are some predefined macros in build/autotools/m4/
+AX_THOR_CHECK_FOR_SDL
 
 
 
