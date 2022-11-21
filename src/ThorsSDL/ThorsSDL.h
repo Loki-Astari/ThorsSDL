@@ -36,6 +36,9 @@ class ThorSDL
         ThorSDL(ThorSDL&&)                  = delete;
         ThorSDL& operator=(ThorSDL const&)  = delete;
         ThorSDL& operator=(ThorSDL&&)       = delete;
+
+        void initSubSystem(InitValue init);
+        void quitSubSystem(InitValue init);
     private:
         static bool initialized;
 };

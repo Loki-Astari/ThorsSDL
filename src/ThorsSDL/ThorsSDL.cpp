@@ -24,3 +24,17 @@ ThorSDL::~ThorSDL()
 {
     SDL_Quit();
 }
+
+void ThorSDL::initSubSystem(InitValue init)
+{
+    auto result = SDL_InitSubSystem(static_cast<Uint32>(init));
+    if (result != 0)
+    {
+        throw std::runtime_error("Failed to init sub system");
+    }
+}
+
+void ThorSDL::quitSubSystem(InitValue init)
+{
+    SDL_QuitSubSystem(static_cast<Uint32>(init));
+}
