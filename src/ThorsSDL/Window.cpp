@@ -3,34 +3,10 @@
 
 using namespace ThorsAnvil::UI;
 
-/*
-    WindowType  type        = Default;
-    bool        border      = true;
-    bool        resizabel   = true;
-    bool        hidden      = true;
-    bool        focus       = true;
-*/
-/*
-enum WindowFlags : Uint32
-{
-    FullScreen  = SDL_WINDOW_FULLSCREEN,        //: fullscreen window
-    Desktop     = SDL_WINDOW_FULLSCREEN_DESKTOP //: fullscreen window at desktop resolution
-    OpenGL      = SDL_WINDOW_OPENGL,            //: window usable with an OpenGL context
-    Vulkan      = SDL_WINDOW_VULKAN,            //: window usable with a Vulkan instance
-    Metal       = SDL_WINDOW_METAL,             //: window usable with a Metal instance
-    Hidden      = SDL_WINDOW_HIDDEN,            //: window is not visible
-    Borderless  = SDL_WINDOW_BORDERLESS,        //: no window decoration
-    Resizable   = SDL_WINDOW_RESIZABLE,         //: window can be resized
-    Minimized   = SDL_WINDOW_MINIMIZED,         //: window is minimized
-    Maximized   = SDL_WINDOW_MAXIMIZED,         //: window is maximized
-    Focus       = SDL_WINDOW_INPUT_GRABBED      //: window has grabbed input focus
-    HighDPI     = SDL_WINDOW_ALLOW_HIGHDPI,     //: window should be created in high-DPI mode if supported (>= SDL 2.0.1)
-};
-*/
-
 WindowState::operator Uint32() const
 {
     Uint32  flags   = static_cast<Uint32>(type)
+                    | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0)
                     | (border ? 0 : SDL_WINDOW_BORDERLESS)
                     | (resizeable ? SDL_WINDOW_RESIZABLE : 0)
                     | (hidden ? SDL_WINDOW_HIDDEN : 0)
@@ -38,12 +14,21 @@ WindowState::operator Uint32() const
     return flags;
 }
 
-Window::Window(Application& application, std::string const& title, Rect const& rect, WindowState state)
+RenderState::operator Uint32() const
+{
+    Uint32  flags   = (software ? SDL_RENDERER_SOFTWARE : 0)
+                    | (accelerated ? SDL_RENDERER_ACCELERATED : 0)
+                    | (presentSync ? SDL_RENDERER_PRESENTVSYNC : 0)
+                    | (targetText ? SDL_RENDERER_TARGETTEXTURE : 0);
+    return flags;
+}
+
+Window::Window(Application& application, std::string const& title, Rect const& rect, WindowState const& winState, RenderState const& renState)
     : application(application)
     , window(nullptr)
     , renderer(nullptr)
 {
-    window  = SDL_CreateWindow(title.c_str(), rect.x, rect.y, rect.w, rect.h, state);
+    window  = SDL_CreateWindow(title.c_str(), rect.x, rect.y, rect.w, rect.h, winState);
     if (window == nullptr)
     {
         throw std::runtime_error("Failed to create Window");
@@ -51,7 +36,7 @@ Window::Window(Application& application, std::string const& title, Rect const& r
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, renState);
     if (renderer == nullptr)
     {
         throw std::runtime_error("Failed to create renderer");
