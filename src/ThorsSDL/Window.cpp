@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "Application.h"
 
 using namespace ThorsAnvil::UI;
 
@@ -37,7 +38,10 @@ WindowState::operator Uint32() const
     return flags;
 }
 
-Window::Window(std::string const& title, Rect const& rect, WindowState state)
+Window::Window(Application& application, std::string const& title, Rect const& rect, WindowState state)
+    : application(application)
+    , window(nullptr)
+    , renderer(nullptr)
 {
     std::cerr << "R: " << rect << "\n"
               << "S: " << state << "\n";
@@ -46,6 +50,17 @@ Window::Window(std::string const& title, Rect const& rect, WindowState state)
     {
         throw std::runtime_error("Failed to create Window");
     }
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+
+    int rendererFlags = SDL_RENDERER_ACCELERATED;
+    renderer = SDL_CreateRenderer(window, -1, rendererFlags);
+    if (renderer == nullptr)
+    {
+        throw std::runtime_error("Failed to create renderer");
+    }
+
+    application.registerWindow(*this);
 }
 
 Window::~Window()
@@ -54,16 +69,32 @@ Window::~Window()
     {
         SDL_DestroyWindow(window);
     }
+    application.unregisterWindow(*this);
 }
 
 Window::Window(Window&& move) noexcept
-    : window(nullptr)
+    : application(move.application)
+    , window(nullptr)
+    , renderer(nullptr)
 {
-    std::swap(window, move.window);
+    std::swap(window,   move.window);
+    std::swap(renderer, move.renderer);
+    application.registerWindow(*this);
 }
 
 Window& Window::operator=(Window&& move) noexcept
 {
-    std::swap(window, move.window);
+    application.unregisterWindow(*this);
+
+    std::swap(window,   move.window);
+    std::swap(renderer, move.renderer);
+    application.registerWindow(*this);
     return *this;
+}
+
+void Window::draw()
+{
+    SDL_SetRenderDrawColor(renderer, 96, 128, 255, 255);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
 }

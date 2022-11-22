@@ -62,10 +62,11 @@ struct WindowState
     }
 };
 
+class Application;
 class Window
 {
     public:
-        Window(std::string const& title, Rect const& rect, WindowState state);
+        Window(Application& application, std::string const& title, Rect const& rect, WindowState state);
         ~Window();
 
         Window(Window const&)             = delete;
@@ -73,8 +74,13 @@ class Window
         Window(Window&& move) noexcept;
         Window& operator=(Window&& move) noexcept;
 
+        void draw();
+
     private:
+        friend class Application;
+        Application&    application;
         SDL_Window*     window;
+        SDL_Renderer*   renderer;
 };
 
 }

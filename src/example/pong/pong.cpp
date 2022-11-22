@@ -1,14 +1,14 @@
-#include <iostream>
 #include "ThorsSDL/ThorsSDL.h"
 
 namespace UI = ThorsAnvil::UI;
 
 int main()
 {
-    std::cout << "Pong V1\n";
+    UI::Application     application(UI::Video);
+    UI::Window          window(application, "Pong v1.0", {SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720}, {});
 
-    UI::Application     application;
-    UI::Window          window("Pong", {10, 10, 100, 100}, UI::WindowState{.type = UI::Metal});
-
-    SDL_Delay(20000);
+    application.eventLoop([]()
+    {
+        SDL_Delay(16);
+    });
 }

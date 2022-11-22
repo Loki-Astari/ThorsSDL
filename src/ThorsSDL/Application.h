@@ -3,6 +3,8 @@
 
 #include "ThorsSDLConfig.h"
 #include <SDL.h>
+#include <functional>
+#include <map>
 
 namespace ThorsAnvil::UI
 {
@@ -27,8 +29,17 @@ inline InitValue operator|(InitValue lhs, InitValue rhs)
     return static_cast<InitValue>(static_cast<Uint32>(lhs) | static_cast<Uint32>(rhs));
 }
 
+class Window;
 class Application
 {
+    private:
+        static bool initialized;
+
+    private:
+        bool                            finished;
+        std::map<SDL_Window*, Window*>  windows;
+
+
     public:
         Application(InitValue init = Everything);
         ~Application();
@@ -40,8 +51,18 @@ class Application
 
         void initSubSystem(InitValue init);
         void quitSubSystem(InitValue init);
+
+        void eventLoop(std::function<void()>&& action);
+        void exitLoop();
+
     private:
-        static bool initialized;
+        friend class Window;
+        void registerWindow(Window& window);
+        void unregisterWindow(Window& window);
+
+    private:
+        void handleEvents();
+        void drawWindows();
 };
 
 }
