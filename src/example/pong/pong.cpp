@@ -7,5 +7,8 @@ int main()
 {
     std::cout << "Pong V1\n";
 
-    UI::ThorSDL       sdl;
+    UI::Application     application;
+    UI::Window          window("Pong", {10, 10, 100, 100}, UI::WindowState{.type = UI::Metal});
+
+    SDL_Delay(20000);
 }
