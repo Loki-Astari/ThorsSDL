@@ -43,8 +43,6 @@ Window::Window(Application& application, std::string const& title, Rect const& r
     , window(nullptr)
     , renderer(nullptr)
 {
-    std::cerr << "R: " << rect << "\n"
-              << "S: " << state << "\n";
     window  = SDL_CreateWindow(title.c_str(), rect.x, rect.y, rect.w, rect.h, state);
     if (window == nullptr)
     {
@@ -53,8 +51,7 @@ Window::Window(Application& application, std::string const& title, Rect const& r
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    int rendererFlags = SDL_RENDERER_ACCELERATED;
-    renderer = SDL_CreateRenderer(window, -1, rendererFlags);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr)
     {
         throw std::runtime_error("Failed to create renderer");
@@ -65,6 +62,10 @@ Window::Window(Application& application, std::string const& title, Rect const& r
 
 Window::~Window()
 {
+    if (renderer != nullptr)
+    {
+        SDL_DestroyRenderer(renderer);
+    }
     if (window != nullptr)
     {
         SDL_DestroyWindow(window);
@@ -94,7 +95,9 @@ Window& Window::operator=(Window&& move) noexcept
 
 void Window::draw()
 {
-    SDL_SetRenderDrawColor(renderer, 96, 128, 255, 255);
+    static constexpr Color background{96, 128, 255, 255};
+
+    SDL_SetRenderDrawColor(renderer, background.r, background.g, background.b, background.alpha);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 }

@@ -2,6 +2,7 @@
 #define THORSANVIL_UI_APPLICATION_H
 
 #include "ThorsSDLConfig.h"
+#include "Util.h"
 #include <SDL.h>
 #include <functional>
 #include <map>

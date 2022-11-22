@@ -1,28 +1,14 @@
 #ifndef THORSANVIL_UI_WINDOW_H
 #define THORSANVIL_UI_WINDOW_H
 
-
 #include "ThorsSDLConfig.h"
+#include "Util.h"
 #include <SDL.h>
 #include <string>
 #include <iostream>
 
 namespace ThorsAnvil::UI
 {
-
-
-struct Rect
-{
-    int         x;
-    int         y;
-    int         w;
-    int         h;
-
-    friend std::ostream& operator<<(std::ostream& s, Rect const& rect)
-    {
-        return s << "R: { {" << rect.x << ", " << rect.y << "} {" << rect.w << ", " << rect.h << "} }";
-    }
-};
 
 enum WindowType { Default = 0, OpenGL = SDL_WINDOW_OPENGL, Vulkan = SDL_WINDOW_VULKAN, Metal = SDL_WINDOW_METAL };
 
