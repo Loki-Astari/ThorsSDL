@@ -10,7 +10,7 @@ WindowState::operator Uint32() const
                     | (border ? 0 : SDL_WINDOW_BORDERLESS)
                     | (resizeable ? SDL_WINDOW_RESIZABLE : 0)
                     | (hidden ? SDL_WINDOW_HIDDEN : 0)
-                    | (focus ? SDL_WINDOW_INPUT_GRABBED : 0);
+                    | (grabFocus ? SDL_WINDOW_INPUT_GRABBED : 0);
     return flags;
 }
 

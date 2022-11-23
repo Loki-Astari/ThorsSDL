@@ -19,7 +19,7 @@ class PongWindow: public UI::Window
 int main()
 {
     UI::DebugApplication     application(UI::Video);
-    PongWindow          window(application, "Pong v1.0", {UI::windowUndefinedPos, UI::windowUndefinedPos, 1280, 720}, {});
+    PongWindow          window(application, "Pong v1.0", {UI::windowUndefinedPos, UI::windowUndefinedPos, 1280, 720}, {.grabFocus = true});
 
     application.eventLoop([]()
     {

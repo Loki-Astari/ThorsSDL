@@ -50,7 +50,7 @@ struct WindowState
     bool        border      = true;
     bool        resizeable  = true;
     bool        hidden      = false;
-    bool        focus       = true;
+    bool        grabFocus   = false;
 
     operator Uint32 () const;
 
@@ -62,7 +62,7 @@ struct WindowState
                     << "Border:   " << ws.border       << " " << (ws.border ? 0 : SDL_WINDOW_BORDERLESS)      << "\n"
                     << "Resize:   " << ws.resizeable   << " " << (ws.resizeable ? SDL_WINDOW_RESIZABLE : 0)   << "\n"
                     << "Hidden:   " << ws.hidden       << " " << (ws.hidden ? SDL_WINDOW_HIDDEN : 0)          << "\n"
-                    << "Focus:    " << ws.focus        << " " << (ws.focus ? SDL_WINDOW_INPUT_GRABBED : 0)    << "\n"
+                    << "Focus:    " << ws.grabFocus    << " " << (ws.grabFocus ? SDL_WINDOW_INPUT_GRABBED : 0)<< "\n"
                     << "Result:   " << static_cast<Uint32>(ws)                                                << "\n"
                     << "}";
     }
