@@ -4,5 +4,6 @@
 #include "ThorsSDLConfig.h"
 #include "Application.h"
 #include "Window.h"
+#include "Pen.h"
 
 #endif

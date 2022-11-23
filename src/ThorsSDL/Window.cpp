@@ -80,9 +80,14 @@ Window& Window::operator=(Window&& move) noexcept
 
 void Window::draw()
 {
-    static constexpr Color background{96, 128, 255, 255};
+    Color const& background = getBackgroundColor();
 
     SDL_SetRenderDrawColor(renderer, background.r, background.g, background.b, background.alpha);
     SDL_RenderClear(renderer);
+    doDraw();
     SDL_RenderPresent(renderer);
+}
+
+void Window::doDraw()
+{
 }

@@ -110,7 +110,13 @@ class Window
         Window& operator=(Window&& move) noexcept;
 
         void draw();
+    private:
+        virtual Color   getBackgroundColor() {return {96, 128, 255, 255};}
+        virtual void    doDraw();
 
+    private:
+        friend class Pen;
+        SDL_Renderer* getSurface() const {return renderer;}
     private:
         friend class Application;
         Application&    application;
