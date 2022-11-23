@@ -73,7 +73,25 @@ class Application
         virtual void handleEventDisplayEvent(SDL_DisplayEvent const& /*event*/)                 {}
 
     /* Window events            0x020*  */
-        virtual void handleEventWindowEvent(SDL_WindowEvent const& /*event*/)                   {}
+        virtual void handleEventWindowShow(SDL_WindowEvent const& /*event*/)                    {}
+        virtual void handleEventWindowHide(SDL_WindowEvent const& /*event*/)                    {}
+        virtual void handleEventWindowExpose(SDL_WindowEvent const& /*event*/)                  {}
+        virtual void handleEventWindowMmoved(SDL_WindowEvent const& /*event*/)                  {}
+        virtual void handleEventWindowResized(SDL_WindowEvent const& /*event*/)                 {}
+        virtual void handleEventWindowSizeChange(SDL_WindowEvent const& /*event*/)              {}
+        virtual void handleEventWindowMin(SDL_WindowEvent const& /*event*/)                     {}
+        virtual void handleEventWindowMax(SDL_WindowEvent const& /*event*/)                     {}
+        virtual void handleEventWindowRestore(SDL_WindowEvent const& /*event*/)                 {}
+        virtual void handleEventWindowEnter(SDL_WindowEvent const& /*event*/)                   {}
+        virtual void handleEventWindowLeave(SDL_WindowEvent const& /*event*/)                   {}
+        virtual void handleEventWindowFocusGain(SDL_WindowEvent const& /*event*/)               {}
+        virtual void handleEventWindowFocusLost(SDL_WindowEvent const& /*event*/)               {}
+        virtual void handleEventWindowClose(SDL_WindowEvent const& /*event*/)                   {}
+        virtual void handleEventWindowTakeFocus(SDL_WindowEvent const& /*event*/)               {}
+        virtual void handleEventWindowHitTest(SDL_WindowEvent const& /*event*/)                 {}
+        virtual void handleEventWindowICCProfChange(SDL_WindowEvent const& /*event*/)           {}
+        virtual void handleEventWindowDisplayChange(SDL_WindowEvent const& /*event*/)           {}
+        virtual void handleEventWindowUnknown(SDL_WindowEvent const& /*event*/)                 {}
         virtual void handleEventSystemEvent(SDL_SysWMEvent const& /*event*/)                    {}
 
     /* Keyboard events          0x030*  */

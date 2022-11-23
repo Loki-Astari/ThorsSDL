@@ -96,7 +96,31 @@ void Application::handleEvents()
             case SDL_DISPLAYEVENT:              return handleEventDisplayEvent(event.display);      // SDL_DisplayEvent
 
     /* Window events            0x020*  */
-            case SDL_WINDOWEVENT:               return handleEventWindowEvent(event.window);        // SDL_WindowEvent
+            case SDL_WINDOWEVENT:
+            {
+                switch (event.window.event)
+                {
+                    case SDL_WINDOWEVENT_SHOWN:             return handleEventWindowShow(event.window);             // SDL_WindowEventzz
+                    case SDL_WINDOWEVENT_HIDDEN:            return handleEventWindowHide(event.window);             // SDL_WindowEventz
+                    case SDL_WINDOWEVENT_EXPOSED:           return handleEventWindowExpose(event.window);           // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_MOVED:             return handleEventWindowMmoved(event.window);           // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_RESIZED:           return handleEventWindowResized(event.window);          // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:      return handleEventWindowSizeChange(event.window);       // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_MINIMIZED:         return handleEventWindowMin(event.window);              // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_MAXIMIZED:         return handleEventWindowMax(event.window);              // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_RESTORED:          return handleEventWindowRestore(event.window);          // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_ENTER:             return handleEventWindowEnter(event.window);            // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_LEAVE:             return handleEventWindowLeave(event.window);            // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:      return handleEventWindowFocusGain(event.window);        // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_FOCUS_LOST:        return handleEventWindowFocusLost(event.window);        // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_CLOSE:             return handleEventWindowClose(event.window);            // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_TAKE_FOCUS:        return handleEventWindowTakeFocus(event.window);        // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_HIT_TEST:          return handleEventWindowHitTest(event.window);          // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_ICCPROF_CHANGED:   return handleEventWindowICCProfChange(event.window);    // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_DISPLAY_CHANGED:   return handleEventWindowDisplayChange(event.window);    // SDL_WindowEvent
+                    default:    return handleEventWindowUnknown(event.window);                                      // SDL_WindowEvent
+                }
+            }
             case SDL_SYSWMEVENT:                return handleEventSystemEvent(event.syswm);         // SDL_SysWMEvent
 
     /* Keyboard events          0x030*  */

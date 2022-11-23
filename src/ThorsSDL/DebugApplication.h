@@ -24,7 +24,25 @@ class DebugApplication: public Application
         virtual void handleEventDisplayEvent(SDL_DisplayEvent const& /*event*/) override;
 
     /* Window events            0x020*  */
-        virtual void handleEventWindowEvent(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowShow(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowHide(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowExpose(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowMmoved(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowResized(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowSizeChange(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowMin(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowMax(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowRestore(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowEnter(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowLeave(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowFocusGain(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowFocusLost(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowClose(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowTakeFocus(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowHitTest(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowICCProfChange(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowDisplayChange(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowUnknown(SDL_WindowEvent const& /*event*/) override;
         virtual void handleEventSystemEvent(SDL_SysWMEvent const& /*event*/) override;
 
     /* Keyboard events          0x030*  */

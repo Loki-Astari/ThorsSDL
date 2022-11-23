@@ -42,9 +42,99 @@ void DebugApplication::handleEventDisplayEvent(SDL_DisplayEvent const& /*event*/
 
 
 /* Window events            0x020*  */
-void DebugApplication::handleEventWindowEvent(SDL_WindowEvent const& /*event*/)
+void DebugApplication::handleEventWindowShow(SDL_WindowEvent const& /*event*/)
 {
-    std::cerr << "handleEventWindowEvent\n";
+    std::cerr << "handleEventWindowShow\n";
+}
+
+void DebugApplication::handleEventWindowHide(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowHide\n";
+}
+
+void DebugApplication::handleEventWindowExpose(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowExpose\n";
+}
+
+void DebugApplication::handleEventWindowMmoved(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowMmoved\n";
+}
+
+void DebugApplication::handleEventWindowResized(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowResized\n";
+}
+
+void DebugApplication::handleEventWindowSizeChange(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowSizeChange\n";
+}
+
+void DebugApplication::handleEventWindowMin(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowMin\n";
+}
+
+void DebugApplication::handleEventWindowMax(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowMax\n";
+}
+
+void DebugApplication::handleEventWindowRestore(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowRestore\n";
+}
+
+void DebugApplication::handleEventWindowEnter(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowEnter\n";
+}
+
+void DebugApplication::handleEventWindowLeave(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowLeave\n";
+}
+
+void DebugApplication::handleEventWindowFocusGain(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowFocusGain\n";
+}
+
+void DebugApplication::handleEventWindowFocusLost(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowFocusLost\n";
+}
+
+void DebugApplication::handleEventWindowClose(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowClose\n";
+}
+
+void DebugApplication::handleEventWindowTakeFocus(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowTakeFocus\n";
+}
+
+void DebugApplication::handleEventWindowHitTest(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowHitTest\n";
+}
+
+void DebugApplication::handleEventWindowICCProfChange(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowICCProfChange\n";
+}
+
+void DebugApplication::handleEventWindowDisplayChange(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowDisplayChange\n";
+}
+
+void DebugApplication::handleEventWindowUnknown(SDL_WindowEvent const& /*event*/)
+{
+    std::cerr << "handleEventWindowUnknown\n";
 }
 
 void DebugApplication::handleEventSystemEvent(SDL_SysWMEvent const& /*event*/)
