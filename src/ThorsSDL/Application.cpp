@@ -66,12 +66,24 @@ void Application::exitLoop()
 
 void Application::registerWindow(Window& window)
 {
-    windows[window.window] = &window;
+    windows[window.getId()] = &window;
 }
 
 void Application::unregisterWindow(Window& window)
 {
-    windows.erase(windows.find(window.window));
+    windows.erase(windows.find(window.getId()));
+}
+
+WindowEventHandler& Application::getWindowHander(Uint32 windowId)
+{
+    auto find = windows.find(windowId);
+    if (find != windows.end())
+    {
+        return *find->second;
+    }
+
+    static WindowEventHandler defaultWindowHandler;
+    return defaultWindowHandler;
 }
 
 void Application::handleEvents()
@@ -103,7 +115,7 @@ void Application::handleEvents()
                     case SDL_WINDOWEVENT_SHOWN:             return handleEventWindowShow(event.window);             // SDL_WindowEventzz
                     case SDL_WINDOWEVENT_HIDDEN:            return handleEventWindowHide(event.window);             // SDL_WindowEventz
                     case SDL_WINDOWEVENT_EXPOSED:           return handleEventWindowExpose(event.window);           // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_MOVED:             return handleEventWindowMmoved(event.window);           // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_MOVED:             return handleEventWindowMoved(event.window);            // SDL_WindowEvent
                     case SDL_WINDOWEVENT_RESIZED:           return handleEventWindowResized(event.window);          // SDL_WindowEvent
                     case SDL_WINDOWEVENT_SIZE_CHANGED:      return handleEventWindowSizeChange(event.window);       // SDL_WindowEvent
                     case SDL_WINDOWEVENT_MINIMIZED:         return handleEventWindowMin(event.window);              // SDL_WindowEvent
@@ -219,3 +231,37 @@ void Application::drawWindows()
         window.second->draw();
     }
 }
+
+/* Window events            0x020*  */
+void Application::handleEventWindowShow(SDL_WindowEvent const& event)                        {getWindowHander(event.windowID).handleEventWindowShow(event);}
+void Application::handleEventWindowHide(SDL_WindowEvent const& event)                        {getWindowHander(event.windowID).handleEventWindowHide(event);}
+void Application::handleEventWindowExpose(SDL_WindowEvent const& event)                      {getWindowHander(event.windowID).handleEventWindowExpose(event);}
+void Application::handleEventWindowMoved(SDL_WindowEvent const& event)                       {getWindowHander(event.windowID).handleEventWindowMoved(event);}
+void Application::handleEventWindowResized(SDL_WindowEvent const& event)                     {getWindowHander(event.windowID).handleEventWindowResized(event);}
+void Application::handleEventWindowSizeChange(SDL_WindowEvent const& event)                  {getWindowHander(event.windowID).handleEventWindowSizeChange(event);}
+void Application::handleEventWindowMin(SDL_WindowEvent const& event)                         {getWindowHander(event.windowID).handleEventWindowMin(event);}
+void Application::handleEventWindowMax(SDL_WindowEvent const& event)                         {getWindowHander(event.windowID).handleEventWindowMax(event);}
+void Application::handleEventWindowRestore(SDL_WindowEvent const& event)                     {getWindowHander(event.windowID).handleEventWindowRestore(event);}
+void Application::handleEventWindowEnter(SDL_WindowEvent const& event)                       {getWindowHander(event.windowID).handleEventWindowEnter(event);}
+void Application::handleEventWindowLeave(SDL_WindowEvent const& event)                       {getWindowHander(event.windowID).handleEventWindowLeave(event);}
+void Application::handleEventWindowFocusGain(SDL_WindowEvent const& event)                   {getWindowHander(event.windowID).handleEventWindowFocusGain(event);}
+void Application::handleEventWindowFocusLost(SDL_WindowEvent const& event)                   {getWindowHander(event.windowID).handleEventWindowFocusLost(event);}
+void Application::handleEventWindowClose(SDL_WindowEvent const& event)                       {getWindowHander(event.windowID).handleEventWindowClose(event);}
+void Application::handleEventWindowTakeFocus(SDL_WindowEvent const& event)                   {getWindowHander(event.windowID).handleEventWindowTakeFocus(event);}
+void Application::handleEventWindowHitTest(SDL_WindowEvent const& event)                     {getWindowHander(event.windowID).handleEventWindowHitTest(event);}
+void Application::handleEventWindowICCProfChange(SDL_WindowEvent const& event)               {getWindowHander(event.windowID).handleEventWindowICCProfChange(event);}
+void Application::handleEventWindowDisplayChange(SDL_WindowEvent const& event)               {getWindowHander(event.windowID).handleEventWindowDisplayChange(event);}
+void Application::handleEventWindowUnknown(SDL_WindowEvent const& event)                     {getWindowHander(event.windowID).handleEventWindowUnknown(event);}
+
+/* Keyboard events          0x030*  */
+void Application::handleEventKeyDown(SDL_KeyboardEvent const& event)                         {getWindowHander(event.windowID).handleEventKeyDown(event);}
+void Application::handleEventKeyUp(SDL_KeyboardEvent const& event)                           {getWindowHander(event.windowID).handleEventKeyUp(event);}
+void Application::handleEventTextEditting(SDL_TextEditingEvent const& event)                 {getWindowHander(event.windowID).handleEventTextEditting(event);}
+void Application::handleEventTextInput(SDL_TextInputEvent const& event)                      {getWindowHander(event.windowID).handleEventTextInput(event);}
+void Application::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event)            {getWindowHander(event.windowID).handleEventTextEditingExt(event);}
+
+/* Mouse events             0x040*  */
+void Application::handleEventMouseMove(SDL_MouseMotionEvent const& event)                    {getWindowHander(event.windowID).handleEventMouseMove(event);}
+void Application::handleEventMouseDown(SDL_MouseButtonEvent const& event)                    {getWindowHander(event.windowID).handleEventMouseDown(event);}
+void Application::handleEventMouseUp(SDL_MouseButtonEvent const& event)                      {getWindowHander(event.windowID).handleEventMouseUp(event);}
+void Application::handleEventMouseWheel(SDL_MouseWheelEvent const& event)                    {getWindowHander(event.windowID).handleEventMouseWheel(event);}

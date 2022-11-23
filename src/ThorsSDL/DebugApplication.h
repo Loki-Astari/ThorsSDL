@@ -27,7 +27,7 @@ class DebugApplication: public Application
         virtual void handleEventWindowShow(SDL_WindowEvent const& /*event*/) override;
         virtual void handleEventWindowHide(SDL_WindowEvent const& /*event*/) override;
         virtual void handleEventWindowExpose(SDL_WindowEvent const& /*event*/) override;
-        virtual void handleEventWindowMmoved(SDL_WindowEvent const& /*event*/) override;
+        virtual void handleEventWindowMoved(SDL_WindowEvent const& /*event*/) override;
         virtual void handleEventWindowResized(SDL_WindowEvent const& /*event*/) override;
         virtual void handleEventWindowSizeChange(SDL_WindowEvent const& /*event*/) override;
         virtual void handleEventWindowMin(SDL_WindowEvent const& /*event*/) override;

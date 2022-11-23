@@ -3,11 +3,11 @@
 
 namespace UI = ThorsAnvil::UI;
 
-class PongWindow: public UI::Window
+class PongWindow: public UI::DebugWindow
 {
     UI::Pen             pen{UI::C::black, UI::C::red};
     public:
-        using Window::Window;
+        using DebugWindow::DebugWindow;
 
         virtual void doDraw() override
         {

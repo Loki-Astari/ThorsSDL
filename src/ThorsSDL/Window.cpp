@@ -53,9 +53,9 @@ Window::~Window()
     }
     if (window != nullptr)
     {
+        application.unregisterWindow(*this);
         SDL_DestroyWindow(window);
     }
-    application.unregisterWindow(*this);
 }
 
 Window::Window(Window&& move) noexcept
