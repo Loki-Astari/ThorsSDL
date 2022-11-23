@@ -10,44 +10,87 @@ class PongWindow: public UI::Window
 {
     class Paddle
     {
-        int const   speed           = 20;
+        int const   speed           = 40;
         int const   height          = 18;
-        int const   width           = 36;
+        int const   width           = 60;
         int const   border          = 4;
         UI::Pen     pen{UI::C::black, UI::C::red};
-        int         pos;
-        int         base;
+        UI::Rect    position;
+        //int         pos;
+        //int         base;
         public:
             Paddle(int windowWidth, int windowHeight)
-                : pos((windowWidth / 2) - (width / 2))
-                , base(windowHeight - height - border)
+                : position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
+                //, pos((windowWidth / 2) - (width / 2))
+                //, base(windowHeight - height - border)
             {}
-            void draw(Window& window)   { pen.drawRect(window, {pos, base, width, height});}
-            void moveLeft()             { pos = std::max(0, pos - speed);}
-            void moveRight()            { pos = std::min(windowWidth - width, pos + speed);}
+            void draw(Window& window)   { pen.drawRect(window, position);}
+            void moveLeft()             { position.x = std::max(0, position.x - speed);}
+            void moveRight()            { position.x = std::min(windowWidth - width, position.x + speed);}
+            bool collision(UI::Pt& ball) const
+            {
+                if (position.contains(ball))
+                {
+                    ball.y = 2 * position.y - ball.y;
+                    return true;
+                }
+                return false;
+            }
     };
     class Ball
     {
-        int const   radius          = 5;
-        UI::Pen     pen{UI::C::white, UI::C::white};
-        UI::Pt      pos;
-        UI::Pt      velocity;
+        int const       radius          = 5;
+        int const       windowWidth;
+        int const       windowHeight;
+        Paddle const&   paddle;
+        UI::Pen         pen{UI::C::white, UI::C::white};
+        UI::Pt          pos;
+        UI::Pt          velocity;
         public:
-            Ball(int windowWidth, int windowHeight)
-                : pos{windowWidth / 2, windowHeight / 2}
-                , velocity{-10, -10}
+            Ball(int windowWidth, int windowHeight, Paddle& paddle)
+                : windowWidth(windowWidth)
+                , windowHeight(windowHeight)
+                , paddle(paddle)
+                , pos{windowWidth / 2, windowHeight / 2}
+                , velocity{-2, -2}
             {}
             void draw(Window& window)   { pen.drawRect(window, {pos.x - radius, pos.y - radius, 2*radius, 2*radius});}
-            void move()                 { pos.x += velocity.x; pos.y += velocity.y;}
+            bool move()
+            {
+                pos.x += velocity.x;
+                pos.y += velocity.y;
+                if (paddle.collision(pos))
+                {
+                    velocity.y  = -velocity.y;
+                }
+                else if (pos.y < 0)
+                {
+                    pos.y       = (pos.y < 0 ? 0 : 2 * windowHeight) - pos.y;
+                    velocity.y  = -velocity.y;
+                }
+                else if (pos.y > windowHeight)
+                {
+                    return false;
+                }
+                if ((pos.x < 0) || (pos.x > windowWidth))
+                {
+                    pos.x       = (pos.x < 0 ? 0 : 2 * windowWidth) - pos.x;
+                    velocity.x  = -velocity.x;
+                }
+
+                return true;
+            }
     };
 
+    UI::Application&    application;
     Paddle              paddle;
     Ball                ball;
     public:
         PongWindow(UI::Application& application, std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(application, title, rect, winState, renState)
+            , application(application)
             , paddle(rect.w, rect.h)
-            , ball(rect.w, rect.h)
+            , ball(rect.w, rect.h, paddle)
         {}
 
         // Called on each window after all events have been handled.
@@ -71,7 +114,10 @@ class PongWindow: public UI::Window
         }
         void update(int /*eventCount*/)
         {
-            ball.move();
+            if (!ball.move())
+            {
+                application.exitLoop();
+            }
         }
 };
 

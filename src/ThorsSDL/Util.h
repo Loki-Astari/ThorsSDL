@@ -11,19 +11,25 @@ namespace ThorsAnvil::UI
 static constexpr int windowUndefinedPos = SDL_WINDOWPOS_UNDEFINED;
 static constexpr int windowCentered     = SDL_WINDOWPOS_CENTERED;
 
-using Rect = SDL_Rect;
-using Pt   = SDL_Point;
-
-inline std::ostream& operator<<(std::ostream& s, Rect const& rect)
+struct Pt: SDL_Point
 {
-    return s << "Rect: { {" << rect.x << ", " << rect.y << "} {" << rect.w << ", " << rect.h << "} }";
-}
+    friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Pt const& point)
+    {
+        return s << "Pt: {" << point.x << ", " << point.y << "}";
+    }
+};
 
-inline std::ostream& operator<<(std::ostream& s, Pt const& point)
+struct Rect: SDL_Rect
 {
-    return s << "Pt: {" << point.x << ", " << point.y << "}";
-}
-
+    bool contains(Pt const& pt) const
+    {
+        return (pt.x >= x && pt.x < (x + w) && pt.y >= y && pt.y < (y + h));
+    }
+    friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Rect const& rect)
+    {
+        return s << "Rect: { {" << rect.x << ", " << rect.y << "} {" << rect.w << ", " << rect.h << "} }";
+    }
+};
 
 struct Color
 {
