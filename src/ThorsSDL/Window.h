@@ -126,6 +126,10 @@ class WindowEventHandler
     /* Keyboard events          0x030*  */
         virtual void handleEventKeyDown(SDL_KeyboardEvent const& /*event*/)                     {}
         virtual void handleEventKeyUp(SDL_KeyboardEvent const& /*event*/)                       {}
+            // SDL_KeyboardEvent:
+            //  Uint8       state
+            //  Uint8       repeat
+            //  SDL_Keysym  keysym
         virtual void handleEventTextEditting(SDL_TextEditingEvent const& /*event*/)             {}
         virtual void handleEventTextInput(SDL_TextInputEvent const& /*event*/)                  {}
         virtual void handleEventTextEditingExt(SDL_TextEditingExtEvent const& /*event*/)        {}
