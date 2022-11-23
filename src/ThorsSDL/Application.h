@@ -61,7 +61,7 @@ class Application
         void registerWindow(Window& window);
         void unregisterWindow(Window& window);
 
-    private:
+    protected:
         virtual void handleEventQuit(SDL_QuitEvent const& /*event*/);
         virtual void handleEventTerminating(SDL_CommonEvent const& /*event*/)                   {}
         virtual void handleEventLowMemory(SDL_CommonEvent const& /*event*/)                     {}
