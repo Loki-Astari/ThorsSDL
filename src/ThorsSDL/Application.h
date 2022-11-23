@@ -40,6 +40,7 @@ class Application
     private:
         bool                        finished;
         std::map<Uint32, Window*>   windows;
+        std::function<void(int)>    userEventDone;
 
 
     public:
@@ -54,7 +55,7 @@ class Application
         void initSubSystem(InitValue init);
         void quitSubSystem(InitValue init);
 
-        void eventLoop(std::function<void()>&& action);
+        void eventLoop(std::function<void()>&& action, std::function<void(int)>&& eventDone = [](int){});
         void exitLoop();
 
     private:
@@ -169,9 +170,11 @@ class Application
     /* User events              0x800*  */
         virtual void handleEventUser(SDL_UserEvent const& /*event*/)                            {}
 
-
+    /* There is an event we don't know about */
         virtual void handleEventUnknown(SDL_CommonEvent const& /*event*/);
 
+    /* When all current events are handle Let the application knwo */
+        virtual void handleEventDone(int eventCount);
     private:
         void handleEvents();
         void drawWindows();

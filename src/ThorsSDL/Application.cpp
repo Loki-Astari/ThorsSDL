@@ -42,8 +42,9 @@ void Application::quitSubSystem(InitValue init)
     SDL_QuitSubSystem(static_cast<Uint32>(init));
 }
 
-void Application::eventLoop(std::function<void()>&& action)
+void Application::eventLoop(std::function<void()>&& action, std::function<void(int)>&& eventDone)
 {
+    userEventDone   = std::move(eventDone);
     try
     {
         while (!finished)
@@ -88,129 +89,133 @@ WindowEventHandler& Application::getWindowHander(Uint32 windowId)
 
 void Application::handleEvents()
 {
+    int count = 0;
     SDL_Event event;
 
     while (SDL_PollEvent(&event))
     {
+        ++count;
         switch (event.type)
         {
     /* Application events       0x010*  */
-            case SDL_QUIT:                      return handleEventQuit(event.quit);                 // SDL_QuitEvent
-            case SDL_APP_TERMINATING:           return handleEventTerminating(event.common);        // SDL_CommonEvent
-            case SDL_APP_LOWMEMORY:             return handleEventLowMemory(event.common);          // SDL_CommonEvent
-            case SDL_APP_WILLENTERBACKGROUND:   return handleEventBackground(event.common, false);  // SDL_CommonEvent
-            case SDL_APP_DIDENTERBACKGROUND:    return handleEventBackground(event.common, true);   // SDL_CommonEvent
-            case SDL_APP_WILLENTERFOREGROUND:   return handleEventForeground(event.common, false);  // SDL_CommonEvent
-            case SDL_APP_DIDENTERFOREGROUND:    return handleEventForeground(event.common, true);   // SDL_CommonEvent
-            case SDL_LOCALECHANGED:             return handleEventLocalUpdate(event.common);        // SDL_CommonEvent
+            case SDL_QUIT:                      handleEventQuit(event.quit);                    break;  // SDL_QuitEvent
+            case SDL_APP_TERMINATING:           handleEventTerminating(event.common);           break;  // SDL_CommonEvent
+            case SDL_APP_LOWMEMORY:             handleEventLowMemory(event.common);             break;  // SDL_CommonEvent
+            case SDL_APP_WILLENTERBACKGROUND:   handleEventBackground(event.common, false);     break;  // SDL_CommonEvent
+            case SDL_APP_DIDENTERBACKGROUND:    handleEventBackground(event.common, true);      break;  // SDL_CommonEvent
+            case SDL_APP_WILLENTERFOREGROUND:   handleEventForeground(event.common, false);     break;  // SDL_CommonEvent
+            case SDL_APP_DIDENTERFOREGROUND:    handleEventForeground(event.common, true);      break;  // SDL_CommonEvent
+            case SDL_LOCALECHANGED:             handleEventLocalUpdate(event.common);           break;  // SDL_CommonEvent
 
     /* Display events           0x015*  */
-            case SDL_DISPLAYEVENT:              return handleEventDisplayEvent(event.display);      // SDL_DisplayEvent
+            case SDL_DISPLAYEVENT:              handleEventDisplayEvent(event.display);         break;  // SDL_DisplayEvent
 
     /* Window events            0x020*  */
             case SDL_WINDOWEVENT:
             {
                 switch (event.window.event)
                 {
-                    case SDL_WINDOWEVENT_SHOWN:             return handleEventWindowShow(event.window);             // SDL_WindowEventzz
-                    case SDL_WINDOWEVENT_HIDDEN:            return handleEventWindowHide(event.window);             // SDL_WindowEventz
-                    case SDL_WINDOWEVENT_EXPOSED:           return handleEventWindowExpose(event.window);           // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_MOVED:             return handleEventWindowMoved(event.window);            // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_RESIZED:           return handleEventWindowResized(event.window);          // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_SIZE_CHANGED:      return handleEventWindowSizeChange(event.window);       // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_MINIMIZED:         return handleEventWindowMin(event.window);              // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_MAXIMIZED:         return handleEventWindowMax(event.window);              // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_RESTORED:          return handleEventWindowRestore(event.window);          // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_ENTER:             return handleEventWindowEnter(event.window);            // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_LEAVE:             return handleEventWindowLeave(event.window);            // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_FOCUS_GAINED:      return handleEventWindowFocusGain(event.window);        // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_FOCUS_LOST:        return handleEventWindowFocusLost(event.window);        // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_CLOSE:             return handleEventWindowClose(event.window);            // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_TAKE_FOCUS:        return handleEventWindowTakeFocus(event.window);        // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_HIT_TEST:          return handleEventWindowHitTest(event.window);          // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_ICCPROF_CHANGED:   return handleEventWindowICCProfChange(event.window);    // SDL_WindowEvent
-                    case SDL_WINDOWEVENT_DISPLAY_CHANGED:   return handleEventWindowDisplayChange(event.window);    // SDL_WindowEvent
-                    default:    return handleEventWindowUnknown(event.window);                                      // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_SHOWN:             handleEventWindowShow(event.window);            break;  // SDL_WindowEventzz
+                    case SDL_WINDOWEVENT_HIDDEN:            handleEventWindowHide(event.window);            break;  // SDL_WindowEventz
+                    case SDL_WINDOWEVENT_EXPOSED:           handleEventWindowExpose(event.window);          break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_MOVED:             handleEventWindowMoved(event.window);           break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_RESIZED:           handleEventWindowResized(event.window);         break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:      handleEventWindowSizeChange(event.window);      break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_MINIMIZED:         handleEventWindowMin(event.window);             break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_MAXIMIZED:         handleEventWindowMax(event.window);             break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_RESTORED:          handleEventWindowRestore(event.window);         break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_ENTER:             handleEventWindowEnter(event.window);           break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_LEAVE:             handleEventWindowLeave(event.window);           break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:      handleEventWindowFocusGain(event.window);       break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_FOCUS_LOST:        handleEventWindowFocusLost(event.window);       break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_CLOSE:             handleEventWindowClose(event.window);           break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_TAKE_FOCUS:        handleEventWindowTakeFocus(event.window);       break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_HIT_TEST:          handleEventWindowHitTest(event.window);         break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_ICCPROF_CHANGED:   handleEventWindowICCProfChange(event.window);   break;  // SDL_WindowEvent
+                    case SDL_WINDOWEVENT_DISPLAY_CHANGED:   handleEventWindowDisplayChange(event.window);   break;  // SDL_WindowEvent
+                    default:    handleEventWindowUnknown(event.window);                                     break;  // SDL_WindowEvent
                 }
+                break;
             }
-            case SDL_SYSWMEVENT:                return handleEventSystemEvent(event.syswm);         // SDL_SysWMEvent
+            case SDL_SYSWMEVENT:                handleEventSystemEvent(event.syswm);            break;  // SDL_SysWMEvent
 
     /* Keyboard events          0x030*  */
-            case SDL_KEYDOWN:                   return handleEventKeyDown(event.key);               // SDL_KeyboardEvent
-            case SDL_KEYUP:                     return handleEventKeyUp(event.key);                 // SDL_KeyboardEvent
-            case SDL_TEXTEDITING:               return handleEventTextEditting(event.edit);         // SDL_TextEditingEvent
-            case SDL_TEXTINPUT:                 return handleEventTextInput(event.text);            // SDL_TextInputEvent
-            case SDL_KEYMAPCHANGED:             return handleEventKeyMapChanged(event.common);      // SDL_CommonEvent
-            case SDL_TEXTEDITING_EXT:           return handleEventTextEditingExt(event.editExt);    // SDL_TextEditingExtEvent
+            case SDL_KEYDOWN:                   handleEventKeyDown(event.key);                  break;  // SDL_KeyboardEvent
+            case SDL_KEYUP:                     handleEventKeyUp(event.key);                    break;  // SDL_KeyboardEvent
+            case SDL_TEXTEDITING:               handleEventTextEditting(event.edit);            break;  // SDL_TextEditingEvent
+            case SDL_TEXTINPUT:                 handleEventTextInput(event.text);               break;  // SDL_TextInputEvent
+            case SDL_KEYMAPCHANGED:             handleEventKeyMapChanged(event.common);         break;  // SDL_CommonEvent
+            case SDL_TEXTEDITING_EXT:           handleEventTextEditingExt(event.editExt);       break;  // SDL_TextEditingExtEvent
 
     /* Mouse events             0x040*  */
-            case SDL_MOUSEMOTION:               return handleEventMouseMove(event.motion);          // SDL_MouseMotionEvent
-            case SDL_MOUSEBUTTONDOWN:           return handleEventMouseDown(event.button);          // SDL_MouseButtonEvent
-            case SDL_MOUSEBUTTONUP:             return handleEventMouseUp(event.button);            // SDL_MouseButtonEvent
-            case SDL_MOUSEWHEEL:                return handleEventMouseWheel(event.wheel);          // SDL_MouseWheelEvent
+            case SDL_MOUSEMOTION:               handleEventMouseMove(event.motion);             break;  // SDL_MouseMotionEvent
+            case SDL_MOUSEBUTTONDOWN:           handleEventMouseDown(event.button);             break;  // SDL_MouseButtonEvent
+            case SDL_MOUSEBUTTONUP:             handleEventMouseUp(event.button);               break;  // SDL_MouseButtonEvent
+            case SDL_MOUSEWHEEL:                handleEventMouseWheel(event.wheel);             break;  // SDL_MouseWheelEvent
 
     /* Joystick events          0x060*  */
-            case SDL_JOYAXISMOTION:             return handleEventJoyMotion(event.jaxis);           // SDL_JoyAxisEvent
-            case SDL_JOYBALLMOTION:             return handleEventJoyBall(event.jball);             // SDL_JoyBallEvent
-            case SDL_JOYHATMOTION:              return handleEventJoyHat(event.jhat);               // SDL_JoyHatEvent
-            case SDL_JOYBUTTONDOWN:             return handleEventJoyButtonDown(event.jbutton);     // SDL_JoyButtonEvent
-            case SDL_JOYBUTTONUP:               return handleEventJoyButtonUp(event.jbutton);       // SDL_JoyButtonEvent
-            case SDL_JOYDEVICEADDED:            return handleEventJoyDeviceAdd(event.jdevice);      // SDL_JoyDeviceEvent
-            case SDL_JOYDEVICEREMOVED:          return handleEventJoyDeviceRem(event.jdevice);      // SDL_JoyDeviceEvent
-            case SDL_JOYBATTERYUPDATED:         return handleEventJoyBattery(event.jbattery);       // SDL_JoyBatteryEvent
+            case SDL_JOYAXISMOTION:             handleEventJoyMotion(event.jaxis);              break;  // SDL_JoyAxisEvent
+            case SDL_JOYBALLMOTION:             handleEventJoyBall(event.jball);                break;  // SDL_JoyBallEvent
+            case SDL_JOYHATMOTION:              handleEventJoyHat(event.jhat);                  break;  // SDL_JoyHatEvent
+            case SDL_JOYBUTTONDOWN:             handleEventJoyButtonDown(event.jbutton);        break;  // SDL_JoyButtonEvent
+            case SDL_JOYBUTTONUP:               handleEventJoyButtonUp(event.jbutton);          break;  // SDL_JoyButtonEvent
+            case SDL_JOYDEVICEADDED:            handleEventJoyDeviceAdd(event.jdevice);         break;  // SDL_JoyDeviceEvent
+            case SDL_JOYDEVICEREMOVED:          handleEventJoyDeviceRem(event.jdevice);         break;  // SDL_JoyDeviceEvent
+            case SDL_JOYBATTERYUPDATED:         handleEventJoyBattery(event.jbattery);          break;  // SDL_JoyBatteryEvent
 
     /* Game controller events   0x065*  */
-            case SDL_CONTROLLERAXISMOTION:      return handleEventControlMotion(event.caxis);       // SDL_ControllerAxisEvent
-            case SDL_CONTROLLERBUTTONDOWN:      return handleEventControlButtonDown(event.cbutton); // SDL_ControllerButtonEvent
-            case SDL_CONTROLLERBUTTONUP:        return handleEventControlButtonUp(event.cbutton);   // SDL_ControllerButtonEvent
-            case SDL_CONTROLLERDEVICEADDED:     return handleEventControlDeviceAdd(event.cdevice);  // SDL_ControllerDeviceEvent
-            case SDL_CONTROLLERDEVICEREMOVED:   return handleEventControlDeviceRem(event.cdevice);  // SDL_ControllerDeviceEvent
-            case SDL_CONTROLLERDEVICEREMAPPED:  return handleEventControlDeviceMap(event.cdevice);  // SDL_ControllerDeviceEvent
+            case SDL_CONTROLLERAXISMOTION:      handleEventControlMotion(event.caxis);          break;  // SDL_ControllerAxisEvent
+            case SDL_CONTROLLERBUTTONDOWN:      handleEventControlButtonDown(event.cbutton);    break;  // SDL_ControllerButtonEvent
+            case SDL_CONTROLLERBUTTONUP:        handleEventControlButtonUp(event.cbutton);      break;  // SDL_ControllerButtonEvent
+            case SDL_CONTROLLERDEVICEADDED:     handleEventControlDeviceAdd(event.cdevice);     break;  // SDL_ControllerDeviceEvent
+            case SDL_CONTROLLERDEVICEREMOVED:   handleEventControlDeviceRem(event.cdevice);     break;  // SDL_ControllerDeviceEvent
+            case SDL_CONTROLLERDEVICEREMAPPED:  handleEventControlDeviceMap(event.cdevice);     break;  // SDL_ControllerDeviceEvent
 
-            case SDL_CONTROLLERTOUCHPADDOWN:    return handleEventTouchPadDown(event.ctouchpad);    // SDL_ControllerTouchpadEvent
-            case SDL_CONTROLLERTOUCHPADUP:      return handleEventTouchPadUp(event.ctouchpad);      // SDL_ControllerTouchpadEvent
-            case SDL_CONTROLLERTOUCHPADMOTION:  return handleEventTouchPadMotion(event.ctouchpad);  // SDL_ControllerTouchpadEvent
-            case SDL_CONTROLLERSENSORUPDATE:    return handleEventTouchPadSendor(event.csensor);    // SDL_ControllerSensorEvent
+            case SDL_CONTROLLERTOUCHPADDOWN:    handleEventTouchPadDown(event.ctouchpad);       break;  // SDL_ControllerTouchpadEvent
+            case SDL_CONTROLLERTOUCHPADUP:      handleEventTouchPadUp(event.ctouchpad);         break;  // SDL_ControllerTouchpadEvent
+            case SDL_CONTROLLERTOUCHPADMOTION:  handleEventTouchPadMotion(event.ctouchpad);     break;  // SDL_ControllerTouchpadEvent
+            case SDL_CONTROLLERSENSORUPDATE:    handleEventTouchPadSendor(event.csensor);       break;  // SDL_ControllerSensorEvent
 
     /* Touch events             0x070*  */
-            case SDL_FINGERDOWN:                return handleEventFingerDown(event.tfinger);        // SDL_TouchFingerEvent
-            case SDL_FINGERUP:                  return handleEventFingerUp(event.tfinger);          // SDL_TouchFingerEvent
-            case SDL_FINGERMOTION:              return handleEventFingerMotion(event.tfinger);      // SDL_TouchFingerEvent
+            case SDL_FINGERDOWN:                handleEventFingerDown(event.tfinger);           break;  // SDL_TouchFingerEvent
+            case SDL_FINGERUP:                  handleEventFingerUp(event.tfinger);             break;  // SDL_TouchFingerEvent
+            case SDL_FINGERMOTION:              handleEventFingerMotion(event.tfinger);         break;  // SDL_TouchFingerEvent
 
     /* Gesture events           0x080*  */
-            case SDL_DOLLARGESTURE:             return handleEventDollarGesture(event.dgesture);    // SDL_DollarGestureEvent
-            case SDL_DOLLARRECORD:              return handleEventDollarRecord(event.dgesture);     // SDL_DollarGestureEvent
-            case SDL_MULTIGESTURE:              return handleEventMultiGesture(event.mgesture);     // SDL_MultiGestureEvent
+            case SDL_DOLLARGESTURE:             handleEventDollarGesture(event.dgesture);       break;  // SDL_DollarGestureEvent
+            case SDL_DOLLARRECORD:              handleEventDollarRecord(event.dgesture);        break;  // SDL_DollarGestureEvent
+            case SDL_MULTIGESTURE:              handleEventMultiGesture(event.mgesture);        break;  // SDL_MultiGestureEvent
 
     /* Clipboard events         0x09*   */
-            case SDL_CLIPBOARDUPDATE:           return handleEventClipboardUpdate(event.common);    // SDL_CommonEvent
+            case SDL_CLIPBOARDUPDATE:           handleEventClipboardUpdate(event.common);       break;  // SDL_CommonEvent
 
     /* Drag and drop events     0x100*  */
-            case SDL_DROPFILE:                  return handleEventDropFile(event.drop);             // SDL_DropEvent
-            case SDL_DROPTEXT:                  return handleEventDropText(event.drop);             // SDL_DropEvent
-            case SDL_DROPBEGIN:                 return handleEventDropBegin(event.drop);            // SDL_DropEvent
-            case SDL_DROPCOMPLETE:              return handleEventDropEnd(event.drop);              // SDL_DropEvent
+            case SDL_DROPFILE:                  handleEventDropFile(event.drop);                break;  // SDL_DropEvent
+            case SDL_DROPTEXT:                  handleEventDropText(event.drop);                break;  // SDL_DropEvent
+            case SDL_DROPBEGIN:                 handleEventDropBegin(event.drop);               break;  // SDL_DropEvent
+            case SDL_DROPCOMPLETE:              handleEventDropEnd(event.drop);                 break;  // SDL_DropEvent
 
     /* Audio hotplug events     0x110*  */
-            case SDL_AUDIODEVICEADDED:          return handleEventAudioDeviceAdd(event.adevice);    // SDL_AudioDeviceEvent
-            case SDL_AUDIODEVICEREMOVED:        return handleEventAudioDeviceRem(event.adevice);    // SDL_AudioDeviceEvent
+            case SDL_AUDIODEVICEADDED:          handleEventAudioDeviceAdd(event.adevice);       break;  // SDL_AudioDeviceEvent
+            case SDL_AUDIODEVICEREMOVED:        handleEventAudioDeviceRem(event.adevice);       break;  // SDL_AudioDeviceEvent
 
     /* Sensor events            0x120*  */
-            case SDL_SENSORUPDATE:              return handleEventSensorUpdate(event.sensor);       // SDL_SensorEvent
+            case SDL_SENSORUPDATE:              handleEventSensorUpdate(event.sensor);          break;  // SDL_SensorEvent
 
     /* Render events            0x200*  */
-            case SDL_RENDER_TARGETS_RESET:      return handleEventRenderTargetReset(event.common);  // SDL_CommonEvent
-            case SDL_RENDER_DEVICE_RESET:       return handleEventRenderDeviceReset(event.common);  // SDL_CommonEvent
+            case SDL_RENDER_TARGETS_RESET:      handleEventRenderTargetReset(event.common);     break;  // SDL_CommonEvent
+            case SDL_RENDER_DEVICE_RESET:       handleEventRenderDeviceReset(event.common);     break;  // SDL_CommonEvent
 
     /* Internal events          0x7F0*  */
-            case SDL_POLLSENTINEL:              return handleEventPollSentinel(event.common);       // SDL_CommonEvent
+            case SDL_POLLSENTINEL:              handleEventPollSentinel(event.common);          break;  // SDL_CommonEvent
 
     /* User events              0x800*  */
-            case SDL_USEREVENT:                 return handleEventUser(event.user);                 // SDL_UserEvent
+            case SDL_USEREVENT:                 handleEventUser(event.user);                    break;  // SDL_UserEvent
 
-            default:                            return handleEventUnknown(event.common);            // SDL_CommonEvent
+            default:                            handleEventUnknown(event.common);               break;  // SDL_CommonEvent
         }
     }
+    handleEventDone(count);
 }
 
 void Application::handleEventQuit(SDL_QuitEvent const& /*event*/)
@@ -265,3 +270,5 @@ void Application::handleEventMouseMove(SDL_MouseMotionEvent const& event)       
 void Application::handleEventMouseDown(SDL_MouseButtonEvent const& event)                    {getWindowHander(event.windowID).handleEventMouseDown(event);}
 void Application::handleEventMouseUp(SDL_MouseButtonEvent const& event)                      {getWindowHander(event.windowID).handleEventMouseUp(event);}
 void Application::handleEventMouseWheel(SDL_MouseWheelEvent const& event)                    {getWindowHander(event.windowID).handleEventMouseWheel(event);}
+
+void Application::handleEventDone(int eventCount)                                            {userEventDone(eventCount);}

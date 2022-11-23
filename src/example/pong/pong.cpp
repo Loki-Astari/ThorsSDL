@@ -18,25 +18,43 @@ class PongWindow: public UI::Window
         int         pos;
         int         base;
         public:
-            Paddle(int middle, int bottom)
-                : pos(middle - (width / 2))
-                , base(bottom - height - border)
+            Paddle(int windowWidth, int windowHeight)
+                : pos((windowWidth / 2) - (width / 2))
+                , base(windowHeight - height - border)
             {}
-            void draw(Window& window)   { pen.drawRect(window, {pos + width, base, width, height});}
+            void draw(Window& window)   { pen.drawRect(window, {pos, base, width, height});}
             void moveLeft()             { pos = std::max(0, pos - speed);}
             void moveRight()            { pos = std::min(windowWidth - width, pos + speed);}
     };
+    class Ball
+    {
+        int const   radius          = 5;
+        UI::Pen     pen{UI::C::white, UI::C::white};
+        UI::Pt      pos;
+        UI::Pt      velocity;
+        public:
+            Ball(int windowWidth, int windowHeight)
+                : pos{windowWidth / 2, windowHeight / 2}
+                , velocity{-10, -10}
+            {}
+            void draw(Window& window)   { pen.drawRect(window, {pos.x - radius, pos.y - radius, 2*radius, 2*radius});}
+            void move()                 { pos.x += velocity.x; pos.y += velocity.y;}
+    };
 
     Paddle              paddle;
+    Ball                ball;
     public:
         PongWindow(UI::Application& application, std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(application, title, rect, winState, renState)
-            , paddle(rect.w / 2, rect.h)
+            , paddle(rect.w, rect.h)
+            , ball(rect.w, rect.h)
         {}
 
+        // Called on each window after all events have been handled.
         virtual void doDraw() override
         {
             paddle.draw(*this);
+            ball.draw(*this);
         }
         virtual void handleEventKeyDown(SDL_KeyboardEvent const& event) override
         {
@@ -51,7 +69,10 @@ class PongWindow: public UI::Window
                     break;
             }
         }
-
+        void update(int /*eventCount*/)
+        {
+            ball.move();
+        }
 };
 
 
@@ -62,6 +83,14 @@ int main()
 
     application.eventLoop([]()
     {
+        // Runs at the end of the event loop
         SDL_Delay(16);
-    });
+    },
+    [&window](int eventCount)
+    {
+        // Runs as the last event handler.
+        // Chance to update the state before drawing.
+        window.update(eventCount);
+    }
+    );
 }
