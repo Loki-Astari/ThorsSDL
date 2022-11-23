@@ -21,10 +21,11 @@ struct Pt: SDL_Point
 
 struct Rect: SDL_Rect
 {
-    bool contains(Pt const& pt) const
-    {
-        return (pt.x >= x && pt.x < (x + w) && pt.y >= y && pt.y < (y + h));
-    }
+    bool contains(Pt const& pt)         const   { return (pt.x >= x && pt.x < (x + w) && pt.y >= y && pt.y < (y + h));}
+    bool xIntersect(Rect const& rect)   const   { return (rect.x < x && (rect.x + rect.w) >= x) || (rect.x >= x && rect.x < (x + w));}
+    bool yIntersect(Rect const& rect)   const   { return (rect.y < y && (rect.y + rect.h) >= y) || (rect.y >= y && rect.y < (y + h));}
+    bool intersect(Rect const& rect)    const   { return xIntersect(rect) && yIntersect(rect);}
+
     friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Rect const& rect)
     {
         return s << "Rect: { {" << rect.x << ", " << rect.y << "} {" << rect.w << ", " << rect.h << "} }";
