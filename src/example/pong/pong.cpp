@@ -42,7 +42,8 @@ class PongWindow: public UI::Window
         int const   bricksPerRow    = 20;
         int const   rowCount        = 10;
         UI::Pen     pens[8]         = {{UI::C::black, UI::C::yellow}, {UI::C::black, UI::C::yellow}, {UI::C::black, UI::C::green}, {UI::C::black, UI::C::green},
-                                       {UI::C::black, UI::C::grey}, {UI::C::black, UI::C::grey}, {UI::C::black, UI::C::antiquewhite}, {UI::C::black, UI::C::antiquewhite}};
+                                       {UI::C::black, UI::C::grey}, {UI::C::black, UI::C::grey}, {UI::C::black, UI::C::antiquewhite}, {UI::C::black, UI::C::antiquewhite}
+                                      };
         int const   brickWidth;
         public:
             Wall(int windowWidth, int /*windowHeight*/)
