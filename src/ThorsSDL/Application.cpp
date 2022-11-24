@@ -26,6 +26,7 @@ Application::Application(InitValue init)
 Application::~Application()
 {
     SDL_Quit();
+    initialized = false;
 }
 
 void Application::initSubSystem(InitValue init)

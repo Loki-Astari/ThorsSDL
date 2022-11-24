@@ -12,6 +12,7 @@ namespace ThorsAnvil::UI
 
 enum InitValue : Uint32
 {
+    Nothing = 0,
     Timer = SDL_INIT_TIMER,
     Audio = SDL_INIT_AUDIO,
     Video = SDL_INIT_VIDEO,
