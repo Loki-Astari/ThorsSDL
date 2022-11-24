@@ -16,41 +16,70 @@ class PongWindow: public UI::Window
         int const   border          = 4;
         UI::Pen     pen{UI::C::black, UI::C::red};
         UI::Rect    position;
-        //int         pos;
-        //int         base;
         public:
             Paddle(int windowWidth, int windowHeight)
                 : position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
-                //, pos((windowWidth / 2) - (width / 2))
-                //, base(windowHeight - height - border)
             {}
             void draw(Window& window)   { pen.drawRect(window, position);}
             void moveLeft()             { position.x = std::max(0, position.x - speed);}
             void moveRight()            { position.x = std::min(windowWidth - width, position.x + speed);}
-            bool collision(UI::Pt& ball) const
+            bool collision(UI::Pt& ball, UI::Pt& velocity) const
             {
                 if (position.contains(ball))
                 {
+                    velocity.y  = -velocity.y;
                     ball.y = 2 * position.y - ball.y;
                     return true;
                 }
                 return false;
             }
     };
+    class Wall
+    {
+        int const   border          = 80;
+        int const   cementSpace     = 3;
+        int const   brickHeight     = 20;
+        int const   bricksPerRow    = 20;
+        int const   rowCount        = 10;
+        UI::Pen     pens[8]         = {{UI::C::black, UI::C::yellow}, {UI::C::black, UI::C::yellow}, {UI::C::black, UI::C::green}, {UI::C::black, UI::C::green},
+                                       {UI::C::black, UI::C::grey}, {UI::C::black, UI::C::grey}, {UI::C::black, UI::C::antiquewhite}, {UI::C::black, UI::C::antiquewhite}};
+        int const   brickWidth;
+        public:
+            Wall(int windowWidth, int /*windowHeight*/)
+                : brickWidth(windowWidth / bricksPerRow)
+            {}
+            void draw(Window& window)
+            {
+                for (int row = 0; row < rowCount; ++row)
+                {
+                    for (int col = 0; col < bricksPerRow; ++col)
+                    {
+                        pens[row % std::size(pens)].drawRect(window, {col * (brickWidth + cementSpace), border + row * (brickHeight + cementSpace), brickWidth, brickHeight});
+                    }
+                }
+            }
+            bool collision(UI::Pt& /*ball*/, UI::Pt& /*velocity*/) const
+            {
+                return false;
+            }
+    };
+
     class Ball
     {
         int const       radius          = 5;
         int const       windowWidth;
         int const       windowHeight;
         Paddle const&   paddle;
+        Wall&           wall;
         UI::Pen         pen{UI::C::white, UI::C::white};
         UI::Pt          pos;
         UI::Pt          velocity;
         public:
-            Ball(int windowWidth, int windowHeight, Paddle& paddle)
+            Ball(int windowWidth, int windowHeight, Paddle& paddle, Wall& wall)
                 : windowWidth(windowWidth)
                 , windowHeight(windowHeight)
                 , paddle(paddle)
+                , wall(wall)
                 , pos{windowWidth / 2, windowHeight / 2}
                 , velocity{-2, -2}
             {}
@@ -59,9 +88,11 @@ class PongWindow: public UI::Window
             {
                 pos.x += velocity.x;
                 pos.y += velocity.y;
-                if (paddle.collision(pos))
-                {
-                    velocity.y  = -velocity.y;
+                if (paddle.collision(pos, velocity))
+                {   // Do Nothing
+                }
+                else if (wall.collision(pos, velocity))
+                {   // Do Nothing
                 }
                 else if (pos.y < 0)
                 {
@@ -81,22 +112,25 @@ class PongWindow: public UI::Window
                 return true;
             }
     };
-
     UI::Application&    application;
     Paddle              paddle;
+    Wall                wall;
     Ball                ball;
+
     public:
         PongWindow(UI::Application& application, std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(application, title, rect, winState, renState)
             , application(application)
             , paddle(rect.w, rect.h)
-            , ball(rect.w, rect.h, paddle)
+            , wall(rect.w, rect.h)
+            , ball(rect.w, rect.h, paddle, wall)
         {}
 
         // Called on each window after all events have been handled.
         virtual void doDraw() override
         {
             paddle.draw(*this);
+            wall.draw(*this);
             ball.draw(*this);
         }
         virtual void handleEventKeyDown(SDL_KeyboardEvent const& event) override
