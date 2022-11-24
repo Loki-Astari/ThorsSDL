@@ -19,12 +19,46 @@ struct Pt: SDL_Point
     }
 };
 
+enum CollisionPoint {Miss, TopLeft, Top, TopRight, Right, BotRight, Bot, BotLeft, Left};
+
 struct Rect: SDL_Rect
 {
     bool contains(Pt const& pt)         const   { return (pt.x >= x && pt.x < (x + w) && pt.y >= y && pt.y < (y + h));}
     bool xIntersect(Rect const& rect)   const   { return (rect.x < x && (rect.x + rect.w) >= x) || (rect.x >= x && rect.x < (x + w));}
     bool yIntersect(Rect const& rect)   const   { return (rect.y < y && (rect.y + rect.h) >= y) || (rect.y >= y && rect.y < (y + h));}
     bool intersect(Rect const& rect)    const   { return xIntersect(rect) && yIntersect(rect);}
+
+    CollisionPoint collision(Pt const& point, Pt const& vel)
+    {
+        int     leftIntersect   = point.y + ((x - point.x + 1) * vel.y / std::abs(vel.x));
+        bool    hitLeft         = (point.x < x && (point.x + vel.x) >= x)
+                               && (leftIntersect >= y && leftIntersect < (y + h));
+
+        int     rightIntersect  = point.y + ((point.x - x - w + 1) * vel.y / std::abs(vel.x));
+        bool    hitRight        = (point.x >= (x + w) && (point.x + vel.x) < (x + w))
+                               && (rightIntersect >= y && rightIntersect < (y + h));
+
+        int     topIntersect    = point.x + ((y - point.y + 1) * vel.x / std::abs(vel.y));
+        bool    hitTop          = (point.y < y && (point.y + vel.y) >= y)
+                               && (topIntersect >= x && topIntersect < (x + w));
+
+        int     botIntersect    = point.x + ((point.y - y - h + 1) * vel.x / std::abs(vel.y));
+        bool    hitBottom       = (point.y >= (y + h) && (point.y + vel.y) < (y + h))
+                               && (botIntersect >= x && botIntersect < (x + w));
+
+        if (hitLeft)
+        {
+            return hitTop ? TopLeft : hitBottom ? BotLeft : Left;
+        }
+        else if (hitRight)
+        {
+            return hitTop ? TopRight : hitBottom ? BotRight : Right;
+        }
+        else
+        {
+            return hitTop ? Top : hitBottom ? Bot : Miss;
+        }
+    }
 
     friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Rect const& rect)
     {
