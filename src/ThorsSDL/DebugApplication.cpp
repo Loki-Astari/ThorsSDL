@@ -20,16 +20,28 @@ void DebugApplication::handleEventLowMemory(SDL_CommonEvent const& event)
     Application::handleEventLowMemory(event);
 }
 
-void DebugApplication::handleEventBackground(SDL_CommonEvent const& event, bool done)
+void DebugApplication::handleEventBackgroundEnterAboutTo(SDL_CommonEvent const& event)
 {
-    std::cerr << "handleEventBackground\n";
-    Application::handleEventBackground(event, done);
+    std::cerr << "handleEventBackgroundEnterAboutTo\n";
+    Application::handleEventBackgroundEnterAboutTo(event);
 }
 
-void DebugApplication::handleEventForeground(SDL_CommonEvent const& event, bool done)
+void DebugApplication::handleEventBackgroundEnterDone(SDL_CommonEvent const& event)
 {
-    std::cerr << "handleEventForeground\n";
-    Application::handleEventForeground(event, done);
+    std::cerr << "handleEventBackgroundEnterDone\n";
+    Application::handleEventBackgroundEnterDone(event);
+}
+
+void DebugApplication::handleEventForegroundEnterAboutTo(SDL_CommonEvent const& event)
+{
+    std::cerr << "handleEventForegroundEnterAboutTo\n";
+    Application::handleEventForegroundEnterAboutTo(event);
+}
+
+void DebugApplication::handleEventForegroundEnterDone(SDL_CommonEvent const& event)
+{
+    std::cerr << "handleEventForegroundEnterDone\n";
+    Application::handleEventForegroundEnterDone(event);
 }
 
 void DebugApplication::handleEventLocalUpdate(SDL_CommonEvent const& event)

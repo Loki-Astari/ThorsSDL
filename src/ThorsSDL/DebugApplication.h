@@ -16,8 +16,10 @@ class DebugApplication: public Application
         virtual void handleEventQuit(SDL_QuitEvent const& /*event*/) override;
         virtual void handleEventTerminating(SDL_CommonEvent const& /*event*/) override;
         virtual void handleEventLowMemory(SDL_CommonEvent const& /*event*/) override;
-        virtual void handleEventBackground(SDL_CommonEvent const& /*event*/, bool /*done*/) override;
-        virtual void handleEventForeground(SDL_CommonEvent const& /*event*/, bool /*done*/) override;
+        virtual void handleEventBackgroundEnterAboutTo(SDL_CommonEvent const& /*event*/) override;
+        virtual void handleEventBackgroundEnterDone(SDL_CommonEvent const& /*event*/) override;
+        virtual void handleEventForegroundEnterAboutTo(SDL_CommonEvent const& /*event*/) override;
+        virtual void handleEventForegroundEnterDone(SDL_CommonEvent const& /*event*/) override;
         virtual void handleEventLocalUpdate(SDL_CommonEvent const& /*event*/) override;
 
     /* Display events           0x015*  */

@@ -69,8 +69,10 @@ class Application
         virtual void handleEventQuit(SDL_QuitEvent const& /*event*/);
         virtual void handleEventTerminating(SDL_CommonEvent const& /*event*/)                   {}
         virtual void handleEventLowMemory(SDL_CommonEvent const& /*event*/)                     {}
-        virtual void handleEventBackground(SDL_CommonEvent const& /*event*/, bool /*done*/)     {}
-        virtual void handleEventForeground(SDL_CommonEvent const& /*event*/, bool /*done*/)     {}
+        virtual void handleEventBackgroundEnterAboutTo(SDL_CommonEvent const& /*event*/)        {}
+        virtual void handleEventBackgroundEnterDone(SDL_CommonEvent const& /*event*/)           {}
+        virtual void handleEventForegroundEnterAboutTo(SDL_CommonEvent const& /*event*/)        {}
+        virtual void handleEventForegroundEnterDone(SDL_CommonEvent const& /*event*/)           {}
         virtual void handleEventLocalUpdate(SDL_CommonEvent const& /*event*/)                   {}
 
     /* Display events           0x015*  */

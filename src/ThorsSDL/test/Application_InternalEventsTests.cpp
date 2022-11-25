@@ -14,4 +14,5 @@
 
 HANDLER_TEST(SystemEvent, SDL_SysWMEvent, SDL_SYSWMEVENT)
 HANDLER_TEST(PollSentinel, SDL_CommonEvent, SDL_POLLSENTINEL)
+HANDLER_TEST(Unknown, SDL_CommonEvent, -1)
 

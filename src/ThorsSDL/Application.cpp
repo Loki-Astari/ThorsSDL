@@ -102,10 +102,10 @@ void Application::handleEvents()
             case SDL_QUIT:                      handleEventQuit(event.quit);                    break;  // SDL_QuitEvent
             case SDL_APP_TERMINATING:           handleEventTerminating(event.common);           break;  // SDL_CommonEvent
             case SDL_APP_LOWMEMORY:             handleEventLowMemory(event.common);             break;  // SDL_CommonEvent
-            case SDL_APP_WILLENTERBACKGROUND:   handleEventBackground(event.common, false);     break;  // SDL_CommonEvent
-            case SDL_APP_DIDENTERBACKGROUND:    handleEventBackground(event.common, true);      break;  // SDL_CommonEvent
-            case SDL_APP_WILLENTERFOREGROUND:   handleEventForeground(event.common, false);     break;  // SDL_CommonEvent
-            case SDL_APP_DIDENTERFOREGROUND:    handleEventForeground(event.common, true);      break;  // SDL_CommonEvent
+            case SDL_APP_WILLENTERBACKGROUND:   handleEventBackgroundEnterAboutTo(event.common);break;  // SDL_CommonEvent
+            case SDL_APP_DIDENTERBACKGROUND:    handleEventBackgroundEnterDone(event.common);   break;  // SDL_CommonEvent
+            case SDL_APP_WILLENTERFOREGROUND:   handleEventForegroundEnterAboutTo(event.common);break;  // SDL_CommonEvent
+            case SDL_APP_DIDENTERFOREGROUND:    handleEventForegroundEnterDone(event.common);   break;  // SDL_CommonEvent
             case SDL_LOCALECHANGED:             handleEventLocalUpdate(event.common);           break;  // SDL_CommonEvent
 
     /* Display events           0x015*  */
