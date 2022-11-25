@@ -39,6 +39,7 @@ Window::Window(Application& application, std::string const& title, Rect const& r
     renderer = SDL_CreateRenderer(window, -1, renState);
     if (renderer == nullptr)
     {
+        SDL_DestroyWindow(window);
         throw std::runtime_error("Failed to create renderer");
     }
 
@@ -47,15 +48,7 @@ Window::Window(Application& application, std::string const& title, Rect const& r
 
 Window::~Window()
 {
-    if (renderer != nullptr)
-    {
-        SDL_DestroyRenderer(renderer);
-    }
-    if (window != nullptr)
-    {
-        application.unregisterWindow(*this);
-        SDL_DestroyWindow(window);
-    }
+    destroy();
 }
 
 Window::Window(Window&& move) noexcept
@@ -70,12 +63,26 @@ Window::Window(Window&& move) noexcept
 
 Window& Window::operator=(Window&& move) noexcept
 {
-    application.unregisterWindow(*this);
+    destroy();
 
-    std::swap(window,   move.window);
-    std::swap(renderer, move.renderer);
+    window = std::exchange(move.window, nullptr);
+    renderer = std::exchange(move.renderer, nullptr);
+
     application.registerWindow(*this);
     return *this;
+}
+
+void Window::destroy()
+{
+    if (renderer != nullptr)
+    {
+        SDL_DestroyRenderer(renderer);
+    }
+    if (window != nullptr)
+    {
+        application.unregisterWindow(*this);
+        SDL_DestroyWindow(window);
+    }
 }
 
 void Window::draw()

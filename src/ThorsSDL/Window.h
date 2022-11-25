@@ -121,7 +121,6 @@ class WindowEventHandler
         virtual void handleEventWindowHitTest(SDL_WindowEvent const& /*event*/)                 {}
         virtual void handleEventWindowICCProfChange(SDL_WindowEvent const& /*event*/)           {}
         virtual void handleEventWindowDisplayChange(SDL_WindowEvent const& /*event*/)           {}
-        virtual void handleEventWindowUnknown(SDL_WindowEvent const& /*event*/)                 {}
 
     /* Keyboard events          0x030*  */
         virtual void handleEventKeyDown(SDL_KeyboardEvent const& /*event*/)                     {}
@@ -133,7 +132,6 @@ class WindowEventHandler
         virtual void handleEventTextEditting(SDL_TextEditingEvent const& /*event*/)             {}
         virtual void handleEventTextInput(SDL_TextInputEvent const& /*event*/)                  {}
         virtual void handleEventTextEditingExt(SDL_TextEditingExtEvent const& /*event*/)        {}
-        virtual void handleEventKeyMapChanged(SDL_CommonEvent const& /*event*/)                 {}
 
     /* Mouse events             0x040*  */
         virtual void handleEventMouseMove(SDL_MouseMotionEvent const& /*event*/)                {}
@@ -152,9 +150,13 @@ class Window: public WindowEventHandler
         Window& operator=(Window const&)  = delete;
         Window(Window&& move) noexcept;
         Window& operator=(Window&& move) noexcept;
+    private:
+        void    destroy();
 
+    public:
         void    draw();
         Uint32  getId() const   {return SDL_GetWindowID(window);}
+
     private:
         virtual Color   getBackgroundColor() {return {96, 128, 255, 255};}
         virtual void    doDraw();
@@ -192,7 +194,6 @@ class DebugWindow: public Window
         virtual void handleEventWindowHitTest(SDL_WindowEvent const& event) override        {std::cerr << "handleEventWindowHitTest\n";         Window::handleEventWindowHitTest(event);}
         virtual void handleEventWindowICCProfChange(SDL_WindowEvent const& event) override  {std::cerr << "handleEventWindowICCProfChange\n";   Window::handleEventWindowICCProfChange(event);}
         virtual void handleEventWindowDisplayChange(SDL_WindowEvent const& event) override  {std::cerr << "handleEventWindowDisplayChange\n";   Window::handleEventWindowDisplayChange(event);}
-        virtual void handleEventWindowUnknown(SDL_WindowEvent const& event) override        {std::cerr << "handleEventWindowUnknown\n";         Window::handleEventWindowUnknown(event);}
 
     /* Keyboard events          0x030*  */
         virtual void handleEventKeyDown(SDL_KeyboardEvent const& event) override            {std::cerr << "handleEventKeyDown\n";               Window::handleEventKeyDown(event);}
@@ -200,7 +201,6 @@ class DebugWindow: public Window
         virtual void handleEventTextEditting(SDL_TextEditingEvent const& event) override    {std::cerr << "handleEventTextEditting\n";          Window::handleEventTextEditting(event);}
         virtual void handleEventTextInput(SDL_TextInputEvent const& event) override         {std::cerr << "handleEventTextInput\n";             Window::handleEventTextInput(event);}
         virtual void handleEventTextEditingExt(SDL_TextEditingExtEvent const& event) override{std::cerr << "handleEventTextEditingExt\n";       Window::handleEventTextEditingExt(event);}
-        virtual void handleEventKeyMapChanged(SDL_CommonEvent const& event) override        {std::cerr << "handleEventKeyMapChanged\n";         Window::handleEventKeyMapChanged(event);}
 
     /* Mouse events             0x040*  */
         virtual void handleEventMouseMove(SDL_MouseMotionEvent const& event) override       {std::cerr << "handleEventMouseMove\n";             Window::handleEventMouseMove(event);}
