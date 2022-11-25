@@ -371,4 +371,12 @@ TEST(UtilTest, RectCollisionLeftTopRight)
     EXPECT_EQ(ThorsAnvil::UI::Miss, rectBig.collision({80, 80}, {15, 240}));
 }
 
+TEST(UtilTest, PrintColor)
+{
+    std::stringstream stream;
+    stream << ThorsAnvil::UI::C::red;
+
+    EXPECT_EQ("C: {255, 0, 0, 255}", stream.str());
+}
+
 

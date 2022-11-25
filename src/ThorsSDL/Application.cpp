@@ -257,7 +257,6 @@ void Application::handleEventWindowTakeFocus(SDL_WindowEvent const& event)      
 void Application::handleEventWindowHitTest(SDL_WindowEvent const& event)                     {getWindowHander(event.windowID).handleEventWindowHitTest(event);}
 void Application::handleEventWindowICCProfChange(SDL_WindowEvent const& event)               {getWindowHander(event.windowID).handleEventWindowICCProfChange(event);}
 void Application::handleEventWindowDisplayChange(SDL_WindowEvent const& event)               {getWindowHander(event.windowID).handleEventWindowDisplayChange(event);}
-void Application::handleEventWindowUnknown(SDL_WindowEvent const& event)                     {getWindowHander(event.windowID).handleEventWindowUnknown(event);}
 
 /* Keyboard events          0x030*  */
 void Application::handleEventKeyDown(SDL_KeyboardEvent const& event)                         {getWindowHander(event.windowID).handleEventKeyDown(event);}

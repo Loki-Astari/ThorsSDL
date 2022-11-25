@@ -78,7 +78,7 @@ struct Color
 
     friend std::ostream& operator<<(std::ostream& s, Color const& color)
     {
-        return s << "C: { {" << static_cast<int>(color.r) << ", " << static_cast<int>(color.g) << ", " << static_cast<int>(color.b) << ", " << static_cast<int>(color.alpha) << "} }";
+        return s << "C: {" << static_cast<int>(color.r) << ", " << static_cast<int>(color.g) << ", " << static_cast<int>(color.b) << ", " << static_cast<int>(color.alpha) << "}";
     }
 };
 

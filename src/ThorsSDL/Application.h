@@ -97,7 +97,7 @@ class Application
         virtual void handleEventWindowHitTest(SDL_WindowEvent const& event);
         virtual void handleEventWindowICCProfChange(SDL_WindowEvent const& event);
         virtual void handleEventWindowDisplayChange(SDL_WindowEvent const& event);
-        virtual void handleEventWindowUnknown(SDL_WindowEvent const& event);
+        virtual void handleEventWindowUnknown(SDL_WindowEvent const& /*event*/)                 {}
         virtual void handleEventSystemEvent(SDL_SysWMEvent const& /*event*/)                    {}
 
     /* Keyboard events          0x030*  */
