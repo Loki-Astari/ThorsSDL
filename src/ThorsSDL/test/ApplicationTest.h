@@ -18,7 +18,7 @@ struct Application ## Handler: public ThorsAnvil::UI::Application           \
         , count(count)                                                      \
         , eventType(eventType)                                              \
     {}                                                                      \
-    virtual void handleEvent ## Handler (EventType const& event){++count;eventType = event.type;}   \
+    virtual void handleEvent ## Handler (EventType const& event) override {++count;eventType = event.type;}   \
 };                                                                          \
                                                                             \
 TEST(ApplicationTest, CheckEventHandler ## Handler )                        \

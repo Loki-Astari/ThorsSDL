@@ -171,7 +171,7 @@ struct ApplicationQuitOrig: public ThorsAnvil::UI::Application
         , count(count)
         , eventType(eventType)
     {}
-    virtual void handleEventQuit(SDL_QuitEvent const& event){++count;eventType = event.type;}
+    virtual void handleEventQuit(SDL_QuitEvent const& event)    override {++count;eventType = event.type;}
 };
 
 TEST(ApplicationTest, CheckEventHandlerQuitOrig)
