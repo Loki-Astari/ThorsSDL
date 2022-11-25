@@ -162,6 +162,33 @@ TEST(ApplicationTest, PollNoEventsAndExit)
     EXPECT_EQ(0, eventCountGot);
 }
 
+TEST(ApplicationTest, EventLoopShouldNotThrowExceptionsButExitNormally)
+{
+    int initCallCount = 0;
+    int quitCallCount = 0;
+    int pollCount = 0;
+    int eventCountGot = -1;
+    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
+    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
+    MOCK_SYS(SDL_PollEvent,   [&pollCount](SDL_Event*){++pollCount;return 0;});
+
+    auto action = [&eventCountGot]()
+    {
+        ThorsAnvil::UI::Application     application;
+
+        application.eventLoop([](){}, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; throw std::runtime_error("Should be caught");});
+    };
+
+    EXPECT_NO_THROW(
+        action();
+    );
+
+    EXPECT_EQ(1, initCallCount);
+    EXPECT_EQ(1, quitCallCount);
+    EXPECT_EQ(1, pollCount);
+    EXPECT_EQ(0, eventCountGot);
+}
+
 struct ApplicationQuitOrig: public ThorsAnvil::UI::Application
 {
     int& count;
