@@ -12,7 +12,7 @@ class DebugApplication: public Application
     public:
         using Application::Application;
 
-    private:
+    protected:
         virtual void handleEventQuit(SDL_QuitEvent const& /*event*/) override;
         virtual void handleEventTerminating(SDL_CommonEvent const& /*event*/) override;
         virtual void handleEventLowMemory(SDL_CommonEvent const& /*event*/) override;
