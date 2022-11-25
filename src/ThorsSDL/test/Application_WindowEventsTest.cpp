@@ -1,6 +1,17 @@
 #include "gtest/gtest.h"
 #include "test/ApplicationTest.h"
 
+/*
+ * HANDLER_TEST defined in test/ApplicationTest.h
+ *
+ * Look in test/ApplicationTest.cpp to see a fully expanded version of this macro.
+ *
+ * The Type: ApplicationQuitOrig
+ * And Test: CheckEventHandlerQuitOrig
+ *
+ * are a fully expanded version of the macro to help in finding bugs.
+ */
+
 HANDLER_WIN_TEST(WindowShow, SDL_WindowEvent, SDL_WINDOWEVENT_SHOWN)
 HANDLER_WIN_TEST(WindowHide, SDL_WindowEvent, SDL_WINDOWEVENT_HIDDEN)
 HANDLER_WIN_TEST(WindowExpose, SDL_WindowEvent, SDL_WINDOWEVENT_EXPOSED)
