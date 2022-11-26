@@ -37,7 +37,6 @@ struct MocksSDLActions
     {
         static int winNumber = 0;
         ++winNumber;
-        std::cerr << "Created: " << winNumber << "\n";
         return reinterpret_cast<SDL_Window*>(winNumber);
     };
     std::function<void(SDL_Window*)>                                    mockSDL_DestroyWindow       = [](SDL_Window*){};
@@ -53,7 +52,7 @@ struct MocksSDLActions
     std::function<int(SDL_Renderer*, Uint8, Uint8, Uint8, Uint8)>       mockSDL_SetRenderDrawColor  = [](SDL_Renderer*, Uint8, Uint8, Uint8, Uint8){return 0;};
     std::function<int(SDL_Renderer*)>                                   mockSDL_RenderClear         = [](SDL_Renderer*){return 0;};
     std::function<void(SDL_Renderer*)>                                  mockSDL_RenderPresent       = [](SDL_Renderer*){};
-    std::function<Uint32(SDL_Window*)>                                  mockSDL_GetWindowID         = [](SDL_Window* w) -> Uint32 {std::cerr << "Get: " << w << "\n";return reinterpret_cast<std::uintptr_t>(w);};
+    std::function<Uint32(SDL_Window*)>                                  mockSDL_GetWindowID         = [](SDL_Window* w) -> Uint32 {return reinterpret_cast<std::uintptr_t>(w);};
     std::function<int(SDL_Renderer*, int, int)>                         mockSDL_RenderDrawPoint     = [](SDL_Renderer*, int, int){return 0;};
     std::function<int(SDL_Renderer*, SDL_Point const*, int)>            mockSDL_RenderDrawPoints    = [](SDL_Renderer*, SDL_Point const*, int){return 0;};
     std::function<int(SDL_Renderer*, int, int, int, int)>               mockSDL_RenderDrawLine      = [](SDL_Renderer*, int, int, int, int){return 0;};
