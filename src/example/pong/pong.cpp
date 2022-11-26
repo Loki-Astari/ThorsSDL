@@ -1,5 +1,6 @@
 #include "ThorsSDL/ThorsSDL.h"
 #include "ThorsSDL/DebugApplication.h"
+#include <vector>
 
 namespace UI = ThorsAnvil::UI;
 
@@ -25,42 +26,104 @@ class PongWindow: public UI::Window
             void moveRight()            { position.x = std::min(windowWidth - width, position.x + speed);}
             bool collision(UI::Pt& ball, UI::Pt& velocity) const
             {
-                if (position.contains(ball))
-                {
-                    velocity.y  = -velocity.y;
-                    ball.y = 2 * position.y - ball.y;
-                    return true;
-                }
-                return false;
+                bool hit = position.bounce(ball, velocity);
+                return hit;
             }
     };
     class Wall
     {
+        struct Brick
+        {
+            Brick(int x, int y, int w, int h, int cementSpace)
+                : drawRect{x, y, w, h}
+                , collisionRect{x, y, w + cementSpace, h + cementSpace}
+                , state(true)
+            {}
+            ThorsAnvil::UI::Rect    drawRect;
+            ThorsAnvil::UI::Rect    collisionRect;
+            bool                    state;
+        };
         int const   border          = 80;
         int const   cementSpace     = 3;
         int const   brickHeight     = 20;
         int const   bricksPerRow    = 20;
         int const   rowCount        = 10;
+        std::vector<std::vector<Brick>>  bricks;
         UI::Pen     pens[8]         = {{UI::C::black, UI::C::yellow}, {UI::C::black, UI::C::yellow}, {UI::C::black, UI::C::green}, {UI::C::black, UI::C::green},
                                        {UI::C::black, UI::C::grey}, {UI::C::black, UI::C::grey}, {UI::C::black, UI::C::antiquewhite}, {UI::C::black, UI::C::antiquewhite}
                                       };
         int const   brickWidth;
+        int const   offset;             // offset from left of screen.
         public:
             Wall(int windowWidth, int /*windowHeight*/)
-                : brickWidth(windowWidth / bricksPerRow)
-            {}
+                : brickWidth((windowWidth / bricksPerRow) - cementSpace)
+                , offset((windowWidth - ((brickWidth + cementSpace) * bricksPerRow)) / 2)
+            {
+                for (int row = 0; row < rowCount; ++row)
+                {
+                    bricks.emplace_back();
+                    for (int col = 0; col < bricksPerRow; ++col)
+                    {
+                        bricks[row].emplace_back(offset + col * (brickWidth + cementSpace), border + row * (brickHeight + cementSpace), brickWidth, brickHeight, cementSpace);
+                    }
+                }
+            }
             void draw(Window& window)
             {
                 for (int row = 0; row < rowCount; ++row)
                 {
                     for (int col = 0; col < bricksPerRow; ++col)
                     {
-                        pens[row % std::size(pens)].drawRect(window, {col * (brickWidth + cementSpace), border + row * (brickHeight + cementSpace), brickWidth, brickHeight});
+                        if (bricks[row][col].state)
+                        {
+                            pens[row % std::size(pens)].drawRect(window, bricks[row][col].drawRect);
+                        }
                     }
                 }
             }
-            bool collision(UI::Pt& /*ball*/, UI::Pt& /*velocity*/) const
+            bool collision(UI::Pt& ball, UI::Pt& velocity)
             {
+                bool hit = false;
+                while (doCollisionCheck(ball, velocity))
+                {
+                    hit = true;
+                    ball.y -= velocity.y;
+                    ball.x -= velocity.x;
+                }
+                if (hit)
+                {
+                    ball.y += velocity.y;
+                    ball.x += velocity.x;
+                }
+                return hit;
+            }
+            bool doCollisionCheck(UI::Pt& ball, UI::Pt& velocity)
+            {
+                int col = ball.x / (brickWidth + cementSpace);
+                int row = (ball.y - border) / (brickHeight + cementSpace);
+
+                for (int r = -1; r < 2; ++r)
+                {
+                    int testRow = row + r;
+                    for (int c = -1; c < 2; ++c)
+                    {
+                        int testCol = col + c;
+                        if (   (testRow < 0 || testRow >= rowCount)
+                            || (testCol < 0 || testCol >= bricksPerRow)
+                            || (testCol == 0 && testRow == 0)
+                            || (!bricks[testRow][testCol].state)
+                           )
+                        {
+                            continue;
+                        }
+                        if (bricks[testRow][testCol].collisionRect.bounce(ball, velocity))
+                        {
+                            bricks[testRow][testCol].state = false;
+                            return true;
+                        }
+                    }
+                }
+
                 return false;
             }
     };
@@ -87,21 +150,24 @@ class PongWindow: public UI::Window
             void draw(Window& window)   { pen.drawRect(window, {pos.x - radius, pos.y - radius, 2*radius, 2*radius});}
             bool move()
             {
-                pos.x += velocity.x;
-                pos.y += velocity.y;
-                if (paddle.collision(pos, velocity))
-                {   // Do Nothing
+                if (!paddle.collision(pos, velocity) && !wall.collision(pos, velocity))
+                {
+                    // Did not hit paddle or wall so advance.
+                    // Note:    if the ball hit the paddle or wall then its position has already
+                    //          been updated.
+                    pos.x += velocity.x;
+                    pos.y += velocity.y;
                 }
-                else if (wall.collision(pos, velocity))
-                {   // Do Nothing
-                }
-                else if (pos.y < 0)
+
+                // Check with collision with walls.
+                if (pos.y < 0)
                 {
                     pos.y       = (pos.y < 0 ? 0 : 2 * windowHeight) - pos.y;
                     velocity.y  = -velocity.y;
                 }
                 else if (pos.y > windowHeight)
                 {
+                    // Ball fell of the bottom of the screen
                     return false;
                 }
                 if ((pos.x < 0) || (pos.x > windowWidth))
