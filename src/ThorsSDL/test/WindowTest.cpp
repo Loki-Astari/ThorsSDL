@@ -2,34 +2,8 @@
 
 TEST(WindowTest, WindowConstruction)
 {
-    MOCK_SYS(SDL_Init,        [](Uint32){return 0;});
-    MOCK_SYS(SDL_Quit,        [](){});
-    MOCK_SYS(SDL_PollEvent,   [](SDL_Event*){return 0;});
-
-    int createWindow = 0;
-    int createRender = 0;
-    int destroyWindow = 0;
-    int destroyRender = 0;
-    int windowId = 0;
-    auto createWindowMock       = [&createWindow](char const*, Uint32, Uint32, Uint32, Uint32, Uint32) -> SDL_Window* {++createWindow;return reinterpret_cast<SDL_Window*>(createWindow);};
-    auto destroyWindowMock      = [&destroyWindow](SDL_Window*){++destroyWindow;};
-    auto createRendererMock     = [&createRender](SDL_Window*, Uint32, Uint32) -> SDL_Renderer* {++createRender;return reinterpret_cast<SDL_Renderer*>(createRender);};
-    auto destroyRendererMock    = [&destroyRender](SDL_Renderer*){++destroyRender;};
-    auto setHintMock            = [](char const*, char const*) { return  SDL_TRUE;}; // SDL_FALSE on not working
-    auto setRenderDrawColorMock = [](SDL_Renderer*, Uint8, Uint8, Uint8, Uint8){ return 0;}; // -1 failure
-    auto renderClearMock        = [](SDL_Renderer*){ return 0;}; // -1 failure.
-    auto renderPresentMock      = [](SDL_Renderer*){};
-    auto getWindowIdMock        = [&windowId](SDL_Window* win) -> Uint32 {++windowId;return reinterpret_cast<std::uintptr_t>(win);};
-
-    MOCK_SYS(SDL_CreateWindow,      createWindowMock);
-    MOCK_SYS(SDL_DestroyWindow,     destroyWindowMock);
-    MOCK_SYS(SDL_CreateRenderer,    createRendererMock);
-    MOCK_SYS(SDL_DestroyRenderer,   destroyRendererMock);
-    MOCK_SYS(SDL_SetHint,           setHintMock);
-    MOCK_SYS(SDL_SetRenderDrawColor,setRenderDrawColorMock);
-    MOCK_SYS(SDL_RenderClear,       renderClearMock);
-    MOCK_SYS(SDL_RenderPresent,     renderPresentMock);
-    MOCK_SYS(SDL_GetWindowID,       getWindowIdMock);
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -41,43 +15,17 @@ TEST(WindowTest, WindowConstruction)
         action();
     );
 
-    EXPECT_EQ(1, createWindow);
-    EXPECT_EQ(1, destroyWindow);
-    EXPECT_EQ(1, createRender);
-    EXPECT_EQ(1, destroyRender);
-    EXPECT_EQ(2, windowId);
+    EXPECT_EQ(1, actions.countSDL_CreateWindow);
+    EXPECT_EQ(1, actions.countSDL_DestroyWindow);
+    EXPECT_EQ(1, actions.countSDL_CreateRenderer);
+    EXPECT_EQ(1, actions.countSDL_DestroyRenderer);
+    EXPECT_EQ(2, actions.countSDL_GetWindowID);
 }
 
 TEST(WindowTest, WindowConstruction_WindowCreateFails)
 {
-    MOCK_SYS(SDL_Init,        [](Uint32){return 0;});
-    MOCK_SYS(SDL_Quit,        [](){});
-    MOCK_SYS(SDL_PollEvent,   [](SDL_Event*){return 0;});
-
-    int createWindow = 0;
-    int createRender = 0;
-    int destroyWindow = 0;
-    int destroyRender = 0;
-    int windowId = 0;
-    auto createWindowMock       = [&createWindow](char const*, Uint32, Uint32, Uint32, Uint32, Uint32) -> SDL_Window* {++createWindow;return nullptr;};
-    auto destroyWindowMock      = [&destroyWindow](SDL_Window*){++destroyWindow;};
-    auto createRendererMock     = [&createRender](SDL_Window*, Uint32, Uint32) -> SDL_Renderer* {++createRender;return reinterpret_cast<SDL_Renderer*>(createRender);};
-    auto destroyRendererMock    = [&destroyRender](SDL_Renderer*){++destroyRender;};
-    auto setHintMock            = [](char const*, char const*) { return  SDL_TRUE;}; // SDL_FALSE on not working
-    auto setRenderDrawColorMock = [](SDL_Renderer*, Uint8, Uint8, Uint8, Uint8){ return 0;}; // -1 failure
-    auto renderClearMock        = [](SDL_Renderer*){ return 0;}; // -1 failure.
-    auto renderPresentMock      = [](SDL_Renderer*){};
-    auto getWindowIdMock        = [&windowId](SDL_Window* win) -> Uint32 {++windowId;return reinterpret_cast<std::uintptr_t>(win);};
-
-    MOCK_SYS(SDL_CreateWindow,      createWindowMock);
-    MOCK_SYS(SDL_DestroyWindow,     destroyWindowMock);
-    MOCK_SYS(SDL_CreateRenderer,    createRendererMock);
-    MOCK_SYS(SDL_DestroyRenderer,   destroyRendererMock);
-    MOCK_SYS(SDL_SetHint,           setHintMock);
-    MOCK_SYS(SDL_SetRenderDrawColor,setRenderDrawColorMock);
-    MOCK_SYS(SDL_RenderClear,       renderClearMock);
-    MOCK_SYS(SDL_RenderPresent,     renderPresentMock);
-    MOCK_SYS(SDL_GetWindowID,       getWindowIdMock);
+    MocksSDLActions     actions{.mockSDL_CreateWindow = [](char const*, int, int, int, int, Uint32) {return nullptr;}};
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -90,43 +38,17 @@ TEST(WindowTest, WindowConstruction_WindowCreateFails)
         std::runtime_error
     );
 
-    EXPECT_EQ(1, createWindow);
-    EXPECT_EQ(0, destroyWindow);
-    EXPECT_EQ(0, createRender);
-    EXPECT_EQ(0, destroyRender);
-    EXPECT_EQ(0, windowId);
+    EXPECT_EQ(1, actions.countSDL_CreateWindow);
+    EXPECT_EQ(0, actions.countSDL_DestroyWindow);
+    EXPECT_EQ(0, actions.countSDL_CreateRenderer);
+    EXPECT_EQ(0, actions.countSDL_DestroyRenderer);
+    EXPECT_EQ(0, actions.countSDL_GetWindowID);
 }
 
 TEST(WindowTest, WindowConstruction_RenderCreateFails)
 {
-    MOCK_SYS(SDL_Init,        [](Uint32){return 0;});
-    MOCK_SYS(SDL_Quit,        [](){});
-    MOCK_SYS(SDL_PollEvent,   [](SDL_Event*){return 0;});
-
-    int createWindow = 0;
-    int createRender = 0;
-    int destroyWindow = 0;
-    int destroyRender = 0;
-    int windowId = 0;
-    auto createWindowMock       = [&createWindow](char const*, Uint32, Uint32, Uint32, Uint32, Uint32) -> SDL_Window* {++createWindow;return reinterpret_cast<SDL_Window*>(createWindow);};
-    auto destroyWindowMock      = [&destroyWindow](SDL_Window*){++destroyWindow;};
-    auto createRendererMock     = [&createRender](SDL_Window*, Uint32, Uint32) -> SDL_Renderer* {++createRender;return nullptr;};
-    auto destroyRendererMock    = [&destroyRender](SDL_Renderer*){++destroyRender;};
-    auto setHintMock            = [](char const*, char const*) { return  SDL_TRUE;}; // SDL_FALSE on not working
-    auto setRenderDrawColorMock = [](SDL_Renderer*, Uint8, Uint8, Uint8, Uint8){ return 0;}; // -1 failure
-    auto renderClearMock        = [](SDL_Renderer*){ return 0;}; // -1 failure.
-    auto renderPresentMock      = [](SDL_Renderer*){};
-    auto getWindowIdMock        = [&windowId](SDL_Window* win) -> Uint32 {++windowId;return reinterpret_cast<std::uintptr_t>(win);};
-
-    MOCK_SYS(SDL_CreateWindow,      createWindowMock);
-    MOCK_SYS(SDL_DestroyWindow,     destroyWindowMock);
-    MOCK_SYS(SDL_CreateRenderer,    createRendererMock);
-    MOCK_SYS(SDL_DestroyRenderer,   destroyRendererMock);
-    MOCK_SYS(SDL_SetHint,           setHintMock);
-    MOCK_SYS(SDL_SetRenderDrawColor,setRenderDrawColorMock);
-    MOCK_SYS(SDL_RenderClear,       renderClearMock);
-    MOCK_SYS(SDL_RenderPresent,     renderPresentMock);
-    MOCK_SYS(SDL_GetWindowID,       getWindowIdMock);
+    MocksSDLActions     actions{.mockSDL_CreateRenderer = [](SDL_Window*, int, Uint32) {return nullptr;}};
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -139,43 +61,17 @@ TEST(WindowTest, WindowConstruction_RenderCreateFails)
         std::runtime_error
     );
 
-    EXPECT_EQ(1, createWindow);
-    EXPECT_EQ(1, destroyWindow);
-    EXPECT_EQ(1, createRender);
-    EXPECT_EQ(0, destroyRender);
-    EXPECT_EQ(0, windowId);
+    EXPECT_EQ(1, actions.countSDL_CreateWindow);
+    EXPECT_EQ(1, actions.countSDL_DestroyWindow);
+    EXPECT_EQ(1, actions.countSDL_CreateRenderer);
+    EXPECT_EQ(0, actions.countSDL_DestroyRenderer);
+    EXPECT_EQ(0, actions.countSDL_GetWindowID);
 }
 
 TEST(WindowTest, WindowMoveConstruction)
 {
-    MOCK_SYS(SDL_Init,        [](Uint32){return 0;});
-    MOCK_SYS(SDL_Quit,        [](){});
-    MOCK_SYS(SDL_PollEvent,   [](SDL_Event*){return 0;});
-
-    int createWindow = 0;
-    int createRender = 0;
-    int destroyWindow = 0;
-    int destroyRender = 0;
-    int windowId = 0;
-    auto createWindowMock       = [&createWindow](char const*, Uint32, Uint32, Uint32, Uint32, Uint32) -> SDL_Window* {++createWindow;return reinterpret_cast<SDL_Window*>(createWindow);};
-    auto destroyWindowMock      = [&destroyWindow](SDL_Window*){++destroyWindow;};
-    auto createRendererMock     = [&createRender](SDL_Window*, Uint32, Uint32) -> SDL_Renderer* {++createRender;return reinterpret_cast<SDL_Renderer*>(createRender);};
-    auto destroyRendererMock    = [&destroyRender](SDL_Renderer*){++destroyRender;};
-    auto setHintMock            = [](char const*, char const*) { return  SDL_TRUE;}; // SDL_FALSE on not working
-    auto setRenderDrawColorMock = [](SDL_Renderer*, Uint8, Uint8, Uint8, Uint8){ return 0;}; // -1 failure
-    auto renderClearMock        = [](SDL_Renderer*){ return 0;}; // -1 failure.
-    auto renderPresentMock      = [](SDL_Renderer*){};
-    auto getWindowIdMock        = [&windowId](SDL_Window* win) -> Uint32 {++windowId;return reinterpret_cast<std::uintptr_t>(win);};
-
-    MOCK_SYS(SDL_CreateWindow,      createWindowMock);
-    MOCK_SYS(SDL_DestroyWindow,     destroyWindowMock);
-    MOCK_SYS(SDL_CreateRenderer,    createRendererMock);
-    MOCK_SYS(SDL_DestroyRenderer,   destroyRendererMock);
-    MOCK_SYS(SDL_SetHint,           setHintMock);
-    MOCK_SYS(SDL_SetRenderDrawColor,setRenderDrawColorMock);
-    MOCK_SYS(SDL_RenderClear,       renderClearMock);
-    MOCK_SYS(SDL_RenderPresent,     renderPresentMock);
-    MOCK_SYS(SDL_GetWindowID,       getWindowIdMock);
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -188,43 +84,17 @@ TEST(WindowTest, WindowMoveConstruction)
         action();
     );
 
-    EXPECT_EQ(1, createWindow);
-    EXPECT_EQ(1, destroyWindow);
-    EXPECT_EQ(1, createRender);
-    EXPECT_EQ(1, destroyRender);
-    EXPECT_EQ(3, windowId);
+    EXPECT_EQ(1, actions.countSDL_CreateWindow);
+    EXPECT_EQ(1, actions.countSDL_DestroyWindow);
+    EXPECT_EQ(1, actions.countSDL_CreateRenderer);
+    EXPECT_EQ(1, actions.countSDL_DestroyRenderer);
+    EXPECT_EQ(3, actions.countSDL_GetWindowID);
 }
 
 TEST(WindowTest, WindowMoveAssignment)
 {
-    MOCK_SYS(SDL_Init,        [](Uint32){return 0;});
-    MOCK_SYS(SDL_Quit,        [](){});
-    MOCK_SYS(SDL_PollEvent,   [](SDL_Event*){return 0;});
-
-    int createWindow = 0;
-    int createRender = 0;
-    int destroyWindow = 0;
-    int destroyRender = 0;
-    int windowId = 0;
-    auto createWindowMock       = [&createWindow](char const*, Uint32, Uint32, Uint32, Uint32, Uint32) -> SDL_Window* {++createWindow;return reinterpret_cast<SDL_Window*>(createWindow);};
-    auto destroyWindowMock      = [&destroyWindow](SDL_Window*){++destroyWindow;};
-    auto createRendererMock     = [&createRender](SDL_Window*, Uint32, Uint32) -> SDL_Renderer* {++createRender;return reinterpret_cast<SDL_Renderer*>(createRender);};
-    auto destroyRendererMock    = [&destroyRender](SDL_Renderer*){++destroyRender;};
-    auto setHintMock            = [](char const*, char const*) { return  SDL_TRUE;}; // SDL_FALSE on not working
-    auto setRenderDrawColorMock = [](SDL_Renderer*, Uint8, Uint8, Uint8, Uint8){ return 0;}; // -1 failure
-    auto renderClearMock        = [](SDL_Renderer*){ return 0;}; // -1 failure.
-    auto renderPresentMock      = [](SDL_Renderer*){};
-    auto getWindowIdMock        = [&windowId](SDL_Window* win) -> Uint32 {++windowId;return reinterpret_cast<std::uintptr_t>(win);};
-
-    MOCK_SYS(SDL_CreateWindow,      createWindowMock);
-    MOCK_SYS(SDL_DestroyWindow,     destroyWindowMock);
-    MOCK_SYS(SDL_CreateRenderer,    createRendererMock);
-    MOCK_SYS(SDL_DestroyRenderer,   destroyRendererMock);
-    MOCK_SYS(SDL_SetHint,           setHintMock);
-    MOCK_SYS(SDL_SetRenderDrawColor,setRenderDrawColorMock);
-    MOCK_SYS(SDL_RenderClear,       renderClearMock);
-    MOCK_SYS(SDL_RenderPresent,     renderPresentMock);
-    MOCK_SYS(SDL_GetWindowID,       getWindowIdMock);
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -239,10 +109,10 @@ TEST(WindowTest, WindowMoveAssignment)
         action();
     );
 
-    EXPECT_EQ(2, createWindow);
-    EXPECT_EQ(2, destroyWindow);
-    EXPECT_EQ(2, createRender);
-    EXPECT_EQ(2, destroyRender);
-    EXPECT_EQ(5, windowId);
+    EXPECT_EQ(2, actions.countSDL_CreateWindow);
+    EXPECT_EQ(2, actions.countSDL_DestroyWindow);
+    EXPECT_EQ(2, actions.countSDL_CreateRenderer);
+    EXPECT_EQ(2, actions.countSDL_DestroyRenderer);
+    EXPECT_EQ(5, actions.countSDL_GetWindowID);
 }
 

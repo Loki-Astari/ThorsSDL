@@ -1,7 +1,7 @@
 #ifndef THORSANVIL_UI_TEST_APPLICATION_TEST_H
 #define THORSANVIL_UI_TEST_APPLICATION_TEST_H
 
-#include "coverage/ThorMock.h"
+#include "test/MockSDL.h"
 #include "DebugApplication.h"
 #include <stdexcept>
 
@@ -22,33 +22,26 @@ struct Application ## Handler: public ThorsAnvil::UI::DebugApplication      \
     {                                                                       \
         ++count;                                                            \
         eventType = event.type;                                             \
-        try { DebugApplication::handleEvent ## Handler(event); }catch(...){}     \
+        try { DebugApplication::handleEvent ## Handler(event); }catch(...){}\
     }                                                                       \
 };                                                                          \
                                                                             \
 TEST(ApplicationTest, CheckEventHandler ## Handler )                        \
 {                                                                           \
-    int initCallCount = 0;                                                  \
-    int quitCallCount = 0;                                                  \
-    int pollCount = 0;                                                      \
-    int eventCountGot = -1;                                                 \
-    int methodCall = 0;                                                     \
-    Uint32 eventEventId = 0;                                                \
-                                                                            \
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});  \
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});        \
-    MOCK_SYS(SDL_PollEvent,   [&pollCount](SDL_Event* event){               \
+    MocksSDLActions     actions{.mockSDL_PollEvent = [](SDL_Event* event){  \
         static int returnValue = 1;                                         \
-        EXPECT_NE(nullptr, event);                                          \
-        ++pollCount;                                                        \
         event->type = EventId;                                              \
         if constexpr (isWin)                                                \
         {                                                                   \
             event->window.event = winEventId;                               \
         }                                                                   \
         return returnValue--;                                               \
-    });                                                                     \
+    }};                                                                     \
+    MockSDL             mockActivate(actions);                              \
                                                                             \
+    int eventCountGot = -1;                                                 \
+    int methodCall = 0;                                                     \
+    Uint32 eventEventId = 0;                                                \
     auto action = [&eventCountGot, &methodCall, &eventEventId]()            \
     {                                                                       \
         Application ## Handler     application(methodCall, eventEventId);   \
@@ -60,9 +53,10 @@ TEST(ApplicationTest, CheckEventHandler ## Handler )                        \
         action();                                                           \
     );                                                                      \
                                                                             \
-    EXPECT_EQ(1, initCallCount);                                            \
-    EXPECT_EQ(1, quitCallCount);                                            \
-    EXPECT_EQ(2, pollCount);                                                \
+    EXPECT_EQ(1, actions.countSDL_Init);                                    \
+    EXPECT_EQ(1, actions.countSDL_Quit);                                    \
+    EXPECT_EQ(2, actions.countSDL_PollEvent);                               \
+                                                                            \
     EXPECT_EQ(1, eventCountGot);                                            \
     EXPECT_EQ(1, methodCall);                                               \
     EXPECT_EQ(EventId, eventEventId);                                       \

@@ -1,15 +1,14 @@
 #include "gtest/gtest.h"
-#include "coverage/ThorMock.h"
+#include "test/ApplicationTest.h"
 #include "Application.h"
 #include "Window.h"
 #include <stdexcept>
 
 TEST(ApplicationTest, CreateAnApplication)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
@@ -18,16 +17,15 @@ TEST(ApplicationTest, CreateAnApplication)
     EXPECT_NO_THROW(
         action()
     );
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Quit);
 }
 
 TEST(ApplicationTest, CreateTwoApplication)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+
     auto action = []()
     {
         ThorsAnvil::UI::Application     application1;
@@ -37,16 +35,14 @@ TEST(ApplicationTest, CreateTwoApplication)
         action(),
         std::runtime_error
     );
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Init);
 }
 
 TEST(ApplicationTest, SDL_InitFails)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return -1;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
+    MocksSDLActions     actions{.mockSDL_Init = [](Uint32){return -1;}};
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -57,18 +53,14 @@ TEST(ApplicationTest, SDL_InitFails)
         action(),
         std::runtime_error
     );
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(0, quitCallCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(0, actions.countSDL_Quit);
 }
 
 TEST(ApplicationTest, InitSubSystemOK)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    int subSysCallCount = 0;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
-    MOCK_SYS(SDL_InitSubSystem, [&subSysCallCount](Uint32){++subSysCallCount;return 0;});
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -81,19 +73,15 @@ TEST(ApplicationTest, InitSubSystemOK)
         action()
     );
 
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
-    EXPECT_EQ(1, subSysCallCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Quit);
+    EXPECT_EQ(1, actions.countSDL_InitSubSystem);
 }
 
 TEST(ApplicationTest, InitSubSystemFail)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    int subSysCallCount = 0;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
-    MOCK_SYS(SDL_InitSubSystem, [&subSysCallCount](Uint32){++subSysCallCount;return -1;});
+    MocksSDLActions     actions{.mockSDL_InitSubSystem = [](Uint32){return -1;}};;
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -106,19 +94,15 @@ TEST(ApplicationTest, InitSubSystemFail)
         action(),
         std::runtime_error
     );
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
-    EXPECT_EQ(1, subSysCallCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Quit);
+    EXPECT_EQ(1, actions.countSDL_InitSubSystem);
 }
 
 TEST(ApplicationTest, QuitSubSystemCalled)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    int subSysCallCount = 0;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
-    MOCK_SYS(SDL_QuitSubSystem, [&subSysCallCount](Uint32){++subSysCallCount;});
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
 
     auto action = []()
     {
@@ -131,21 +115,17 @@ TEST(ApplicationTest, QuitSubSystemCalled)
         action()
     );
 
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
-    EXPECT_EQ(1, subSysCallCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Quit);
+    EXPECT_EQ(1, actions.countSDL_QuitSubSystem);
 }
 
 TEST(ApplicationTest, PollNoEventsAndExit)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    int pollCount = 0;
-    int eventCountGot = -1;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
-    MOCK_SYS(SDL_PollEvent,   [&pollCount](SDL_Event*){++pollCount;return 0;});
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
 
+    int eventCountGot = -1;
     auto action = [&eventCountGot]()
     {
         ThorsAnvil::UI::Application     application;
@@ -157,22 +137,18 @@ TEST(ApplicationTest, PollNoEventsAndExit)
         action();
     );
 
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
-    EXPECT_EQ(1, pollCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Quit);
+    EXPECT_EQ(1, actions.countSDL_PollEvent);
     EXPECT_EQ(0, eventCountGot);
 }
 
 TEST(ApplicationTest, EventLoopShouldNotThrowExceptionsButExitNormally)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    int pollCount = 0;
-    int eventCountGot = -1;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
-    MOCK_SYS(SDL_PollEvent,   [&pollCount](SDL_Event*){++pollCount;return 0;});
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
 
+    int eventCountGot = -1;
     auto action = [&eventCountGot]()
     {
         ThorsAnvil::UI::Application     application;
@@ -184,47 +160,18 @@ TEST(ApplicationTest, EventLoopShouldNotThrowExceptionsButExitNormally)
         action();
     );
 
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
-    EXPECT_EQ(1, pollCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Quit);
+    EXPECT_EQ(1, actions.countSDL_PollEvent);
     EXPECT_EQ(0, eventCountGot);
 }
 
 TEST(ApplicationTest, CheckWindowIsRegisteredByCheckingCallsToGetWindowId)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    int pollCount = 0;
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+
     int eventCountGot = -1;
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
-    MOCK_SYS(SDL_PollEvent,   [&pollCount](SDL_Event*){++pollCount;return 0;});
-
-    int createWindow = 0;
-    int createRender = 0;
-    int destroyWindow = 0;
-    int destroyRender = 0;
-    int windowId = 0;
-    auto createWindowMock       = [&createWindow](char const*, Uint32, Uint32, Uint32, Uint32, Uint32) -> SDL_Window* {++createWindow;return reinterpret_cast<SDL_Window*>(1);};
-    auto destroyWindowMock      = [&destroyWindow](SDL_Window*){++destroyWindow;};
-    auto createRendererMock     = [&createRender](SDL_Window*, Uint32, Uint32) -> SDL_Renderer* {++createRender;return reinterpret_cast<SDL_Renderer*>(2);};
-    auto destroyRendererMock    = [&destroyRender](SDL_Renderer*){++destroyRender;};
-    auto setHintMock            = [](char const*, char const*) { return  SDL_TRUE;}; // SDL_FALSE on not working
-    auto setRenderDrawColorMock = [](SDL_Renderer*, Uint8, Uint8, Uint8, Uint8){ return 0;}; // -1 failure
-    auto renderClearMock        = [](SDL_Renderer*){ return 0;}; // -1 failure.
-    auto renderPresentMock      = [](SDL_Renderer*){};
-    auto getWindowIdMock        = [&windowId](SDL_Window*){++windowId;return 1;};
-
-    MOCK_SYS(SDL_CreateWindow,      createWindowMock);
-    MOCK_SYS(SDL_DestroyWindow,     destroyWindowMock);
-    MOCK_SYS(SDL_CreateRenderer,    createRendererMock);
-    MOCK_SYS(SDL_DestroyRenderer,   destroyRendererMock);
-    MOCK_SYS(SDL_SetHint,           setHintMock);
-    MOCK_SYS(SDL_SetRenderDrawColor,setRenderDrawColorMock);
-    MOCK_SYS(SDL_RenderClear,       renderClearMock);
-    MOCK_SYS(SDL_RenderPresent,     renderPresentMock);
-    MOCK_SYS(SDL_GetWindowID,       getWindowIdMock);
-
     auto action = [&eventCountGot]()
     {
         ThorsAnvil::UI::Application     application;
@@ -237,15 +184,15 @@ TEST(ApplicationTest, CheckWindowIsRegisteredByCheckingCallsToGetWindowId)
         action();
     );
 
-    EXPECT_EQ(1, createWindow);
-    EXPECT_EQ(1, destroyWindow);
-    EXPECT_EQ(1, createRender);
-    EXPECT_EQ(1, destroyRender);
-    EXPECT_EQ(2, windowId);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Quit);
+    EXPECT_EQ(1, actions.countSDL_PollEvent);
+    EXPECT_EQ(1, actions.countSDL_CreateWindow);
+    EXPECT_EQ(1, actions.countSDL_DestroyWindow);
+    EXPECT_EQ(1, actions.countSDL_CreateRenderer);
+    EXPECT_EQ(1, actions.countSDL_DestroyRenderer);
+    EXPECT_EQ(2, actions.countSDL_GetWindowID);
 
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
-    EXPECT_EQ(1, pollCount);
     EXPECT_EQ(0, eventCountGot);
 }
 
@@ -263,23 +210,16 @@ struct ApplicationQuitOrig: public ThorsAnvil::UI::Application
 
 TEST(ApplicationTest, CheckEventHandlerQuitOrig)
 {
-    int initCallCount = 0;
-    int quitCallCount = 0;
-    int pollCount = 0;
+    MocksSDLActions     actions{.mockSDL_PollEvent = [](SDL_Event* event){
+        static int returnValue = 1;
+        event->type = SDL_QUIT;
+        return returnValue--;
+    }};
+    MockSDL             mockActivate(actions);
+
     int eventCountGot = -1;
     int methodCall = 0;
     Uint32 eventType = 0;
-
-    MOCK_SYS(SDL_Init,        [&initCallCount](Uint32){++initCallCount;return 0;});
-    MOCK_SYS(SDL_Quit,        [&quitCallCount](){++quitCallCount;});
-    MOCK_SYS(SDL_PollEvent,   [&pollCount](SDL_Event* event){
-        static int returnValue = 1;
-        EXPECT_NE(nullptr, event);
-        ++pollCount;
-        event->type = SDL_QUIT;
-        return returnValue--;
-    });
-
     auto action = [&eventCountGot, &methodCall, &eventType]()
     {
         ApplicationQuitOrig     application(methodCall, eventType);
@@ -291,9 +231,10 @@ TEST(ApplicationTest, CheckEventHandlerQuitOrig)
         action();
     );
 
-    EXPECT_EQ(1, initCallCount);
-    EXPECT_EQ(1, quitCallCount);
-    EXPECT_EQ(2, pollCount);
+    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.countSDL_Quit);
+    EXPECT_EQ(2, actions.countSDL_PollEvent);
+
     EXPECT_EQ(1, eventCountGot);
     EXPECT_EQ(1, methodCall);
     EXPECT_EQ(SDL_QUIT, eventType);
