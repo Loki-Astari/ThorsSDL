@@ -85,6 +85,11 @@ void Window::destroy()
     }
 }
 
+Uint32 Window::getId() const
+{
+    return SDL_GetWindowID(window);
+}
+
 void Window::draw()
 {
     Color const& background = getBackgroundColor();

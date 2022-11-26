@@ -155,7 +155,7 @@ class Window: public WindowEventHandler
 
     public:
         void    draw();
-        Uint32  getId() const   {return SDL_GetWindowID(window);}
+        Uint32  getId() const;
 
     private:
         virtual Color   getBackgroundColor() {return {96, 128, 255, 255};}
