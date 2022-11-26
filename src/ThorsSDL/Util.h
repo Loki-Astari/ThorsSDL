@@ -28,7 +28,7 @@ struct Rect: SDL_Rect
     bool yIntersect(Rect const& rect)   const   { return (rect.y < y && (rect.y + rect.h) >= y) || (rect.y >= y && rect.y < (y + h));}
     bool intersect(Rect const& rect)    const   { return xIntersect(rect) && yIntersect(rect);}
 
-    CollisionPoint collision(Pt const& point, Pt const& vel)
+    CollisionPoint collision(Pt const& point, Pt const& vel) const
     {
         int     leftIntersect   = point.y + ((x - point.x + 1) * vel.y / std::abs(vel.x));
         bool    hitLeft         = (point.x < x && (point.x + vel.x) >= x)
@@ -58,6 +58,33 @@ struct Rect: SDL_Rect
         {
             return hitTop ? Top : hitBottom ? Bot : Miss;
         }
+    }
+    bool bounce(UI::Pt& point, UI::Pt& velocity) const
+    {
+        CollisionPoint hit = collision(point, velocity);
+        switch (hit)
+        {
+            case TopLeft:
+            case TopRight:
+            case BotRight:
+            case BotLeft:
+                velocity.x = -velocity.x;
+                velocity.y = -velocity.y;
+                return true;
+            case Top:
+            case Bot:
+                velocity.y = -velocity.y;
+                point.x     += velocity.x;
+                return true;
+            case Right:
+            case Left:
+                velocity.x = -velocity.x;
+                point.y     += velocity.y;
+                return true;
+            case Miss:
+                break;
+        }
+        return false;
     }
 
     friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Rect const& rect)
