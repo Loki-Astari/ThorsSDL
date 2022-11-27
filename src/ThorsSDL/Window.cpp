@@ -24,9 +24,9 @@ RenderState::operator Uint32() const
 }
 
 Window::Window(Application& application, std::string const& title, Rect const& rect, WindowState const& winState, RenderState const& renState)
-    : application(application)
+    : DrawContext(nullptr)
+    , application(application)
     , window(nullptr)
-    , renderer(nullptr)
 {
     window  = SDL_CreateWindow(title.c_str(), rect.x, rect.y, rect.w, rect.h, winState);
     if (window == nullptr)
@@ -36,11 +36,14 @@ Window::Window(Application& application, std::string const& title, Rect const& r
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    renderer = SDL_CreateRenderer(window, -1, renState);
-    if (renderer == nullptr)
+    try
+    {
+        static_cast<DrawContext&>(*this) = DrawContext(window, renState);
+    }
+    catch (...)
     {
         SDL_DestroyWindow(window);
-        throw std::runtime_error("Failed to create renderer");
+        throw;
     }
 
     application.registerWindow(*this);
@@ -52,12 +55,11 @@ Window::~Window()
 }
 
 Window::Window(Window&& move) noexcept
-    : application(move.application)
+    : DrawContext(std::move(move))
+    , application(move.application)
     , window(nullptr)
-    , renderer(nullptr)
 {
     std::swap(window,   move.window);
-    std::swap(renderer, move.renderer);
     application.registerWindow(*this);
 }
 
@@ -66,7 +68,7 @@ Window& Window::operator=(Window&& move) noexcept
     destroy();
 
     window = std::exchange(move.window, nullptr);
-    renderer = std::exchange(move.renderer, nullptr);
+    static_cast<DrawContext&>(*this) = std::move(move);
 
     application.registerWindow(*this);
     return *this;
@@ -74,10 +76,6 @@ Window& Window::operator=(Window&& move) noexcept
 
 void Window::destroy()
 {
-    if (renderer != nullptr)
-    {
-        SDL_DestroyRenderer(renderer);
-    }
     if (window != nullptr)
     {
         application.unregisterWindow(*this);
@@ -94,10 +92,10 @@ void Window::draw()
 {
     Color const& background = getBackgroundColor();
 
-    SDL_SetRenderDrawColor(renderer, background.r, background.g, background.b, background.alpha);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(getSurface(), background.r, background.g, background.b, background.alpha);
+    SDL_RenderClear(getSurface());
     doDraw();
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(getSurface());
 }
 
 void Window::doDraw()

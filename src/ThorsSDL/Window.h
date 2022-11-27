@@ -2,6 +2,7 @@
 #define THORSANVIL_UI_WINDOW_H
 
 #include "ThorsSDLConfig.h"
+#include "DrawContext.h"
 #include "Util.h"
 #include <SDL.h>
 #include <string>
@@ -68,35 +69,6 @@ struct WindowState
     }
 };
 
-/*
-Renderer Flags:
-===============
-    SDL_RENDERER_SOFTWARE         The renderer is a software fallback
-    SDL_RENDERER_ACCELERATED      The renderer uses hardware acceleration
-    SDL_RENDERER_PRESENTVSYNC     Present is synchronized with the refresh rate
-    SDL_RENDERER_TARGETTEXTURE    The renderer supports rendering to text
-*/
-
-struct RenderState
-{
-    bool    software    = false;
-    bool    accelerated = true;
-    bool    presentSync = false;
-    bool    targetText  = false;
-
-    operator Uint32 () const;
-
-    friend std::ostream& operator<<(std::ostream& s, RenderState const& rs)
-    {
-        return s    << "{\n"
-                    << "Software:    " << rs.software       << " " << (rs.software ? SDL_RENDERER_SOFTWARE : 0)        << "\n"
-                    << "accelerated: " << rs.accelerated    << " " << (rs.accelerated ? SDL_RENDERER_ACCELERATED : 0)  << "\n"
-                    << "presentSync: " << rs.presentSync    << " " << (rs.presentSync ? SDL_RENDERER_PRESENTVSYNC : 0) << "\n"
-                    << "targetText:  " << rs.targetText     << " " << (rs.targetText ? SDL_RENDERER_TARGETTEXTURE : 0) << "\n"
-                    << "}";
-    }
-};
-
 class Application;
 
 class WindowEventHandler
@@ -140,7 +112,7 @@ class WindowEventHandler
         virtual void handleEventMouseWheel(SDL_MouseWheelEvent const& /*event*/)                {}
 };
 
-class Window: public WindowEventHandler
+class Window: public WindowEventHandler, public DrawContext
 {
     public:
         Window(Application& application, std::string const& title, Rect const& rect, WindowState const& winState = {}, RenderState const& renState = {});
@@ -162,12 +134,8 @@ class Window: public WindowEventHandler
         virtual void    doDraw();
 
     private:
-        friend class Pen;
-        SDL_Renderer* getSurface() const {return renderer;}
-    private:
         Application&    application;
         SDL_Window*     window;
-        SDL_Renderer*   renderer;
 };
 
 class DebugWindow: public Window

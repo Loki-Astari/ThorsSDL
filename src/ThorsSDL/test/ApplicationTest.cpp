@@ -130,7 +130,7 @@ TEST(ApplicationTest, PollNoEventsAndExit)
     {
         ThorsAnvil::UI::Application     application;
 
-        application.eventLoop(60, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});
+        application.eventLoop(10000, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});
     };
 
     EXPECT_NO_THROW(
@@ -153,7 +153,7 @@ TEST(ApplicationTest, EventLoopShouldNotThrowExceptionsButExitNormally)
     {
         ThorsAnvil::UI::Application     application;
 
-        application.eventLoop(60, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; throw std::runtime_error("Should be caught");});
+        application.eventLoop(10000, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; throw std::runtime_error("Should be caught");});
     };
 
     EXPECT_NO_THROW(
@@ -177,7 +177,7 @@ TEST(ApplicationTest, CheckWindowIsRegisteredByCheckingCallsToGetWindowId)
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
 
-        application.eventLoop(60, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});
+        application.eventLoop(10000, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});
     };
 
     EXPECT_NO_THROW(
@@ -224,7 +224,7 @@ TEST(ApplicationTest, CheckEventHandlerQuitOrig)
     {
         ApplicationQuitOrig     application(methodCall, eventType);
 
-        application.eventLoop(60, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});
+        application.eventLoop(10000, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});
     };
 
     EXPECT_NO_THROW(

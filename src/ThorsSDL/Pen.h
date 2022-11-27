@@ -52,7 +52,7 @@ namespace ThorsAnvil::UI
         SDL_RenderTargetSupported
 */
 
-class Window;
+class DrawContext;
 class Pen
 {
     public:
@@ -62,13 +62,13 @@ class Pen
 
     public:
         // Basic Drawing
-        Pen const& drawPoint(Window& window, Pt const& point) const;                     // SDL_RenderDrawPoint
-        Pen const& drawLine(Window& window, Pt const& start, Pt const& end) const;       // SDL_RenderDrawLine
-        Pen const& drawRect(Window& window, Rect const& rect) const;                     // SDL_RenderDrawRect / SDL_RenderFillRect
+        Pen const& drawPoint(DrawContext& drawContext, Pt const& point) const;                     // SDL_RenderDrawPoint
+        Pen const& drawLine(DrawContext& drawContext, Pt const& start, Pt const& end) const;       // SDL_RenderDrawLine
+        Pen const& drawRect(DrawContext& drawContext, Rect const& rect) const;                     // SDL_RenderDrawRect / SDL_RenderFillRect
 
-        Pen const& drawPoints(Window& window, std::initializer_list<Pt> points) const;   // SDL_RenderDrawPoints
-        Pen const& drawLines(Window& window, std::initializer_list<Pt> points) const;    // SDL_RenderDrawLines
-        Pen const& drawRects(Window& window, std::initializer_list<Rect> rects) const;   // SDL_RenderDrawRects / SDL_RenderFillRects
+        Pen const& drawPoints(DrawContext& drawContext, std::initializer_list<Pt> points) const;   // SDL_RenderDrawPoints
+        Pen const& drawLines(DrawContext& drawContext, std::initializer_list<Pt> points) const;    // SDL_RenderDrawLines
+        Pen const& drawRects(DrawContext& drawContext, std::initializer_list<Rect> rects) const;   // SDL_RenderDrawRects / SDL_RenderFillRects
 
         // Advanced Drawing
         // void drawGeometry: SDL_RenderGeometry
