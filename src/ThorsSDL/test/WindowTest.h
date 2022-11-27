@@ -57,7 +57,7 @@ TEST(WindowTest, CheckEventHandler ## Handler)                                  
         Window ## Handler               window(application, count, eventType, winEventType);    \
         windowId = window.getId();                                              \
                                                                                 \
-        application.eventLoop([](){}, [&application](int){application.exitLoop();});            \
+        application.eventLoop(60, [&application](int){application.exitLoop();});            \
     };                                                                          \
                                                                                 \
     EXPECT_NO_THROW(                                                            \

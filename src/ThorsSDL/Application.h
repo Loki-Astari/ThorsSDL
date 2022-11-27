@@ -56,7 +56,7 @@ class Application
         void initSubSystem(InitValue init);
         void quitSubSystem(InitValue init);
 
-        void eventLoop(std::function<void()>&& action, std::function<void(int)>&& eventDone = [](int){});
+        void eventLoop(int fps, std::function<void(int)>&& eventDone = [](int){});
         void exitLoop();
 
     private:

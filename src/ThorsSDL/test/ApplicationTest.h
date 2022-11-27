@@ -46,7 +46,7 @@ TEST(ApplicationTest, CheckEventHandler ## Handler )                        \
     {                                                                       \
         Application ## Handler     application(methodCall, eventEventId);   \
                                                                             \
-        application.eventLoop([](){}, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});  \
+        application.eventLoop(60, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});  \
     };                                                                      \
                                                                             \
     EXPECT_NO_THROW(                                                        \

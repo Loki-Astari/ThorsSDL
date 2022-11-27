@@ -2,6 +2,7 @@
 #include "Window.h"
 #include <stdexcept>
 #include <iostream>
+#include <chrono>
 
 
 using namespace ThorsAnvil::UI;
@@ -43,16 +44,23 @@ void Application::quitSubSystem(InitValue init)
     SDL_QuitSubSystem(static_cast<Uint32>(init));
 }
 
-void Application::eventLoop(std::function<void()>&& action, std::function<void(int)>&& eventDone)
+void Application::eventLoop(int fps, std::function<void(int)>&& eventDone)
 {
+    static std::chrono::time_point lastUpdate = std::chrono::system_clock::now();
+    const int millisondsToWaitPerDrawCycle = 1000 / fps;
     userEventDone   = std::move(eventDone);
     try
     {
         while (!finished)
         {
             handleEvents();
-            drawWindows();
-            action();
+            std::chrono::time_point thisTime = std::chrono::system_clock::now();
+            std::chrono::milliseconds   diff = std::chrono::duration_cast<std::chrono::milliseconds>(thisTime - lastUpdate);
+            if (diff.count() > millisondsToWaitPerDrawCycle)
+            {
+                lastUpdate = thisTime;
+                drawWindows();
+            }
         }
     }
     catch (std::exception const& e)
