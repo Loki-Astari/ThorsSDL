@@ -2,8 +2,11 @@
 #define THORSANVIL_UI_DRAW_CONTEXT_H
 
 #include "ThorsSDLConfig.h"
+#include <SDL.h>
+#include <gtest/gtest_prod.h>
 #include <iostream>
 
+class DrawContextTest_GetSurface_Test;
 namespace ThorsAnvil::UI
 {
 
@@ -53,6 +56,7 @@ class DrawContext
     private:
         friend class Pen;
         friend class Window;
+        FRIEND_TEST(::DrawContextTest, GetSurface);
         SDL_Renderer* getSurface() const {return renderer;}
     private:
         SDL_Renderer*   renderer;

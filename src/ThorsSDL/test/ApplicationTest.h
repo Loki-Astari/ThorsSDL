@@ -53,9 +53,9 @@ TEST(ApplicationTest, CheckEventHandler ## Handler )                        \
         action();                                                           \
     );                                                                      \
                                                                             \
-    EXPECT_EQ(1, actions.countSDL_Init);                                    \
-    EXPECT_EQ(1, actions.countSDL_Quit);                                    \
-    EXPECT_EQ(2, actions.countSDL_PollEvent);                               \
+    EXPECT_EQ(1, actions.count[countSDL_Init]);                             \
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);                             \
+    EXPECT_EQ(2, actions.count[countSDL_PollEvent]);                        \
                                                                             \
     EXPECT_EQ(1, eventCountGot);                                            \
     EXPECT_EQ(1, methodCall);                                               \

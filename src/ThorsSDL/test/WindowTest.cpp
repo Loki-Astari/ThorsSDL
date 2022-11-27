@@ -15,11 +15,11 @@ TEST(WindowTest, WindowConstruction)
         action();
     );
 
-    EXPECT_EQ(1, actions.countSDL_CreateWindow);
-    EXPECT_EQ(1, actions.countSDL_DestroyWindow);
-    EXPECT_EQ(1, actions.countSDL_CreateRenderer);
-    EXPECT_EQ(1, actions.countSDL_DestroyRenderer);
-    EXPECT_EQ(2, actions.countSDL_GetWindowID);
+    EXPECT_EQ(1, actions.count[countSDL_CreateWindow]);
+    EXPECT_EQ(1, actions.count[countSDL_DestroyWindow]);
+    EXPECT_EQ(1, actions.count[countSDL_CreateRenderer]);
+    EXPECT_EQ(1, actions.count[countSDL_DestroyRenderer]);
+    EXPECT_EQ(2, actions.count[countSDL_GetWindowID]);
 }
 
 TEST(WindowTest, WindowConstruction_WindowCreateFails)
@@ -38,11 +38,11 @@ TEST(WindowTest, WindowConstruction_WindowCreateFails)
         std::runtime_error
     );
 
-    EXPECT_EQ(1, actions.countSDL_CreateWindow);
-    EXPECT_EQ(0, actions.countSDL_DestroyWindow);
-    EXPECT_EQ(0, actions.countSDL_CreateRenderer);
-    EXPECT_EQ(0, actions.countSDL_DestroyRenderer);
-    EXPECT_EQ(0, actions.countSDL_GetWindowID);
+    EXPECT_EQ(1, actions.count[countSDL_CreateWindow]);
+    EXPECT_EQ(0, actions.count[countSDL_DestroyWindow]);
+    EXPECT_EQ(0, actions.count[countSDL_CreateRenderer]);
+    EXPECT_EQ(0, actions.count[countSDL_DestroyRenderer]);
+    EXPECT_EQ(0, actions.count[countSDL_GetWindowID]);
 }
 
 TEST(WindowTest, WindowConstruction_RenderCreateFails)
@@ -61,11 +61,11 @@ TEST(WindowTest, WindowConstruction_RenderCreateFails)
         std::runtime_error
     );
 
-    EXPECT_EQ(1, actions.countSDL_CreateWindow);
-    EXPECT_EQ(1, actions.countSDL_DestroyWindow);
-    EXPECT_EQ(1, actions.countSDL_CreateRenderer);
-    EXPECT_EQ(0, actions.countSDL_DestroyRenderer);
-    EXPECT_EQ(0, actions.countSDL_GetWindowID);
+    EXPECT_EQ(1, actions.count[countSDL_CreateWindow]);
+    EXPECT_EQ(1, actions.count[countSDL_DestroyWindow]);
+    EXPECT_EQ(1, actions.count[countSDL_CreateRenderer]);
+    EXPECT_EQ(0, actions.count[countSDL_DestroyRenderer]);
+    EXPECT_EQ(0, actions.count[countSDL_GetWindowID]);
 }
 
 TEST(WindowTest, WindowMoveConstruction)
@@ -84,11 +84,11 @@ TEST(WindowTest, WindowMoveConstruction)
         action();
     );
 
-    EXPECT_EQ(1, actions.countSDL_CreateWindow);
-    EXPECT_EQ(1, actions.countSDL_DestroyWindow);
-    EXPECT_EQ(1, actions.countSDL_CreateRenderer);
-    EXPECT_EQ(1, actions.countSDL_DestroyRenderer);
-    EXPECT_EQ(3, actions.countSDL_GetWindowID);
+    EXPECT_EQ(1, actions.count[countSDL_CreateWindow]);
+    EXPECT_EQ(1, actions.count[countSDL_DestroyWindow]);
+    EXPECT_EQ(1, actions.count[countSDL_CreateRenderer]);
+    EXPECT_EQ(1, actions.count[countSDL_DestroyRenderer]);
+    EXPECT_EQ(3, actions.count[countSDL_GetWindowID]);
 }
 
 TEST(WindowTest, WindowMoveAssignment)
@@ -109,10 +109,10 @@ TEST(WindowTest, WindowMoveAssignment)
         action();
     );
 
-    EXPECT_EQ(2, actions.countSDL_CreateWindow);
-    EXPECT_EQ(2, actions.countSDL_DestroyWindow);
-    EXPECT_EQ(2, actions.countSDL_CreateRenderer);
-    EXPECT_EQ(2, actions.countSDL_DestroyRenderer);
-    EXPECT_EQ(5, actions.countSDL_GetWindowID);
+    EXPECT_EQ(2, actions.count[countSDL_CreateWindow]);
+    EXPECT_EQ(2, actions.count[countSDL_DestroyWindow]);
+    EXPECT_EQ(2, actions.count[countSDL_CreateRenderer]);
+    EXPECT_EQ(2, actions.count[countSDL_DestroyRenderer]);
+    EXPECT_EQ(5, actions.count[countSDL_GetWindowID]);
 }
 

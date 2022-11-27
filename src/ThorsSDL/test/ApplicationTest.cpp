@@ -17,8 +17,8 @@ TEST(ApplicationTest, CreateAnApplication)
     EXPECT_NO_THROW(
         action()
     );
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Quit);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
 }
 
 TEST(ApplicationTest, CreateTwoApplication)
@@ -35,8 +35,8 @@ TEST(ApplicationTest, CreateTwoApplication)
         action(),
         std::runtime_error
     );
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Init);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
 }
 
 TEST(ApplicationTest, SDL_InitFails)
@@ -53,8 +53,8 @@ TEST(ApplicationTest, SDL_InitFails)
         action(),
         std::runtime_error
     );
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(0, actions.countSDL_Quit);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(0, actions.count[countSDL_Quit]);
 }
 
 TEST(ApplicationTest, InitSubSystemOK)
@@ -73,9 +73,9 @@ TEST(ApplicationTest, InitSubSystemOK)
         action()
     );
 
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Quit);
-    EXPECT_EQ(1, actions.countSDL_InitSubSystem);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(1, actions.count[countSDL_InitSubSystem]);
 }
 
 TEST(ApplicationTest, InitSubSystemFail)
@@ -94,9 +94,9 @@ TEST(ApplicationTest, InitSubSystemFail)
         action(),
         std::runtime_error
     );
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Quit);
-    EXPECT_EQ(1, actions.countSDL_InitSubSystem);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(1, actions.count[countSDL_InitSubSystem]);
 }
 
 TEST(ApplicationTest, QuitSubSystemCalled)
@@ -115,9 +115,9 @@ TEST(ApplicationTest, QuitSubSystemCalled)
         action()
     );
 
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Quit);
-    EXPECT_EQ(1, actions.countSDL_QuitSubSystem);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(1, actions.count[countSDL_QuitSubSystem]);
 }
 
 TEST(ApplicationTest, PollNoEventsAndExit)
@@ -137,9 +137,9 @@ TEST(ApplicationTest, PollNoEventsAndExit)
         action();
     );
 
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Quit);
-    EXPECT_EQ(1, actions.countSDL_PollEvent);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(1, actions.count[countSDL_PollEvent]);
     EXPECT_EQ(0, eventCountGot);
 }
 
@@ -160,9 +160,9 @@ TEST(ApplicationTest, EventLoopShouldNotThrowExceptionsButExitNormally)
         action();
     );
 
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Quit);
-    EXPECT_EQ(1, actions.countSDL_PollEvent);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(1, actions.count[countSDL_PollEvent]);
     EXPECT_EQ(0, eventCountGot);
 }
 
@@ -184,14 +184,14 @@ TEST(ApplicationTest, CheckWindowIsRegisteredByCheckingCallsToGetWindowId)
         action();
     );
 
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Quit);
-    EXPECT_EQ(1, actions.countSDL_PollEvent);
-    EXPECT_EQ(1, actions.countSDL_CreateWindow);
-    EXPECT_EQ(1, actions.countSDL_DestroyWindow);
-    EXPECT_EQ(1, actions.countSDL_CreateRenderer);
-    EXPECT_EQ(1, actions.countSDL_DestroyRenderer);
-    EXPECT_EQ(2, actions.countSDL_GetWindowID);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(1, actions.count[countSDL_PollEvent]);
+    EXPECT_EQ(1, actions.count[countSDL_CreateWindow]);
+    EXPECT_EQ(1, actions.count[countSDL_DestroyWindow]);
+    EXPECT_EQ(1, actions.count[countSDL_CreateRenderer]);
+    EXPECT_EQ(1, actions.count[countSDL_DestroyRenderer]);
+    EXPECT_EQ(2, actions.count[countSDL_GetWindowID]);
 
     EXPECT_EQ(0, eventCountGot);
 }
@@ -231,9 +231,9 @@ TEST(ApplicationTest, CheckEventHandlerQuitOrig)
         action();
     );
 
-    EXPECT_EQ(1, actions.countSDL_Init);
-    EXPECT_EQ(1, actions.countSDL_Quit);
-    EXPECT_EQ(2, actions.countSDL_PollEvent);
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(2, actions.count[countSDL_PollEvent]);
 
     EXPECT_EQ(1, eventCountGot);
     EXPECT_EQ(1, methodCall);

@@ -46,7 +46,7 @@ void Application::quitSubSystem(InitValue init)
 
 void Application::eventLoop(int fps, std::function<void(int)>&& eventDone)
 {
-    static std::chrono::time_point<std::chrono::system_clock> lastUpdate;
+    static std::chrono::time_point<std::chrono::system_clock> lastUpdate{};
     const int millisondsToWaitPerDrawCycle = 1000 / fps;
     userEventDone   = std::move(eventDone);
     try
