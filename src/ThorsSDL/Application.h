@@ -65,6 +65,11 @@ class Application
         void unregisterWindow(Window& window);
         WindowEventHandler& getWindowHander(Uint32 windowId);
 
+    private:
+        int handleEvents();
+        void updateState(int eventCount);
+        void drawWindows();
+
     protected:
         virtual void handleEventQuit(SDL_QuitEvent const& /*event*/);
         virtual void handleEventTerminating(SDL_CommonEvent const& /*event*/)                   {}
@@ -176,11 +181,6 @@ class Application
     /* There is an event we don't know about */
         virtual void handleEventUnknown(SDL_CommonEvent const& /*event*/);
 
-    /* When all current events are handle Let the application knwo */
-        virtual void handleEventDone(int eventCount);
-    private:
-        void handleEvents();
-        void drawWindows();
 };
 
 }

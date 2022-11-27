@@ -1,5 +1,7 @@
 #include "ThorsSDL/ThorsSDL.h"
-#include "ThorsSDL/DebugApplication.h"
+#include "ThorsSDL/Application.h"
+#include "ThorsSDL/Window.h"
+#include "ThorsSDL/Sprite.h"
 #include <vector>
 
 namespace UI = ThorsAnvil::UI;
@@ -9,19 +11,21 @@ int constexpr           windowHeight    = 720;
 
 class PongWindow: public UI::Window
 {
-    class Paddle
+    class Paddle: public UI::Sprite
     {
         int const   speed           = 10;
         int const   height          = 18;
         int const   width           = 60;
         int const   border          = 4;
+        UI::Application& application;
         UI::Pen     pen{UI::C::black, UI::C::red};
         UI::Rect    position;
         public:
-            Paddle(int windowWidth, int windowHeight)
-                : position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
+            Paddle(UI::Application& application, UI::Window& window, int windowWidth, int windowHeight)
+                : Sprite(window, 15)
+                , application(application)
+                , position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
             {}
-            void draw(Window& window)   { pen.drawRect(window, position);}
             void moveLeft()             { position.x = std::max(0, position.x - speed);}
             void moveRight()            { position.x = std::min(windowWidth - width, position.x + speed);}
             bool collision(UI::Pt& ball, UI::Pt& velocity) const
@@ -29,31 +33,33 @@ class PongWindow: public UI::Window
                 bool hit = position.bounce(ball, velocity);
                 return hit;
             }
-            void move()
+            virtual void doDraw(DrawContext& context) override
             {
-                static std::chrono::time_point lastUpdate = std::chrono::system_clock::now();
-                std::chrono::time_point thisTime = std::chrono::system_clock::now();
-                std::chrono::milliseconds   diff = std::chrono::duration_cast<std::chrono::milliseconds>(thisTime - lastUpdate);
-                if (diff.count() <= 15)
-                {
-                    return;
-                }
-
+                pen.drawRect(context, position);
+            }
+            virtual bool doUpdateState() override
+            {
+                bool updated = false;
                 int numkeys = 0;
                 Uint8 const* keystates = SDL_GetKeyboardState(&numkeys);
                 if (keystates[SDL_SCANCODE_Q])
                 {
-                    lastUpdate = thisTime;
                     moveLeft();
+                    updated = true;
                 }
-                else if (keystates[SDL_SCANCODE_W])
+                if (keystates[SDL_SCANCODE_W])
                 {
-                    lastUpdate = thisTime;
                     moveRight();
+                    updated = true;
                 }
+                if (keystates[SDL_SCANCODE_P])
+                {
+                    application.exitLoop();
+                }
+                return updated;
             }
     };
-    class Wall
+    class Wall: public UI::Sprite
     {
         struct Brick
         {
@@ -62,8 +68,8 @@ class PongWindow: public UI::Window
                 , collisionRect{x, y, w + cementSpace, h + cementSpace}
                 , state(true)
             {}
-            ThorsAnvil::UI::Rect    drawRect;
-            ThorsAnvil::UI::Rect    collisionRect;
+            UI::Rect    drawRect;
+            UI::Rect    collisionRect;
             bool                    state;
         };
         int const   border          = 80;
@@ -78,8 +84,9 @@ class PongWindow: public UI::Window
         int const   brickWidth;
         int const   offset;             // offset from left of screen.
         public:
-            Wall(int windowWidth, int /*windowHeight*/)
-                : brickWidth((windowWidth / bricksPerRow) - cementSpace)
+            Wall(Window& window, int windowWidth, int /*windowHeight*/)
+                : Sprite(window, 10000)
+                , brickWidth((windowWidth / bricksPerRow) - cementSpace)
                 , offset((windowWidth - ((brickWidth + cementSpace) * bricksPerRow)) / 2)
             {
                 for (int row = 0; row < rowCount; ++row)
@@ -91,7 +98,8 @@ class PongWindow: public UI::Window
                     }
                 }
             }
-            void draw(Window& window)
+            virtual bool doUpdateState() override {return true;}
+            virtual void doDraw(DrawContext& window) override
             {
                 for (int row = 0; row < rowCount; ++row)
                 {
@@ -151,7 +159,7 @@ class PongWindow: public UI::Window
             }
     };
 
-    class Ball
+    class Ball: public UI::Sprite
     {
         int const       radius          = 5;
         int const       windowWidth;
@@ -162,26 +170,21 @@ class PongWindow: public UI::Window
         UI::Pt          pos;
         UI::Pt          velocity;
         public:
-            Ball(int windowWidth, int windowHeight, Paddle& paddle, Wall& wall)
-                : windowWidth(windowWidth)
+            Ball(Window& parent, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall)
+                : Sprite(parent, 15)
+                , windowWidth(windowWidth)
                 , windowHeight(windowHeight)
                 , paddle(paddle)
                 , wall(wall)
                 , pos{windowWidth / 2, windowHeight / 2}
                 , velocity{-4, -4}
             {}
-            void draw(Window& window)   { pen.drawRect(window, {pos.x - radius, pos.y - radius, 2*radius, 2*radius});}
-            bool move()
+            virtual void doDraw(DrawContext& context) override
             {
-                static std::chrono::time_point lastUpdate = std::chrono::system_clock::now();
-                std::chrono::time_point thisTime = std::chrono::system_clock::now();
-                std::chrono::milliseconds   diff = std::chrono::duration_cast<std::chrono::milliseconds>(thisTime - lastUpdate);
-                if (diff.count() <= 15)
-                {
-                    return true;
-                }
-                lastUpdate = thisTime;
-
+                pen.drawRect(context, {pos.x - radius, pos.y - radius, 2*radius, 2*radius});
+            }
+            virtual bool doUpdateState() override
+            {
                 if (!paddle.collision(pos, velocity) && !wall.collision(pos, velocity))
                 {
                     // Did not hit paddle or wall so advance.
@@ -197,21 +200,14 @@ class PongWindow: public UI::Window
                     pos.y       = (pos.y < 0 ? 0 : 2 * windowHeight) - pos.y;
                     velocity.y  = -velocity.y;
                 }
-                else if (pos.y > windowHeight)
-                {
-                    // Ball fell of the bottom of the screen
-                    return false;
-                }
                 if ((pos.x < 0) || (pos.x > windowWidth))
                 {
                     pos.x       = (pos.x < 0 ? 0 : 2 * windowWidth) - pos.x;
                     velocity.x  = -velocity.x;
                 }
-
                 return true;
             }
     };
-    UI::Application&    application;
     Paddle              paddle;
     Wall                wall;
     Ball                ball;
@@ -219,27 +215,10 @@ class PongWindow: public UI::Window
     public:
         PongWindow(UI::Application& application, std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(application, title, rect, winState, renState)
-            , application(application)
-            , paddle(rect.w, rect.h)
-            , wall(rect.w, rect.h)
-            , ball(rect.w, rect.h, paddle, wall)
+            , paddle(application, *this, rect.w, rect.h)
+            , wall(*this, rect.w, rect.h)
+            , ball(*this, rect.w, rect.h, paddle, wall)
         {}
-
-        // Called on each window after all events have been handled.
-        virtual void doDraw() override
-        {
-            paddle.draw(*this);
-            wall.draw(*this);
-            ball.draw(*this);
-        }
-        void update(int /*eventCount*/)
-        {
-            paddle.move();
-            if (!ball.move())
-            {
-                application.exitLoop();
-            }
-        }
 };
 
 
@@ -248,12 +227,5 @@ int main()
     UI::Application     application(UI::Video);
     PongWindow          window(application, "Pong v1.0", {UI::windowUndefinedPos, UI::windowUndefinedPos, windowWidth, windowHeight}, {.grabFocus = true});
 
-    application.eventLoop(60,
-        [&window](int eventCount)
-        {
-            // Runs as the last event handler.
-            // Chance to update the state before drawing.
-            window.update(eventCount);
-        }
-    );
+    application.eventLoop(60);
 }

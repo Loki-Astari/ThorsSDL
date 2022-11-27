@@ -7,6 +7,7 @@
 #include <SDL.h>
 #include <string>
 #include <iostream>
+#include <vector>
 
 namespace ThorsAnvil::UI
 {
@@ -69,7 +70,6 @@ struct WindowState
     }
 };
 
-class Application;
 
 class WindowEventHandler
 {
@@ -112,6 +112,8 @@ class WindowEventHandler
         virtual void handleEventMouseWheel(SDL_MouseWheelEvent const& /*event*/)                {}
 };
 
+class Application;
+class Sprite;
 class Window: public WindowEventHandler, public DrawContext
 {
     public:
@@ -126,6 +128,7 @@ class Window: public WindowEventHandler, public DrawContext
         void    destroy();
 
     public:
+        void    updateState();
         void    draw();
         Uint32  getId() const;
 
@@ -134,8 +137,14 @@ class Window: public WindowEventHandler, public DrawContext
         virtual void    doDraw();
 
     private:
-        Application&    application;
-        SDL_Window*     window;
+        friend class Sprite;
+        void    addSprite(Sprite& sprite);
+        void    remSprite(Sprite& sprite);
+
+    private:
+        Application&            application;
+        SDL_Window*             window;
+        std::vector<Sprite*>    sprites;
 };
 
 class DebugWindow: public Window

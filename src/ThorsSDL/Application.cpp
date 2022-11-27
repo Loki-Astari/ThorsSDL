@@ -49,11 +49,15 @@ void Application::eventLoop(int fps, std::function<void(int)>&& eventDone)
     static std::chrono::time_point<std::chrono::system_clock> lastUpdate{};
     const int millisondsToWaitPerDrawCycle = 1000 / fps;
     userEventDone   = std::move(eventDone);
+
     try
     {
         while (!finished)
         {
-            handleEvents();
+            int eventCount = handleEvents();
+
+            updateState(eventCount);
+
             std::chrono::time_point thisTime = std::chrono::system_clock::now();
             std::chrono::milliseconds   diff = std::chrono::duration_cast<std::chrono::milliseconds>(thisTime - lastUpdate);
             if (diff.count() > millisondsToWaitPerDrawCycle)
@@ -96,7 +100,25 @@ WindowEventHandler& Application::getWindowHander(Uint32 windowId)
     return defaultWindowHandler;
 }
 
-void Application::handleEvents()
+void Application::updateState(int eventCount)
+{
+    userEventDone(eventCount);
+
+    for (auto& window: windows)
+    {
+        window.second->updateState();
+    }
+}
+
+void Application::drawWindows()
+{
+    for (auto& window: windows)
+    {
+        window.second->draw();
+    }
+}
+
+int Application::handleEvents()
 {
     int count = 0;
     SDL_Event event;
@@ -224,7 +246,7 @@ void Application::handleEvents()
             default:                            handleEventUnknown(event.common);               break;  // SDL_CommonEvent
         }
     }
-    handleEventDone(count);
+    return count;
 }
 
 void Application::handleEventQuit(SDL_QuitEvent const& /*event*/)
@@ -236,14 +258,6 @@ void Application::handleEventUnknown(SDL_CommonEvent const& event)
 {
     std::cerr << "Unknown Event: " << event.type << "\n";
     throw std::runtime_error("Unknown Event");
-}
-
-void Application::drawWindows()
-{
-    for (auto& window: windows)
-    {
-        window.second->draw();
-    }
 }
 
 /* Window events            0x020*  */
@@ -278,5 +292,3 @@ void Application::handleEventMouseMove(SDL_MouseMotionEvent const& event)       
 void Application::handleEventMouseDown(SDL_MouseButtonEvent const& event)                    {getWindowHander(event.windowID).handleEventMouseDown(event);}
 void Application::handleEventMouseUp(SDL_MouseButtonEvent const& event)                      {getWindowHander(event.windowID).handleEventMouseUp(event);}
 void Application::handleEventMouseWheel(SDL_MouseWheelEvent const& event)                    {getWindowHander(event.windowID).handleEventMouseWheel(event);}
-
-void Application::handleEventDone(int eventCount)                                            {userEventDone(eventCount);}

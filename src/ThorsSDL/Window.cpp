@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "Application.h"
+#include "Sprite.h"
 
 using namespace ThorsAnvil::UI;
 
@@ -27,6 +28,7 @@ Window::Window(Application& application, std::string const& title, Rect const& r
     : DrawContext(nullptr)
     , application(application)
     , window(nullptr)
+    , sprites{}
 {
     window  = SDL_CreateWindow(title.c_str(), rect.x, rect.y, rect.w, rect.h, winState);
     if (window == nullptr)
@@ -60,6 +62,7 @@ Window::Window(Window&& move) noexcept
     , window(nullptr)
 {
     std::swap(window,   move.window);
+    std::swap(sprites,  move.sprites);
     application.registerWindow(*this);
 }
 
@@ -68,10 +71,19 @@ Window& Window::operator=(Window&& move) noexcept
     destroy();
 
     window = std::exchange(move.window, nullptr);
+    sprites= std::exchange(move.sprites,{});
     static_cast<DrawContext&>(*this) = std::move(move);
 
     application.registerWindow(*this);
     return *this;
+}
+
+void Window::updateState()
+{
+    for (auto& sprite: sprites)
+    {
+        sprite->updateState();
+    }
 }
 
 void Window::destroy()
@@ -94,10 +106,31 @@ void Window::draw()
 
     SDL_SetRenderDrawColor(getSurface(), background.r, background.g, background.b, background.alpha);
     SDL_RenderClear(getSurface());
+
     doDraw();
+
+    for (auto const& sprite: sprites)
+    {
+        sprite->doDraw(*this);
+    }
+
     SDL_RenderPresent(getSurface());
 }
 
 void Window::doDraw()
 {
+}
+
+void Window::addSprite(Sprite& sprite)
+{
+    sprites.emplace_back(&sprite);
+}
+
+void Window::remSprite(Sprite& sprite)
+{
+    auto find = std::find(std::begin(sprites), std::end(sprites), &sprite);
+    if (find != std::end(sprites))
+    {
+        sprites.erase(find);
+    }
 }

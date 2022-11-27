@@ -3,6 +3,7 @@
 
 #include "ThorsSDLConfig.h"
 #include "DrawContext.h"
+#include "Util.h"
 
 namespace ThorsAnvil::UI
 {
@@ -10,11 +11,18 @@ namespace ThorsAnvil::UI
 class Window;
 class Sprite: public DrawContext
 {
+    Window&             parent;
+    TimePoint           lastUpdate;
+    int                 updatePeriod;
+
     public:
         Sprite(Window& parent, int millisecondUpdateTime);
+        virtual ~Sprite();
 
-    private:
-        std::chrono::milliseconds   updatePeriod;
+        void updateState();
+
+        virtual void doDraw(DrawContext& drawContext)   = 0;
+        virtual bool doUpdateState()                    = 0;
 };
 
 }

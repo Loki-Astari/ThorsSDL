@@ -11,6 +11,8 @@ namespace ThorsAnvil::UI
 static constexpr int windowUndefinedPos = SDL_WINDOWPOS_UNDEFINED;
 static constexpr int windowCentered     = SDL_WINDOWPOS_CENTERED;
 
+using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+
 struct Pt: SDL_Point
 {
     friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Pt const& point)
