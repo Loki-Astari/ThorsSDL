@@ -29,6 +29,10 @@ enum {
     , countSDL_RenderFillRects
     , countSDL_RenderDrawRects
 
+    , countTTF_Init
+    , countTTF_Quit
+
+
     , count_Max
 };
 
@@ -69,6 +73,9 @@ struct MocksSDLActions
     std::function<int(SDL_Renderer*, SDL_Rect const*)>                  mockSDL_RenderDrawRect      = [](SDL_Renderer*, SDL_Rect const*){return 0;};
     std::function<int(SDL_Renderer*, SDL_Rect const*, int)>             mockSDL_RenderFillRects     = [](SDL_Renderer*, SDL_Rect const*, int){return 0;};
     std::function<int(SDL_Renderer*, SDL_Rect const*, int)>             mockSDL_RenderDrawRects     = [](SDL_Renderer*, SDL_Rect const*, int){return 0;};
+
+    std::function<int()>                                                mockTTF_Init                = [](){return 0;};
+    std::function<void()>                                               mockTTF_Quit                = [](){};
 };
 
 class MockSDL
@@ -96,6 +103,9 @@ class MockSDL
     MOCK_MEM_DECL(SDL_RenderFillRects);
     MOCK_MEM_DECL(SDL_RenderDrawRects);
 
+    MOCK_MEM_DECL(TTF_Init);
+    MOCK_MEM_DECL(TTF_Quit);
+
     public:
         MockSDL(MocksSDLActions& action)
             : MOCK_MEM_INIT(SDL_Init,               [&action](Uint32 f)                                             {++action.count[countSDL_Init];return action.mockSDL_Init(f);})
@@ -120,6 +130,9 @@ class MockSDL
             , MOCK_MEM_INIT(SDL_RenderDrawRect,     [&action](SDL_Renderer* r, SDL_Rect const* rp)                  {++action.count[countSDL_RenderDrawRect];return action.mockSDL_RenderDrawRect(r, rp);})
             , MOCK_MEM_INIT(SDL_RenderFillRects,    [&action](SDL_Renderer* r, SDL_Rect const* rp, int c)           {++action.count[countSDL_RenderFillRects];return action.mockSDL_RenderFillRects(r, rp, c);})
             , MOCK_MEM_INIT(SDL_RenderDrawRects,    [&action](SDL_Renderer* r, SDL_Rect const* rp, int c)           {++action.count[countSDL_RenderDrawRects];return action.mockSDL_RenderDrawRects(r, rp, c);})
+
+            , MOCK_MEM_INIT(TTF_Init,               [&action]()                                                     {++action.count[countTTF_Init];return action.mockTTF_Init();})
+            , MOCK_MEM_INIT(TTF_Quit,               [&action]()                                                     {++action.count[countTTF_Quit];return action.mockTTF_Quit();})
         {}
 
 };
