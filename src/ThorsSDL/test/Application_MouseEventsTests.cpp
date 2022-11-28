@@ -12,8 +12,8 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(MouseMove, SDL_MouseMotionEvent, SDL_MOUSEMOTION)
-HANDLER_TEST(MouseDown, SDL_MouseButtonEvent, SDL_MOUSEBUTTONDOWN)
-HANDLER_TEST(MouseUp, SDL_MouseButtonEvent, SDL_MOUSEBUTTONUP)
-HANDLER_TEST(MouseWheel, SDL_MouseWheelEvent, SDL_MOUSEWHEEL)
+HANDLER_TEST(Application_MouseEventsTests, MouseMove, SDL_MouseMotionEvent, SDL_MOUSEMOTION)
+HANDLER_TEST(Application_MouseEventsTests, MouseDown, SDL_MouseButtonEvent, SDL_MOUSEBUTTONDOWN)
+HANDLER_TEST(Application_MouseEventsTests, MouseUp, SDL_MouseButtonEvent, SDL_MOUSEBUTTONUP)
+HANDLER_TEST(Application_MouseEventsTests, MouseWheel, SDL_MouseWheelEvent, SDL_MOUSEWHEEL)
 

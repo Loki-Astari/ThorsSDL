@@ -12,15 +12,15 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(ControlMotion, SDL_ControllerAxisEvent, SDL_CONTROLLERAXISMOTION)
-HANDLER_TEST(ControlButtonDown, SDL_ControllerButtonEvent, SDL_CONTROLLERBUTTONDOWN)
-HANDLER_TEST(ControlButtonUp, SDL_ControllerButtonEvent, SDL_CONTROLLERBUTTONUP)
-HANDLER_TEST(ControlDeviceAdd, SDL_ControllerDeviceEvent, SDL_CONTROLLERDEVICEADDED)
-HANDLER_TEST(ControlDeviceRem, SDL_ControllerDeviceEvent, SDL_CONTROLLERDEVICEREMOVED)
-HANDLER_TEST(ControlDeviceMap, SDL_ControllerDeviceEvent, SDL_CONTROLLERDEVICEREMAPPED)
+HANDLER_TEST(Application_ControllerEventsTests, ControlMotion, SDL_ControllerAxisEvent, SDL_CONTROLLERAXISMOTION)
+HANDLER_TEST(Application_ControllerEventsTests, ControlButtonDown, SDL_ControllerButtonEvent, SDL_CONTROLLERBUTTONDOWN)
+HANDLER_TEST(Application_ControllerEventsTests, ControlButtonUp, SDL_ControllerButtonEvent, SDL_CONTROLLERBUTTONUP)
+HANDLER_TEST(Application_ControllerEventsTests, ControlDeviceAdd, SDL_ControllerDeviceEvent, SDL_CONTROLLERDEVICEADDED)
+HANDLER_TEST(Application_ControllerEventsTests, ControlDeviceRem, SDL_ControllerDeviceEvent, SDL_CONTROLLERDEVICEREMOVED)
+HANDLER_TEST(Application_ControllerEventsTests, ControlDeviceMap, SDL_ControllerDeviceEvent, SDL_CONTROLLERDEVICEREMAPPED)
 
-HANDLER_TEST(TouchPadDown, SDL_ControllerTouchpadEvent, SDL_CONTROLLERTOUCHPADDOWN)
-HANDLER_TEST(TouchPadUp, SDL_ControllerTouchpadEvent, SDL_CONTROLLERTOUCHPADUP)
-HANDLER_TEST(TouchPadMotion, SDL_ControllerTouchpadEvent, SDL_CONTROLLERTOUCHPADMOTION)
-HANDLER_TEST(TouchPadSendor, SDL_ControllerSensorEvent, SDL_CONTROLLERSENSORUPDATE)
+HANDLER_TEST(Application_ControllerEventsTests, TouchPadDown, SDL_ControllerTouchpadEvent, SDL_CONTROLLERTOUCHPADDOWN)
+HANDLER_TEST(Application_ControllerEventsTests, TouchPadUp, SDL_ControllerTouchpadEvent, SDL_CONTROLLERTOUCHPADUP)
+HANDLER_TEST(Application_ControllerEventsTests, TouchPadMotion, SDL_ControllerTouchpadEvent, SDL_CONTROLLERTOUCHPADMOTION)
+HANDLER_TEST(Application_ControllerEventsTests, TouchPadSendor, SDL_ControllerSensorEvent, SDL_CONTROLLERSENSORUPDATE)
 

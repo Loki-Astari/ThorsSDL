@@ -12,6 +12,6 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(RenderTargetReset, SDL_CommonEvent, SDL_RENDER_TARGETS_RESET)
-HANDLER_TEST(RenderDeviceReset, SDL_CommonEvent, SDL_RENDER_DEVICE_RESET)
+HANDLER_TEST(Application_RenderEventsTests, RenderTargetReset, SDL_CommonEvent, SDL_RENDER_TARGETS_RESET)
+HANDLER_TEST(Application_RenderEventsTests, RenderDeviceReset, SDL_CommonEvent, SDL_RENDER_DEVICE_RESET)
 

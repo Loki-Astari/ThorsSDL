@@ -12,5 +12,5 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(ClipboardUpdate, SDL_CommonEvent, SDL_CLIPBOARDUPDATE)
+HANDLER_TEST(Application_ClipboardEventsTests, ClipboardUpdate, SDL_CommonEvent, SDL_CLIPBOARDUPDATE)
 

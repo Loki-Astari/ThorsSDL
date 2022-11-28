@@ -12,5 +12,5 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(SensorUpdate, SDL_SensorEvent, SDL_SENSORUPDATE)
+HANDLER_TEST(Application_SensorEventsTests, SensorUpdate, SDL_SensorEvent, SDL_SENSORUPDATE)
 

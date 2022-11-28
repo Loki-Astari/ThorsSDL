@@ -12,6 +12,6 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(AudioDeviceAdd, SDL_AudioDeviceEvent, SDL_AUDIODEVICEADDED)
-HANDLER_TEST(AudioDeviceRem, SDL_AudioDeviceEvent, SDL_AUDIODEVICEREMOVED)
+HANDLER_TEST(Application_AudioEventsTests, AudioDeviceAdd, SDL_AudioDeviceEvent, SDL_AUDIODEVICEADDED)
+HANDLER_TEST(Application_AudioEventsTests, AudioDeviceRem, SDL_AudioDeviceEvent, SDL_AUDIODEVICEREMOVED)
 

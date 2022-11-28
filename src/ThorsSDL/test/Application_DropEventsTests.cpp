@@ -12,8 +12,8 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(DropFile, SDL_DropEvent, SDL_DROPFILE)
-HANDLER_TEST(DropText, SDL_DropEvent, SDL_DROPTEXT)
-HANDLER_TEST(DropBegin, SDL_DropEvent, SDL_DROPBEGIN)
-HANDLER_TEST(DropEnd, SDL_DropEvent, SDL_DROPCOMPLETE)
+HANDLER_TEST(Application_DropEventsTests, DropFile, SDL_DropEvent, SDL_DROPFILE)
+HANDLER_TEST(Application_DropEventsTests, DropText, SDL_DropEvent, SDL_DROPTEXT)
+HANDLER_TEST(Application_DropEventsTests, DropBegin, SDL_DropEvent, SDL_DROPBEGIN)
+HANDLER_TEST(Application_DropEventsTests, DropEnd, SDL_DropEvent, SDL_DROPCOMPLETE)
 

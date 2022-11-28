@@ -5,10 +5,10 @@
 #include "DebugApplication.h"
 #include <stdexcept>
 
-#define HANDLER_TEST(Handler, EventType, EventId)                  HANDLER_TEST_FULL(Handler, EventType, EventId, false, 0)
-#define HANDLER_WIN_TEST(Handler, EventType, EventId)              HANDLER_TEST_FULL(Handler, EventType, SDL_WINDOWEVENT, true, EventId)
+#define HANDLER_TEST(Test, Handler, EventType, EventId)                  HANDLER_TEST_FULL(Test, Handler, EventType, EventId, false, 0)
+#define HANDLER_WIN_TEST(Test, Handler, EventType, EventId)              HANDLER_TEST_FULL(Test, Handler, EventType, SDL_WINDOWEVENT, true, EventId)
 
-#define HANDLER_TEST_FULL(Handler, EventType, EventId, isWin, winEventId)   \
+#define HANDLER_TEST_FULL(Test, Handler, EventType, EventId, isWin, winEventId)   \
 struct Application ## Handler: public ThorsAnvil::UI::DebugApplication      \
 {                                                                           \
     int& count;                                                             \
@@ -26,7 +26,7 @@ struct Application ## Handler: public ThorsAnvil::UI::DebugApplication      \
     }                                                                       \
 };                                                                          \
                                                                             \
-TEST(ApplicationTest, CheckEventHandler ## Handler )                        \
+TEST(Test, CheckEventHandler ## Handler )                                   \
 {                                                                           \
     MocksSDLActions     actions{.mockSDL_PollEvent = [](SDL_Event* event){  \
         static int returnValue = 1;                                         \

@@ -12,7 +12,7 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(DollarGesture, SDL_DollarGestureEvent, SDL_DOLLARGESTURE)
-HANDLER_TEST(DollarRecord, SDL_DollarGestureEvent, SDL_DOLLARRECORD)
-HANDLER_TEST(MultiGesture, SDL_MultiGestureEvent, SDL_MULTIGESTURE)
+HANDLER_TEST(Application_GestureEventsTests, DollarGesture, SDL_DollarGestureEvent, SDL_DOLLARGESTURE)
+HANDLER_TEST(Application_GestureEventsTests, DollarRecord, SDL_DollarGestureEvent, SDL_DOLLARRECORD)
+HANDLER_TEST(Application_GestureEventsTests, MultiGesture, SDL_MultiGestureEvent, SDL_MULTIGESTURE)
 

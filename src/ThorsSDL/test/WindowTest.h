@@ -7,9 +7,9 @@
 #include "Application.h"
 #include <stdexcept>
 
-#define WIN_HANDLER_TEST(Handler, EventType, EventId)               WIN_HANDLER_TEST_FULL(Handler, EventType, EventId, false, 0)
-#define WIN_HANDLER_WIN_TEST(Handler, EventType, winEventId)        WIN_HANDLER_TEST_FULL(Handler, EventType, SDL_WINDOWEVENT, true, winEventId)
-#define WIN_HANDLER_TEST_FULL(Handler, EventType, EventId, isWin, winEventId)   \
+#define WIN_HANDLER_TEST(Test, Handler, EventType, EventId)               WIN_HANDLER_TEST_FULL(Test, Handler, EventType, EventId, false, 0)
+#define WIN_HANDLER_WIN_TEST(Test, Handler, EventType, winEventId)        WIN_HANDLER_TEST_FULL(Test, Handler, EventType, SDL_WINDOWEVENT, true, winEventId)
+#define WIN_HANDLER_TEST_FULL(Test, Handler, EventType, EventId, isWin, winEventId)   \
 struct Window ## Handler: public ThorsAnvil::UI::DebugWindow                    \
 {                                                                               \
     int& count;                                                                 \
@@ -33,7 +33,7 @@ struct Window ## Handler: public ThorsAnvil::UI::DebugWindow                    
     }                                                                           \
 };                                                                              \
                                                                                 \
-TEST(WindowTest, CheckEventHandler ## Handler)                                  \
+TEST(Test, CheckEventHandler ## Handler)                                        \
 {                                                                               \
     int windowId = -1;                                                          \
     MocksSDLActions     actions{.mockSDL_PollEvent = [&windowId](SDL_Event* event){      \

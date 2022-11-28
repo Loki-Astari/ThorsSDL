@@ -12,5 +12,5 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(DisplayEvent, SDL_DisplayEvent, SDL_DISPLAYEVENT)
+HANDLER_TEST(Application_DisplayEventsTest, DisplayEvent, SDL_DisplayEvent, SDL_DISPLAYEVENT)
 

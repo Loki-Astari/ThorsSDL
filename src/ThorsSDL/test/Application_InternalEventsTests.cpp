@@ -12,7 +12,7 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(SystemEvent, SDL_SysWMEvent, SDL_SYSWMEVENT)
-HANDLER_TEST(PollSentinel, SDL_CommonEvent, SDL_POLLSENTINEL)
-HANDLER_TEST(Unknown, SDL_CommonEvent, -1)
+HANDLER_TEST(Application_InternalEventsTests, SystemEvent, SDL_SysWMEvent, SDL_SYSWMEVENT)
+HANDLER_TEST(Application_InternalEventsTests, PollSentinel, SDL_CommonEvent, SDL_POLLSENTINEL)
+HANDLER_TEST(Application_InternalEventsTests, Unknown, SDL_CommonEvent, -1)
 

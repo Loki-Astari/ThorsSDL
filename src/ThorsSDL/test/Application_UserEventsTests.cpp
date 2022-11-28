@@ -12,5 +12,5 @@
  * are a fully expanded version of the macro to help in finding bugs.
  */
 
-HANDLER_TEST(User, SDL_UserEvent, SDL_USEREVENT)
+HANDLER_TEST(Application_UserEventsTests, User, SDL_UserEvent, SDL_USEREVENT)
 
