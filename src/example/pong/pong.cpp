@@ -224,8 +224,23 @@ class PongWindow: public UI::Window
 
 int main()
 {
-    UI::Application     application(UI::Video);
+    UI::Application     application(UI::Video, UI::Fonts);
+    TTF_Font*   font = TTF_OpenFont("arial.ttf", "14");
+
+    SDL_Color       color{255, 255, 255};
+    SDL_Surface*    surface = TTF_RenderText_Solid(font, "Welcome to Gigi Labs", color);
+    SDL_Texture*    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    int texW = 0;
+    int texH = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+    SDL_Rect dstrect = { 0, 0, texW, texH };
+    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+
     PongWindow          window(application, "Pong v1.0", {UI::windowUndefinedPos, UI::windowUndefinedPos, windowWidth, windowHeight}, {.grabFocus = true});
 
     application.eventLoop(60);
+
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+    TTF_CloseFont(font);
 }

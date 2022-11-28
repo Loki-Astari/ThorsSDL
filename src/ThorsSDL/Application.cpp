@@ -9,24 +9,42 @@ using namespace ThorsAnvil::UI;
 
 bool Application::initialized = false;
 
-Application::Application(InitValue init)
+SDLLib_Main::SDLLib_Main(InitValue init)
+    : SDLLibBase(SDL_Init(init), "Failed to Initialize SDL2")
+{}
+SDLLib_Main::~SDLLib_Main()
+{
+    SDL_Quit();
+}
+
+SDLLib_TTF::SDLLib_TTF()
+    : SDLLibBase(TTF_Init(), "Failed to Initialize SDL2 TTF")
+{}
+SDLLib_TTF::~SDLLib_TTF()
+{
+    TTF_Quit();
+}
+
+Application::Application(InitValue init, InitLibs libs)
     : finished(false)
 {
     if (initialized)
     {
         throw std::runtime_error("Attempt to re-initialize SDL");
     }
-    auto result = SDL_Init(static_cast<Uint32>(init));
-    if (result != 0)
-    {
-        throw std::runtime_error("Failed to initialize SDL");
-    }
+    sdl2 = std::make_unique<SDLLib_Main>(init);
+
+    initSubSystem(libs);
+
     initialized = true;
 }
 
+Application::Application(InitLibs libs)
+    : Application(Everything, libs)
+{}
+
 Application::~Application()
 {
-    SDL_Quit();
     initialized = false;
 }
 
@@ -42,6 +60,22 @@ void Application::initSubSystem(InitValue init)
 void Application::quitSubSystem(InitValue init)
 {
     SDL_QuitSubSystem(static_cast<Uint32>(init));
+}
+
+void Application::initSubSystem(InitLibs init)
+{
+    if (init & Fonts)
+    {
+        sdl2ttf = std::make_unique<SDLLib_TTF>();
+    }
+}
+
+void Application::quitSubSystem(InitLibs init)
+{
+    if (init & Fonts)
+    {
+        sdl2ttf.reset();
+    }
 }
 
 void Application::eventLoop(int fps, std::function<void(int)>&& eventDone)

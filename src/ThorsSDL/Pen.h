@@ -4,6 +4,7 @@
 #include "ThorsSDLConfig.h"
 #include "Util.h"
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 namespace ThorsAnvil::UI
 {
@@ -56,23 +57,34 @@ class DrawContext;
 class Pen
 {
     public:
-        //int             width;
+        Pen(Color ink =  {0, 0, 0, 255}, Color fill = {255, 255, 255, 0});
+
         Color           ink     = {0, 0, 0, 255};       // Solid Black
         Color           fill    = {255, 255, 255, 0};   // Transparent (White)
 
     public:
         // Basic Drawing
-        Pen const& drawPoint(DrawContext& drawContext, Pt const& point) const;                     // SDL_RenderDrawPoint
-        Pen const& drawLine(DrawContext& drawContext, Pt const& start, Pt const& end) const;       // SDL_RenderDrawLine
-        Pen const& drawRect(DrawContext& drawContext, Rect const& rect) const;                     // SDL_RenderDrawRect / SDL_RenderFillRect
+        void drawPoint(DrawContext& drawContext, Pt const& point) const;                     // SDL_RenderDrawPoint
+        void drawLine(DrawContext& drawContext, Pt const& start, Pt const& end) const;       // SDL_RenderDrawLine
+        void drawRect(DrawContext& drawContext, Rect const& rect) const;                     // SDL_RenderDrawRect / SDL_RenderFillRect
 
-        Pen const& drawPoints(DrawContext& drawContext, std::initializer_list<Pt> points) const;   // SDL_RenderDrawPoints
-        Pen const& drawLines(DrawContext& drawContext, std::initializer_list<Pt> points) const;    // SDL_RenderDrawLines
-        Pen const& drawRects(DrawContext& drawContext, std::initializer_list<Rect> rects) const;   // SDL_RenderDrawRects / SDL_RenderFillRects
+        void drawPoints(DrawContext& drawContext, std::initializer_list<Pt> points) const;   // SDL_RenderDrawPoints
+        void drawLines(DrawContext& drawContext, std::initializer_list<Pt> points) const;    // SDL_RenderDrawLines
+        void drawRects(DrawContext& drawContext, std::initializer_list<Rect> rects) const;   // SDL_RenderDrawRects / SDL_RenderFillRects
 
         // Advanced Drawing
         // void drawGeometry: SDL_RenderGeometry
 };
+
+class TextPen: public Pen
+{
+    public:
+        TextPen(std::string const& fontName, int pt = 12, Color ink =  {0, 0, 0, 255}, Color fill = {255, 255, 255, 0});
+
+    private:
+        std::shared_ptr<TTF_Font>   font;
+};
+
 
 }
 

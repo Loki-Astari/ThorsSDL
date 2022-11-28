@@ -4,21 +4,24 @@
 
 using namespace ThorsAnvil::UI;
 
-Pen const& Pen::drawPoint(DrawContext& drawContext, Pt const& point) const
+Pen::Pen(Color ink, Color fill)
+    : ink(ink)
+    , fill(fill)
+{}
+
+void Pen::drawPoint(DrawContext& drawContext, Pt const& point) const
 {
     SDL_SetRenderDrawColor(drawContext.getSurface(), ink.r, ink.g, ink.b, ink.alpha);
     SDL_RenderDrawPoint(drawContext.getSurface(), point.x, point.y);
-    return *this;
 }
 
-Pen const& Pen::drawLine(DrawContext& drawContext, Pt const& start, Pt const& end) const
+void Pen::drawLine(DrawContext& drawContext, Pt const& start, Pt const& end) const
 {
     SDL_SetRenderDrawColor(drawContext.getSurface(), ink.r, ink.g, ink.b, ink.alpha);
     SDL_RenderDrawLine(drawContext.getSurface(), start.x, start.y, end.x, end.y);
-    return *this;
 }
 
-Pen const& Pen::drawRect(DrawContext& drawContext, Rect const& rect) const
+void Pen::drawRect(DrawContext& drawContext, Rect const& rect) const
 {
     if (fill.alpha != 0)
     {
@@ -31,24 +34,21 @@ Pen const& Pen::drawRect(DrawContext& drawContext, Rect const& rect) const
         SDL_SetRenderDrawColor(drawContext.getSurface(), ink.r, ink.g, ink.b, ink.alpha);
         SDL_RenderDrawRect(drawContext.getSurface(), &rect);
     }
-    return *this;
 }
 
-Pen const& Pen::drawPoints(DrawContext& drawContext, std::initializer_list<Pt> points) const
+void Pen::drawPoints(DrawContext& drawContext, std::initializer_list<Pt> points) const
 {
     SDL_SetRenderDrawColor(drawContext.getSurface(), ink.r, ink.g, ink.b, ink.alpha);
     SDL_RenderDrawPoints(drawContext.getSurface(), std::data(points), std::size(points));
-    return *this;
 }
 
-Pen const& Pen::drawLines(DrawContext& drawContext, std::initializer_list<Pt> lines) const
+void Pen::drawLines(DrawContext& drawContext, std::initializer_list<Pt> lines) const
 {
     SDL_SetRenderDrawColor(drawContext.getSurface(), ink.r, ink.g, ink.b, ink.alpha);
     SDL_RenderDrawLines(drawContext.getSurface(), std::data(lines), std::size(lines));
-    return *this;
 }
 
-Pen const& Pen::drawRects(DrawContext& drawContext, std::initializer_list<Rect> rects) const
+void Pen::drawRects(DrawContext& drawContext, std::initializer_list<Rect> rects) const
 {
     if (fill.alpha != 0)
     {
@@ -61,6 +61,14 @@ Pen const& Pen::drawRects(DrawContext& drawContext, std::initializer_list<Rect> 
         SDL_SetRenderDrawColor(drawContext.getSurface(), ink.r, ink.g, ink.b, ink.alpha);
         SDL_RenderDrawRects(drawContext.getSurface(), std::data(rects), std::size(rects));
     }
+}
 
-    return *this;
+TextPen::TextPen(std::string const& fontName, int pt, Color ink, Color fill)
+    : Pen(ink, fill)
+    , font(TTF_OpenFont(fontName.c_str(), pt), [](TTF_Font* p){TTF_CloseFont(p);})
+{
+    if (!font)
+    {
+        throw std::runtime_error("Failed to create font");
+    }
 }

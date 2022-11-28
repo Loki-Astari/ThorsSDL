@@ -4,6 +4,7 @@
 #include "ThorsSDLConfig.h"
 #include "Util.h"
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <functional>
 #include <map>
 
@@ -31,12 +32,55 @@ inline InitValue operator|(InitValue lhs, InitValue rhs)
     return static_cast<InitValue>(static_cast<Uint32>(lhs) | static_cast<Uint32>(rhs));
 }
 
+enum InitLibs : Uint32
+{
+    NoLibs  = 0,
+    Fonts   = 1,
+    Images  = 2
+};
+
+inline InitLibs operator|(InitLibs lhs, InitLibs rhs)
+{
+    return static_cast<InitLibs>(static_cast<Uint32>(lhs) | static_cast<Uint32>(rhs));
+}
+
+inline bool operator&(InitLibs lhs, InitLibs rhs)
+{
+    return (static_cast<Uint32>(lhs) & static_cast<Uint32>(rhs)) != 0;
+}
+
+struct SDLLibBase
+{
+    SDLLibBase(int state, char const* message)
+    {
+        if (state != 0)
+        {
+            throw std::runtime_error(message);
+        }
+    }
+    virtual ~SDLLibBase()   {}
+};
+
+struct SDLLib_Main: public SDLLibBase
+{
+    SDLLib_Main(InitValue init);
+    ~SDLLib_Main();
+};
+
+struct SDLLib_TTF: public SDLLibBase
+{
+    SDLLib_TTF();
+    ~SDLLib_TTF();
+};
+
 class Window;
 class WindowEventHandler;
 class Application
 {
     private:
         static bool initialized;
+        std::unique_ptr<SDLLib_Main>    sdl2;
+        std::unique_ptr<SDLLib_TTF>     sdl2ttf;
 
     private:
         bool                        finished;
@@ -45,7 +89,8 @@ class Application
 
 
     public:
-        Application(InitValue init = Everything);
+        Application(InitValue init = Everything, InitLibs = NoLibs);
+        Application(InitLibs libs);
         ~Application();
 
         Application(Application const&)             = delete;
@@ -55,6 +100,9 @@ class Application
 
         void initSubSystem(InitValue init);
         void quitSubSystem(InitValue init);
+
+        void initSubSystem(InitLibs libs);
+        void quitSubSystem(InitLibs libs);
 
         void eventLoop(int fps, std::function<void(int)>&& eventDone = [](int){});
         void exitLoop();
