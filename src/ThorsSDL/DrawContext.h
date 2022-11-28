@@ -40,6 +40,9 @@ struct RenderState
 };
 
 class Window;
+class Pen;
+class TextPen;
+class Texture;
 class DrawContext
 {
     public:
@@ -55,6 +58,8 @@ class DrawContext
         void destroy();
     private:
         friend class Pen;
+        friend class TextPen;
+        friend class Texture;
         friend class Window;
         FRIEND_TEST(::DrawContextTest, GetSurface);
         SDL_Renderer* getSurface() const {return renderer;}

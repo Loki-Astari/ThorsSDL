@@ -2,6 +2,7 @@
 #include "ThorsSDL/Application.h"
 #include "ThorsSDL/Window.h"
 #include "ThorsSDL/Sprite.h"
+#include "ThorsSDL/Pen.h"
 #include <vector>
 
 namespace UI = ThorsAnvil::UI;
@@ -59,6 +60,37 @@ class PongWindow: public UI::Window
                 return updated;
             }
     };
+
+    class Score: public UI::Sprite
+    {
+        int             score;
+        UI::TextPen     pen;
+        UI::Texture     scoreText;
+        public:
+            Score(Window& parent)
+                : Sprite(parent, 16)
+                , score(0)
+                , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24)
+                , scoreText(pen.createTextureFromString(parent, "Current Score: "))
+            {}
+            virtual void doDraw(DrawContext& context) override
+            {
+                scoreText.doDraw();
+
+                UI::Texture     scoreValue = pen.createTextureFromString(context, std::to_string(score).c_str());
+                scoreValue.doDraw({250, 0, 0, 0});
+            }
+            virtual bool doUpdateState() override
+            {
+                return false;
+            }
+
+            void addPoints(int value)
+            {
+                score += value;
+            }
+    };
+
     class Wall: public UI::Sprite
     {
         struct Brick
@@ -83,11 +115,13 @@ class PongWindow: public UI::Window
                                       };
         int const   brickWidth;
         int const   offset;             // offset from left of screen.
+        Score&      score;
         public:
-            Wall(Window& window, int windowWidth, int /*windowHeight*/)
+            Wall(Window& window, int windowWidth, int /*windowHeight*/, Score& score)
                 : Sprite(window, 10000)
                 , brickWidth((windowWidth / bricksPerRow) - cementSpace)
                 , offset((windowWidth - ((brickWidth + cementSpace) * bricksPerRow)) / 2)
+                , score(score)
             {
                 for (int row = 0; row < rowCount; ++row)
                 {
@@ -118,6 +152,7 @@ class PongWindow: public UI::Window
                 while (doCollisionCheck(ball, velocity))
                 {
                     hit = true;
+                    score.addPoints(10);
                     ball.y -= velocity.y;
                     ball.x -= velocity.x;
                 }
@@ -209,6 +244,7 @@ class PongWindow: public UI::Window
             }
     };
     Paddle              paddle;
+    Score               score;
     Wall                wall;
     Ball                ball;
 
@@ -216,7 +252,8 @@ class PongWindow: public UI::Window
         PongWindow(UI::Application& application, std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(application, title, rect, winState, renState)
             , paddle(application, *this, rect.w, rect.h)
-            , wall(*this, rect.w, rect.h)
+            , score(*this)
+            , wall(*this, rect.w, rect.h, score)
             , ball(*this, rect.w, rect.h, paddle, wall)
         {}
 };
@@ -225,22 +262,22 @@ class PongWindow: public UI::Window
 int main()
 {
     UI::Application     application(UI::Video, UI::Fonts);
-    TTF_Font*   font = TTF_OpenFont("arial.ttf", "14");
+    //TTF_Font*   font = TTF_OpenFont("arial.ttf", "14");
 
-    SDL_Color       color{255, 255, 255};
-    SDL_Surface*    surface = TTF_RenderText_Solid(font, "Welcome to Gigi Labs", color);
-    SDL_Texture*    texture = SDL_CreateTextureFromSurface(renderer, surface);
-    int texW = 0;
-    int texH = 0;
-    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
-    SDL_Rect dstrect = { 0, 0, texW, texH };
-    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+    //SDL_Color       color{255, 255, 255};
+    //SDL_Surface*    surface = TTF_RenderText_Solid(font, "Welcome to Gigi Labs", color);
+    //SDL_Texture*    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    //int texW = 0;
+    //int texH = 0;
+    //SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+    //SDL_Rect dstrect = { 0, 0, texW, texH };
+    //SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
     PongWindow          window(application, "Pong v1.0", {UI::windowUndefinedPos, UI::windowUndefinedPos, windowWidth, windowHeight}, {.grabFocus = true});
 
     application.eventLoop(60);
 
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
-    TTF_CloseFont(font);
+    //SDL_DestroyTexture(texture);
+    //SDL_FreeSurface(surface);
+    //TTF_CloseFont(font);
 }

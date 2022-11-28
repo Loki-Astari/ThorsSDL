@@ -63,6 +63,31 @@ void Pen::drawRects(DrawContext& drawContext, std::initializer_list<Rect> rects)
     }
 }
 
+Texture::Texture(DrawContext& drawContext, SDL_Surface& surface)
+    : drawContext(drawContext)
+    , texture(SDL_CreateTextureFromSurface(drawContext.getSurface(), &surface), [](SDL_Texture* t){if (t){SDL_DestroyTexture(t);}})
+{
+    if (!texture)
+    {
+        throw std::runtime_error("Failed to Create Texture");
+    }
+}
+
+void Texture::doDraw(Rect dst, Rect src)
+{
+    Rect*    rectSrc = &src;
+    if (src.w == 0 || src.h == 0)
+    {
+        rectSrc = nullptr;
+    }
+    if (dst.w == 0 || dst.h == 0)
+    {
+        SDL_QueryTexture(texture.get(), nullptr, nullptr, &dst.w, &dst.h);
+    }
+    SDL_RenderCopy(drawContext.getSurface(), texture.get(), rectSrc, &dst);
+}
+
+
 TextPen::TextPen(std::string const& fontName, int pt, Color ink, Color fill)
     : Pen(ink, fill)
     // Note: I know I don't need to test for null on p here.
@@ -74,4 +99,36 @@ TextPen::TextPen(std::string const& fontName, int pt, Color ink, Color fill)
     {
         throw std::runtime_error("Failed to create font");
     }
+}
+
+// Note only use in: TextPen::createTextureFromString
+struct SurfaceHolder
+{
+    SDL_Surface*    surface;
+
+    SurfaceHolder(TTF_Font& font, char const* message, Color const& ink)
+        : surface(TTF_RenderText_Solid(&font, message, SDL_Color{ink.r, ink.b, ink.g, ink.alpha}))
+    {
+        if (!surface)
+        {
+            throw std::runtime_error("Failed to Create Surface");
+        }
+    }
+    ~SurfaceHolder()
+    {
+        SDL_FreeSurface(surface);
+    }
+
+
+    SurfaceHolder(SurfaceHolder const&)             = delete;
+    SurfaceHolder& operator=(SurfaceHolder const&)  = delete;
+    SurfaceHolder(SurfaceHolder&&)                  = delete;
+    SurfaceHolder& operator=(SurfaceHolder&&)       = delete;
+};
+
+
+Texture TextPen::createTextureFromString(DrawContext& drawContext, char const* message) const
+{
+    SurfaceHolder       surface(*font, message, ink);
+    return Texture{drawContext, *surface.surface};
 }
