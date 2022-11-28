@@ -17223,6 +17223,7 @@ printf "%s\n" "no" >&6; }
 	fi
 fi
 
+
     SDL_VERSION=2.0.0
 
 # Check whether --with-sdl2-prefix was given.
@@ -17550,17 +17551,79 @@ rm -f core conftest.err conftest.$ac_objext conftest.beam \
      as_fn_error $? "
 *** SDL version $SDL_VERSION not found!
 
-    Please install SDL
+Error: Count not find libSDL2
 
-        On the mac use brew install sdl2
+You can solve this in installing SDL2
 
+        On the mac use:
+            > brew install sdl2
 
-" "$LINENO" 5
-
+    " "$LINENO" 5
   fi
 
 
   rm -f conf.sdl2test
+
+
+
+    ORIG_LDFLAGS="${LDFLAGS}"
+    LDFLAGS="${LDFLAGS} ${SDL_LIBS}"
+
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for TTF_Init in -lSDL2_ttf" >&5
+printf %s "checking for TTF_Init in -lSDL2_ttf... " >&6; }
+if test ${ac_cv_lib_SDL2_ttf_TTF_Init+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lSDL2_ttf  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int TTF_Init ();
+}
+int
+main (void)
+{
+return conftest::TTF_Init ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_SDL2_ttf_TTF_Init=yes
+else $as_nop
+  ac_cv_lib_SDL2_ttf_TTF_Init=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_SDL2_ttf_TTF_Init" >&5
+printf "%s\n" "$ac_cv_lib_SDL2_ttf_TTF_Init" >&6; }
+if test "x$ac_cv_lib_SDL2_ttf_TTF_Init" = xyes
+then :
+  :
+else $as_nop
+  as_fn_error 1 "
+
+Error: Could not find libSDL2_ttf
+
+You can solve this by installing SDL2_ttf
+
+        On the mac use:
+            > brew install sdl2_ttf
+
+        " "$LINENO" 5
+
+fi
+
+
+    LDFLAGS="${ORIG_LDFLAGS}"
+    SDL_LIBS="${SDL_LIBS} -lSDL2_ttf"
+
 
 
 
