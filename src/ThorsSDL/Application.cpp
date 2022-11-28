@@ -94,7 +94,8 @@ void Application::eventLoop(int fps, std::function<void(int)>&& eventDone)
 
             std::chrono::time_point thisTime = std::chrono::system_clock::now();
             std::chrono::milliseconds   diff = std::chrono::duration_cast<std::chrono::milliseconds>(thisTime - lastUpdate);
-            if (diff.count() > millisondsToWaitPerDrawCycle)
+
+            if (diff.count() >= millisondsToWaitPerDrawCycle)
             {
                 lastUpdate = thisTime;
                 drawWindows();

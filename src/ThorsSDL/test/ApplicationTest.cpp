@@ -377,3 +377,42 @@ TEST(ApplicationTest, CheckEventHandlerQuitOrig)
     EXPECT_EQ(SDL_QUIT, eventType);
 }
 
+TEST(ApplicationTest, HandleUnknownEvent)
+{
+    MocksSDLActions     actions{.mockSDL_PollEvent = [](SDL_Event* event){
+            event->type = -1;
+            return 1;
+        }
+    };
+    MockSDL             mockActivate(actions);
+
+    auto action = []()
+    {
+        ThorsAnvil::UI::Application     application;
+
+        application.eventLoop(10000);
+    };
+
+    EXPECT_NO_THROW(
+        action()
+    );
+}
+
+TEST(ApplicationTest, ApplicationWithWindowThatNeedsDrawing)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+
+    auto action = []()
+    {
+        ThorsAnvil::UI::Application     application;
+        ThorsAnvil::UI::Window          window(application, "Test", {10, 10, 20, 20});
+
+        application.eventLoop(10000, [&application](int){application.exitLoop();});
+    };
+
+    EXPECT_NO_THROW(
+        action()
+    );
+}
+
