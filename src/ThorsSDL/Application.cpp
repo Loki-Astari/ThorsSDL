@@ -9,22 +9,6 @@ using namespace ThorsAnvil::UI;
 
 bool Application::initialized = false;
 
-SDLLib_Main::SDLLib_Main(InitValue init)
-    : SDLLibBase(SDL_Init(init), "Failed to Initialize SDL2")
-{}
-SDLLib_Main::~SDLLib_Main()
-{
-    SDL_Quit();
-}
-
-SDLLib_TTF::SDLLib_TTF()
-    : SDLLibBase(TTF_Init(), "Failed to Initialize SDL2 TTF")
-{}
-SDLLib_TTF::~SDLLib_TTF()
-{
-    TTF_Quit();
-}
-
 Application::Application(InitValue init, InitLibs libs)
     : finished(false)
 {
@@ -32,7 +16,7 @@ Application::Application(InitValue init, InitLibs libs)
     {
         throw std::runtime_error("Attempt to re-initialize SDL");
     }
-    sdl2 = std::make_unique<SDLLib_Main>(init);
+    sdl2 = std::make_unique<SDL::Lib_Main>(init);
 
     initSubSystem(libs);
 
@@ -66,7 +50,7 @@ void Application::initSubSystem(InitLibs init)
 {
     if (init & Fonts)
     {
-        sdl2ttf = std::make_unique<SDLLib_TTF>();
+        sdl2ttf = std::make_unique<SDL::Lib_TTF>();
     }
 }
 

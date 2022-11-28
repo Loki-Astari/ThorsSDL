@@ -1,4 +1,3 @@
-#include "ThorsSDL/ThorsSDL.h"
 #include "ThorsSDL/Application.h"
 #include "ThorsSDL/Window.h"
 #include "ThorsSDL/Sprite.h"
