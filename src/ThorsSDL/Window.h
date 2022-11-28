@@ -4,11 +4,13 @@
 #include "ThorsSDLConfig.h"
 #include "DrawContext.h"
 #include "Util.h"
+#include <gtest/gtest_prod.h>
 #include <SDL.h>
 #include <string>
 #include <iostream>
 #include <vector>
 
+class SpriteTest_WindowConstruction_Test;
 namespace ThorsAnvil::UI
 {
 /*
@@ -140,6 +142,9 @@ class Window: public WindowEventHandler, public DrawContext
         friend class Sprite;
         void    addSprite(Sprite& sprite);
         void    remSprite(Sprite& sprite);
+
+    private:
+        FRIEND_TEST(::SpriteTest, WindowConstruction);
 
     private:
         Application&            application;

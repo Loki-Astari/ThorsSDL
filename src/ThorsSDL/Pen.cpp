@@ -65,7 +65,10 @@ void Pen::drawRects(DrawContext& drawContext, std::initializer_list<Rect> rects)
 
 TextPen::TextPen(std::string const& fontName, int pt, Color ink, Color fill)
     : Pen(ink, fill)
-    , font(TTF_OpenFont(fontName.c_str(), pt), [](TTF_Font* p){TTF_CloseFont(p);})
+    // Note: I know I don't need to test for null on p here.
+    //       But doing so makes the unit tests easier to write.
+    //       We check that a failed Open() does not result in a call to Close().
+    , font(TTF_OpenFont(fontName.c_str(), pt), [](TTF_Font* p){if (p){TTF_CloseFont(p);}})
 {
     if (!font)
     {
