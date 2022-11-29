@@ -4,12 +4,12 @@
 using namespace ThorsAnvil::UI;
 
 
-Sprite::Sprite(Window& parent, int millisecondUpdateTime)
+Sprite::Sprite(Window& parent, std::size_t layer, int millisecondUpdateTime)
     : parent(parent)
     , lastUpdate{}
     , updatePeriod(millisecondUpdateTime)
 {
-    parent.addSprite(*this);
+    parent.addSprite(*this, layer);
 }
 
 Sprite::~Sprite()

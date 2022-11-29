@@ -82,11 +82,10 @@ class Window: public WindowEventHandler, public DrawContext
 
     private:
         virtual Color   getBackgroundColor() {return {96, 128, 255, 255};}
-        virtual void    doDraw();
 
     private:
         friend class Sprite;
-        void    addSprite(Sprite& sprite);
+        void    addSprite(Sprite& sprite, std::size_t layer);
         void    remSprite(Sprite& sprite);
 
     private:
@@ -98,10 +97,11 @@ class Window: public WindowEventHandler, public DrawContext
         FRIEND_TEST(::SpriteTest, WindowConstruction);
 
     private:
-        Application&                    application;
-        std::unique_ptr<SDL::Window>    window;
-        WindowRegister                  windowRegister;
-        std::vector<Sprite*>            sprites;
+        Application&                        application;
+        std::unique_ptr<SDL::Window>        window;
+        WindowRegister                      windowRegister;
+        std::vector<std::vector<Sprite*>>   sprites;
+        std::size_t                         currentSpriteLayer;
 };
 
 class DebugWindow: public Window

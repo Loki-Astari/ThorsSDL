@@ -22,7 +22,7 @@ TEST(SpriteTest, WindowConstruction)
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window(application, "Title", {10, 10, 20, 20});
 
-        TestSprite                      sprite(window, 0);
+        TestSprite                      sprite(window, 0, 0);
         EXPECT_EQ(1, window.sprites.size());
 
         application.eventLoop(1000, [&application](int){application.exitLoop();});

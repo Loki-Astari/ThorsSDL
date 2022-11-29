@@ -40,7 +40,8 @@ Window::Window(Application& application, std::string const& title, Rect const& r
     , application(application)
     , window(std::make_unique<SDL::Window>(title, rect, winState))
     , windowRegister(*this)
-    , sprites{}
+    , sprites{std::vector<Sprite*>{}}
+    , currentSpriteLayer(0)
 {
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
@@ -54,9 +55,12 @@ Window::Window(Window&& move) noexcept
     : DrawContext(std::move(move))
     , application(move.application)
     , windowRegister(*this)
+    , sprites{}
+    , currentSpriteLayer(0)
 {
-    std::swap(window,   move.window);
-    std::swap(sprites,  move.sprites);
+    std::swap(window,               move.window);
+    std::swap(sprites,              move.sprites);
+    std::swap(currentSpriteLayer,   move.currentSpriteLayer);
     application.registerWindow(*this);
 }
 
@@ -64,8 +68,9 @@ Window& Window::operator=(Window&& move) noexcept
 {
     unregisterWindow();
 
-    window = std::exchange(move.window, nullptr);
-    sprites= std::exchange(move.sprites,{});
+    window              = std::exchange(move.window, nullptr);
+    sprites             = std::exchange(move.sprites, {});
+    currentSpriteLayer  = std::exchange(move.currentSpriteLayer, 0);
     static_cast<DrawContext&>(*this) = std::move(move);
 
     registerWindow();
@@ -90,7 +95,7 @@ void Window::unregisterWindow()
 
 void Window::updateState()
 {
-    for (auto& sprite: sprites)
+    for (auto& sprite: sprites[currentSpriteLayer])
     {
         sprite->updateState();
     }
@@ -108,9 +113,7 @@ void Window::draw()
     SDL_SetRenderDrawColor(getSurface(), background.r, background.g, background.b, background.alpha);
     SDL_RenderClear(getSurface());
 
-    doDraw();
-
-    for (auto const& sprite: sprites)
+    for (auto const& sprite: sprites[currentSpriteLayer])
     {
         sprite->doDraw(*this);
     }
@@ -118,20 +121,20 @@ void Window::draw()
     SDL_RenderPresent(getSurface());
 }
 
-void Window::doDraw()
+void Window::addSprite(Sprite& sprite, std::size_t layer)
 {
-}
-
-void Window::addSprite(Sprite& sprite)
-{
-    sprites.emplace_back(&sprite);
+    sprites.resize(std::max(sprites.size(), layer + 1));
+    sprites[layer].emplace_back(&sprite);
 }
 
 void Window::remSprite(Sprite& sprite)
 {
-    auto find = std::find(std::begin(sprites), std::end(sprites), &sprite);
-    if (find != std::end(sprites))
+    for (auto& spriteLayer: sprites)
     {
-        sprites.erase(find);
+        auto find = std::find(std::begin(spriteLayer), std::end(spriteLayer), &sprite);
+        if (find != std::end(spriteLayer))
+        {
+            spriteLayer.erase(find);
+        }
     }
 }

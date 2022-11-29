@@ -11,6 +11,8 @@ int constexpr           windowHeight    = 720;
 
 class PongWindow: public UI::Window
 {
+    static int constexpr gameLayer = 0;
+
     class Paddle: public UI::Sprite
     {
         int const   speed           = 10;
@@ -22,7 +24,7 @@ class PongWindow: public UI::Window
         UI::Rect    position;
         public:
             Paddle(UI::Application& application, UI::Window& window, int windowWidth, int windowHeight)
-                : Sprite(window, 15)
+                : Sprite(window, gameLayer, 15)
                 , application(application)
                 , position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
             {}
@@ -67,7 +69,7 @@ class PongWindow: public UI::Window
         UI::Texture     scoreText;
         public:
             Score(Window& parent)
-                : Sprite(parent, 16)
+                : Sprite(parent, gameLayer, 16)
                 , score(0)
                 , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24)
                 , scoreText(pen.createTextureFromString(parent, "Current Score: "))
@@ -117,7 +119,7 @@ class PongWindow: public UI::Window
         Score&      score;
         public:
             Wall(Window& window, int windowWidth, int /*windowHeight*/, Score& score)
-                : Sprite(window, 10000)
+                : Sprite(window, gameLayer, 10000)
                 , brickWidth((windowWidth / bricksPerRow) - cementSpace)
                 , offset((windowWidth - ((brickWidth + cementSpace) * bricksPerRow)) / 2)
                 , score(score)
@@ -205,7 +207,7 @@ class PongWindow: public UI::Window
         UI::Pt          velocity;
         public:
             Ball(Window& parent, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall)
-                : Sprite(parent, 15)
+                : Sprite(parent, gameLayer, 15)
                 , windowWidth(windowWidth)
                 , windowHeight(windowHeight)
                 , paddle(paddle)

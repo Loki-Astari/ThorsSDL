@@ -16,7 +16,7 @@ class Sprite: public DrawContext
     int                 updatePeriod;
 
     public:
-        Sprite(Window& parent, int millisecondUpdateTime);
+        Sprite(Window& parent, std::size_t layer, int millisecondUpdateTime);
         virtual ~Sprite();
 
         void updateState();
