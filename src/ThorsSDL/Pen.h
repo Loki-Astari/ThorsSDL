@@ -3,6 +3,7 @@
 
 #include "ThorsSDLConfig.h"
 #include "ThorsSDL.h"
+#include "Texture.h"
 #include "Util.h"
 
 namespace ThorsAnvil::UI
@@ -73,22 +74,6 @@ class Pen
 
         // Advanced Drawing
         // void drawGeometry: SDL_RenderGeometry
-};
-
-static constexpr Rect   zero{0, 0, 0, 0};
-
-class TextPen;
-class Texture
-{
-    DrawContext&                    drawContext;
-    std::shared_ptr<SDL_Texture>    texture;
-
-    private:
-        friend class TextPen;
-        Texture(DrawContext& drawContext, SDL_Surface& surface);
-    public:
-
-        void doDraw(Rect dst = zero, Rect src = zero);
 };
 
 class TextPen: public Pen
