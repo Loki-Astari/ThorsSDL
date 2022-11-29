@@ -76,6 +76,7 @@ class Window: public WindowEventHandler, public DrawContext
         Window& operator=(Window&& move) noexcept;
 
     public:
+        void    updateLayer(std::size_t layer);
         void    updateState();
         void    draw();
         Uint32  getId() const;

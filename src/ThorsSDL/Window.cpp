@@ -93,6 +93,11 @@ void Window::unregisterWindow()
     }
 }
 
+void Window::updateLayer(std::size_t layer)
+{
+    currentSpriteLayer = layer;
+}
+
 void Window::updateState()
 {
     for (auto& sprite: sprites[currentSpriteLayer])
