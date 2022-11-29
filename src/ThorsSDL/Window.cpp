@@ -95,7 +95,12 @@ void Window::unregisterWindow()
 
 void Window::updateLayer(std::size_t layer)
 {
+    sprites.resize(std::max(sprites.size(), layer+1));
     currentSpriteLayer = layer;
+    for (auto& sprite: sprites[currentSpriteLayer])
+    {
+        sprite->reset();
+    }
 }
 
 void Window::updateState()

@@ -31,6 +31,7 @@ class GameLayer
             bool collision(UI::Pt& ball, UI::Pt& velocity) const;
             virtual void doDraw(DrawContext& context) override;
             virtual bool doUpdateState() override;
+            virtual void reset() override;
     };
 
     class Score: public UI::Sprite
@@ -42,6 +43,7 @@ class GameLayer
             Score(Window& parent, std::size_t layer);
             virtual void doDraw(DrawContext& context) override;
             virtual bool doUpdateState() override;
+            virtual void reset() override;
             void addPoints(int value);
     };
 
@@ -74,6 +76,7 @@ class GameLayer
             Wall(Window& window, std::size_t layer, int windowWidth, int /*windowHeight*/, Score& score);
             virtual bool doUpdateState() override;
             virtual void doDraw(DrawContext& window) override;
+            virtual void reset() override;
             bool collision(UI::Pt& ball, UI::Pt& velocity);
             bool doCollisionCheck(UI::Pt& ball, UI::Pt& velocity);
     };
@@ -93,6 +96,7 @@ class GameLayer
             Ball(Window& parent, std::size_t layer, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall);
             virtual void doDraw(DrawContext& context) override;
             virtual bool doUpdateState() override;
+            virtual void reset() override;
     };
     Paddle              paddle;
     Score               score;

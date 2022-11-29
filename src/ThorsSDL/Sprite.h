@@ -23,6 +23,7 @@ class Sprite: public DrawContext
 
         virtual void doDraw(DrawContext& drawContext)   = 0;
         virtual bool doUpdateState()                    = 0;
+        virtual void reset() {}
 };
 
 }

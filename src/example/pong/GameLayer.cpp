@@ -53,6 +53,11 @@ bool  GameLayer::Paddle::doUpdateState()
     return updated;
 }
 
+void GameLayer::Paddle::reset()
+{
+    position.x = (windowWidth/ 2) - (width / 2);
+}
+
 GameLayer::Score::Score(Window& parent, std::size_t layer)
     : Sprite(parent, layer, 16)
     , score(0)
@@ -73,6 +78,11 @@ bool GameLayer::Score::doUpdateState()
     return false;
 }
 
+void GameLayer::Score::reset()
+{
+    score = 0;
+}
+
 void GameLayer::Score::addPoints(int value)
 {
     score += value;
@@ -84,14 +94,7 @@ GameLayer::Wall::Wall(Window& window, std::size_t layer, int windowWidth, int /*
     , offset((windowWidth - ((brickWidth + cementSpace) * bricksPerRow)) / 2)
     , score(score)
 {
-    for (int row = 0; row < rowCount; ++row)
-    {
-        bricks.emplace_back();
-        for (int col = 0; col < bricksPerRow; ++col)
-        {
-            bricks[row].emplace_back(offset + col * (brickWidth + cementSpace), border + row * (brickHeight + cementSpace), brickWidth, brickHeight, cementSpace);
-        }
-    }
+    reset();
 }
 
 bool GameLayer::Wall::doUpdateState()
@@ -109,6 +112,19 @@ void GameLayer::Wall::doDraw(DrawContext& window)
             {
                 pens[row % std::size(pens)].drawRect(window, bricks[row][col].drawRect);
             }
+        }
+    }
+}
+
+void GameLayer::Wall::reset()
+{
+    bricks.clear();
+    for (int row = 0; row < rowCount; ++row)
+    {
+        bricks.emplace_back();
+        for (int col = 0; col < bricksPerRow; ++col)
+        {
+            bricks[row].emplace_back(offset + col * (brickWidth + cementSpace), border + row * (brickHeight + cementSpace), brickWidth, brickHeight, cementSpace);
         }
     }
 }
@@ -204,4 +220,10 @@ bool GameLayer::Ball::doUpdateState()
         velocity.x  = -velocity.x;
     }
     return true;
+}
+
+void GameLayer::Ball::reset()
+{
+    pos         = {windowWidth / 2, windowHeight / 2};
+    velocity    = {-4, -4};
 }
