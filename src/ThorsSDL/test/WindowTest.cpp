@@ -65,7 +65,7 @@ TEST(WindowTest, WindowConstruction_RenderCreateFails)
     EXPECT_EQ(1, actions.count[countSDL_DestroyWindow]);
     EXPECT_EQ(1, actions.count[countSDL_CreateRenderer]);
     EXPECT_EQ(0, actions.count[countSDL_DestroyRenderer]);
-    EXPECT_EQ(0, actions.count[countSDL_GetWindowID]);
+    EXPECT_EQ(2, actions.count[countSDL_GetWindowID]);
 }
 
 TEST(WindowTest, WindowMoveConstruction)

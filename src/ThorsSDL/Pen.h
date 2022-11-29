@@ -2,9 +2,8 @@
 #define THORSANVIL_UI_PEN_H
 
 #include "ThorsSDLConfig.h"
+#include "ThorsSDL.h"
 #include "Util.h"
-#include <SDL.h>
-#include <SDL_ttf.h>
 
 namespace ThorsAnvil::UI
 {
@@ -95,13 +94,13 @@ class Texture
 class TextPen: public Pen
 {
     public:
-        TextPen(std::string const& fontName, int pt = 12, Color ink =  {0, 0, 0, 255}, Color fill = {255, 255, 255, 0});
+        TextPen(std::string const& fileName, int point = 12, Color ink =  {0, 0, 0, 255}, Color fill = {255, 255, 255, 0});
 
         Texture     createTextureFromString(DrawContext& drawContext, char const* message)                const;
         Texture     createTextureFromString(DrawContext& drawContext, std::string const& message)         const   {return createTextureFromString(drawContext, message.c_str());}
 
     private:
-        std::shared_ptr<TTF_Font>   font;
+        std::shared_ptr<SDL::TTFont>   font;
 };
 
 

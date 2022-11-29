@@ -24,42 +24,36 @@ RenderState::operator Uint32() const
     return flags;
 }
 
+WindowRegister::WindowRegister(Window& window)
+    : window(window)
+{
+    window.registerWindow();
+}
+
+WindowRegister::~WindowRegister()
+{
+    window.unregisterWindow();
+}
+
 Window::Window(Application& application, std::string const& title, Rect const& rect, WindowState const& winState, RenderState const& renState)
     : DrawContext(nullptr)
     , application(application)
-    , window(nullptr)
+    , window(std::make_unique<SDL::Window>(title, rect, winState))
+    , windowRegister(*this)
     , sprites{}
 {
-    window  = SDL_CreateWindow(title.c_str(), rect.x, rect.y, rect.w, rect.h, winState);
-    if (window == nullptr)
-    {
-        throw std::runtime_error("Failed to create Window");
-    }
-
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    try
-    {
-        static_cast<DrawContext&>(*this) = DrawContext(window, renState);
-    }
-    catch (...)
-    {
-        SDL_DestroyWindow(window);
-        throw;
-    }
-
-    application.registerWindow(*this);
+    static_cast<DrawContext&>(*this) = DrawContext(*window, renState);
 }
 
 Window::~Window()
-{
-    destroy();
-}
+{}
 
 Window::Window(Window&& move) noexcept
     : DrawContext(std::move(move))
     , application(move.application)
-    , window(nullptr)
+    , windowRegister(*this)
 {
     std::swap(window,   move.window);
     std::swap(sprites,  move.sprites);
@@ -68,14 +62,30 @@ Window::Window(Window&& move) noexcept
 
 Window& Window::operator=(Window&& move) noexcept
 {
-    destroy();
+    unregisterWindow();
 
     window = std::exchange(move.window, nullptr);
     sprites= std::exchange(move.sprites,{});
     static_cast<DrawContext&>(*this) = std::move(move);
 
-    application.registerWindow(*this);
+    registerWindow();
     return *this;
+}
+
+void Window::registerWindow()
+{
+    if (window)
+    {
+        application.registerWindow(*this);
+    }
+}
+
+void Window::unregisterWindow()
+{
+    if (window)
+    {
+        application.unregisterWindow(*this);
+    }
 }
 
 void Window::updateState()
@@ -86,18 +96,9 @@ void Window::updateState()
     }
 }
 
-void Window::destroy()
-{
-    if (window != nullptr)
-    {
-        application.unregisterWindow(*this);
-        SDL_DestroyWindow(window);
-    }
-}
-
 Uint32 Window::getId() const
 {
-    return SDL_GetWindowID(window);
+    return SDL_GetWindowID(*window);
 }
 
 void Window::draw()

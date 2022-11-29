@@ -2,10 +2,9 @@
 #define THORSANVIL_UI_WINDOW_H
 
 #include "ThorsSDLConfig.h"
+#include "ThorsSDL.h"
 #include "DrawContext.h"
-#include "Util.h"
 #include <gtest/gtest_prod.h>
-#include <SDL.h>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -13,65 +12,6 @@
 class SpriteTest_WindowConstruction_Test;
 namespace ThorsAnvil::UI
 {
-/*
-Window Flags:
-=============
-    SDL_WINDOW_FULLSCREEN         fullscreen window
-    SDL_WINDOW_FULLSCREEN_DESKTOP fullscreen window at desktop resolution
-
-    SDL_WINDOW_OPENGL             window usable with an OpenGL context
-    SDL_WINDOW_VULKAN             window usable with a Vulkan instance
-    SDL_WINDOW_METAL              window usable with a Metal instance
-    SDL_WINDOW_HIDDEN             window is not visible
-    SDL_WINDOW_BORDERLESS         no window decoration
-    SDL_WINDOW_RESIZABLE          window can be resized
-    SDL_WINDOW_MINIMIZED          window is minimized
-    SDL_WINDOW_MAXIMIZED          window is maximized
-    SDL_WINDOW_INPUT_GRABBED      window has grabbed input focus
-    SDL_WINDOW_ALLOW_HIGHDPI      window should be created in high-DPI mode if supported (>= SDL 2.0.1)
-*/
-
-
-enum WindowType { Default = 0, OpenGL = SDL_WINDOW_OPENGL, Vulkan = SDL_WINDOW_VULKAN, Metal = SDL_WINDOW_METAL };
-
-inline std::ostream& operator<<(std::ostream& s, WindowType const& wt)
-{
-    switch (wt)
-    {
-        case Default:   return s << "Default";
-        case OpenGL:    return s << "OpenGL";
-        case Vulkan:    return s << "Vulkan";
-        case Metal:     return s << "Metal";
-        default: break;
-    }
-    return s << "Unknown??";
-}
-
-struct WindowState
-{
-    WindowType  type        = Default;
-    bool        fullscreen  = false;
-    bool        border      = true;
-    bool        resizeable  = true;
-    bool        hidden      = false;
-    bool        grabFocus   = false;
-
-    operator Uint32 () const;
-
-    friend std::ostream& operator<<(std::ostream& s, WindowState const& ws)
-    {
-        return s    << "{\n"
-                    << "Type:     " << ws.type         << " " << static_cast<Uint32>(ws.type)                 << "\n"
-                    << "Full:     " << ws.fullscreen   << " " << (ws.fullscreen ? SDL_WINDOW_FULLSCREEN : 0)  << "\n"
-                    << "Border:   " << ws.border       << " " << (ws.border ? 0 : SDL_WINDOW_BORDERLESS)      << "\n"
-                    << "Resize:   " << ws.resizeable   << " " << (ws.resizeable ? SDL_WINDOW_RESIZABLE : 0)   << "\n"
-                    << "Hidden:   " << ws.hidden       << " " << (ws.hidden ? SDL_WINDOW_HIDDEN : 0)          << "\n"
-                    << "Focus:    " << ws.grabFocus    << " " << (ws.grabFocus ? SDL_WINDOW_INPUT_GRABBED : 0)<< "\n"
-                    << "Result:   " << static_cast<Uint32>(ws)                                                << "\n"
-                    << "}";
-    }
-};
-
 
 class WindowEventHandler
 {
@@ -114,6 +54,14 @@ class WindowEventHandler
         virtual void handleEventMouseWheel(SDL_MouseWheelEvent const& /*event*/)                {}
 };
 
+class WindowRegister
+{
+    Window&         window;
+    public:
+        WindowRegister(Window& window);
+        ~WindowRegister();
+};
+
 class Application;
 class Sprite;
 class Window: public WindowEventHandler, public DrawContext
@@ -126,8 +74,6 @@ class Window: public WindowEventHandler, public DrawContext
         Window& operator=(Window const&)  = delete;
         Window(Window&& move) noexcept;
         Window& operator=(Window&& move) noexcept;
-    private:
-        void    destroy();
 
     public:
         void    updateState();
@@ -144,12 +90,18 @@ class Window: public WindowEventHandler, public DrawContext
         void    remSprite(Sprite& sprite);
 
     private:
+        friend class WindowRegister;
+        void registerWindow();
+        void unregisterWindow();
+
+    private:
         FRIEND_TEST(::SpriteTest, WindowConstruction);
 
     private:
-        Application&            application;
-        SDL_Window*             window;
-        std::vector<Sprite*>    sprites;
+        Application&                    application;
+        std::unique_ptr<SDL::Window>    window;
+        WindowRegister                  windowRegister;
+        std::vector<Sprite*>            sprites;
 };
 
 class DebugWindow: public Window

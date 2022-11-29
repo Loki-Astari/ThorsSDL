@@ -88,47 +88,13 @@ void Texture::doDraw(Rect dst, Rect src)
 }
 
 
-TextPen::TextPen(std::string const& fontName, int pt, Color ink, Color fill)
+TextPen::TextPen(std::string const& fileName, int point, Color ink, Color fill)
     : Pen(ink, fill)
-    // Note: I know I don't need to test for null on p here.
-    //       But doing so makes the unit tests easier to write.
-    //       We check that a failed Open() does not result in a call to Close().
-    , font(TTF_OpenFont(fontName.c_str(), pt), [](TTF_Font* p){if (p){TTF_CloseFont(p);}})
-{
-    if (!font)
-    {
-        throw std::runtime_error("Failed to create font");
-    }
-}
-
-// Note only use in: TextPen::createTextureFromString
-struct SurfaceHolder
-{
-    SDL_Surface*    surface;
-
-    SurfaceHolder(TTF_Font& font, char const* message, Color const& ink)
-        : surface(TTF_RenderText_Solid(&font, message, SDL_Color{ink.r, ink.b, ink.g, ink.alpha}))
-    {
-        if (!surface)
-        {
-            throw std::runtime_error("Failed to Create Surface");
-        }
-    }
-    ~SurfaceHolder()
-    {
-        SDL_FreeSurface(surface);
-    }
-
-
-    SurfaceHolder(SurfaceHolder const&)             = delete;
-    SurfaceHolder& operator=(SurfaceHolder const&)  = delete;
-    SurfaceHolder(SurfaceHolder&&)                  = delete;
-    SurfaceHolder& operator=(SurfaceHolder&&)       = delete;
-};
-
+    , font(std::make_shared<SDL::TTFont>(fileName, point))
+{}
 
 Texture TextPen::createTextureFromString(DrawContext& drawContext, char const* message) const
 {
-    SurfaceHolder       surface(*font, message, ink);
-    return Texture{drawContext, *surface.surface};
+    SDL::Surface       surface(*font, message, ink);
+    return Texture{drawContext, *surface};
 }
