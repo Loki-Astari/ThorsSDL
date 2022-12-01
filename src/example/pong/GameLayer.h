@@ -20,7 +20,7 @@ class GameLayer
         int const   height          = 18;
         int const   width           = 60;
         int const   border          = 4;
-        UI::Application& application;
+        //UI::Application& application;
         UI::Pen     pen{UI::C::black, UI::C::red};
         UI::Rect    position;
         int         windowWidth;
@@ -103,14 +103,8 @@ class GameLayer
     Wall                wall;
     Ball                ball;
 
-
     public:
-        GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, UI::Rect const& rect)
-            : paddle(application, window, layer, rect.w, rect.h)
-            , score(window, layer)
-            , wall(window, layer, rect.w, rect.h, score)
-            , ball(window, layer, rect.w, rect.h, paddle, wall)
-        {}
+        GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, UI::Rect const& rect);
 };
 
 }

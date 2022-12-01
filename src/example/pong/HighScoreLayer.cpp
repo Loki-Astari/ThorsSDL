@@ -8,15 +8,34 @@
 
 using namespace ThorsAnvil::UI::Example::Pong;
 
-HighScoreLayer::HighScoreTable::HighScoreTable(UI::Application& /*application*/, UI::Window& parent, std::size_t layer)
+HighScoreLayer::HighScoreTable::HighScoreTable(UI::Application& application, UI::Window& parent, std::size_t layer, UI::Rect const& rect)
     : Sprite(parent, layer, 10)
-    //, application(application)
+    , application(application)
     , window(parent)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue)
+    , rect(rect)
 {}
 
-void HighScoreLayer::HighScoreTable::doDraw(UI::DrawContext& /*context*/)
+void HighScoreLayer::HighScoreTable::doDraw(UI::DrawContext& context)
 {
+    UI::Texture title   = pen.createTextureFromString(context, "High Score Table");
+    title.doDraw({rect.w / 2 - 100, 100, 0, 0});
+
+    int dist = 200;
+    for (auto const& score: scores)
+    {
+        UI::Texture name    = pen.createTextureFromString(context, score.name);
+        UI::Texture date    = pen.createTextureFromString(context, score.date);
+        UI::Texture valu    = pen.createTextureFromString(context, std::to_string(score.score));
+
+        name.doDraw({rect.w / 2 - 300, dist, 0, 0});
+        date.doDraw({rect.w / 2 - 100, dist, 0, 0});
+        valu.doDraw({rect.w / 2 + 200, dist, 0, 0});
+        dist += 50;
+    }
+
+    UI::Texture instruct = pen.createTextureFromString(context, "Press: L to Play, Q to Quit.   Game:  Q: Moves paddle left, W: Moves paddle right");
+    instruct.doDraw({100, 600, 0, 0});
 }
 
 bool HighScoreLayer::HighScoreTable::doUpdateState()
@@ -26,6 +45,10 @@ bool HighScoreLayer::HighScoreTable::doUpdateState()
     if (keystates[SDL_SCANCODE_L])
     {
         window.updateLayer(1);
+    }
+    if (keystates[SDL_SCANCODE_Q])
+    {
+        application.exitLoop();
     }
     return true;
 }

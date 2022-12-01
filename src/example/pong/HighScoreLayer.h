@@ -22,9 +22,10 @@ class HighScoreLayer
     };
     class HighScoreTable: public UI::Sprite
     {
-        //Application&                application;
+        Application&                application;
         Window&                     window;
         UI::TextPen                 pen;
+        UI::Rect                    rect;
         std::vector<HighScore>      scores{ {"Martin",  "1/1/2023",  150},
                                             {"Loki",    "2/1/2023",  140},
                                             {"Thor",    "3/1/2023",  130},
@@ -32,7 +33,7 @@ class HighScoreLayer
                                             {"Iron Man","5/1/2023",  110}
                                           };
         public:
-            HighScoreTable(Application& application, Window& parent, std::size_t layer);
+            HighScoreTable(Application& application, Window& parent, std::size_t layer, UI::Rect const& rect);
             virtual void doDraw(DrawContext& context) override;
             virtual bool doUpdateState() override;
     };
@@ -40,8 +41,8 @@ class HighScoreLayer
     HighScoreTable       highScoreTable;
 
     public:
-        HighScoreLayer(UI::Application& application, UI::Window& window, std::size_t layer, UI::Rect const& /*rect*/)
-            : highScoreTable(application, window, layer)
+        HighScoreLayer(UI::Application& application, UI::Window& window, std::size_t layer, UI::Rect const& rect)
+            : highScoreTable(application, window, layer, rect)
         {}
 };
 

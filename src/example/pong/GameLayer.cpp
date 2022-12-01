@@ -3,9 +3,9 @@
 
 using namespace ThorsAnvil::UI::Example::Pong;
 
-GameLayer::Paddle::Paddle(UI::Application& application, UI::Window& window, std::size_t layer, int windowWidth, int windowHeight)
+GameLayer::Paddle::Paddle(UI::Application& /*application*/, UI::Window& window, std::size_t layer, int windowWidth, int windowHeight)
     : Sprite(window, layer, 15)
-    , application(application)
+    //, application(application)
     , position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
     , windowWidth(windowWidth)
 {}
@@ -15,23 +15,23 @@ void GameLayer::Paddle::moveLeft()
     position.x = std::max(0, position.x - speed);
 }
 
-void  GameLayer::Paddle::moveRight()
+void GameLayer::Paddle::moveRight()
 {
     position.x = std::min(windowWidth - width, position.x + speed);
 }
 
-bool  GameLayer::Paddle::collision(UI::Pt& ball, UI::Pt& velocity) const
+bool GameLayer::Paddle::collision(UI::Pt& ball, UI::Pt& velocity) const
 {
     bool hit = position.bounce(ball, velocity);
     return hit;
 }
 
-void  GameLayer::Paddle::doDraw(DrawContext& context)
+void GameLayer::Paddle::doDraw(DrawContext& context)
 {
     pen.drawRect(context, position);
 }
 
-bool  GameLayer::Paddle::doUpdateState()
+bool GameLayer::Paddle::doUpdateState()
 {
     bool updated = false;
     int numkeys = 0;
@@ -45,10 +45,6 @@ bool  GameLayer::Paddle::doUpdateState()
     {
         moveRight();
         updated = true;
-    }
-    if (keystates[SDL_SCANCODE_P])
-    {
-        application.exitLoop();
     }
     return updated;
 }
@@ -227,3 +223,10 @@ void GameLayer::Ball::reset()
     pos         = {windowWidth / 2, windowHeight / 2};
     velocity    = {-4, -4};
 }
+
+GameLayer::GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, UI::Rect const& rect)
+    : paddle(application, window, layer, rect.w, rect.h)
+    , score(window, layer)
+    , wall(window, layer, rect.w, rect.h, score)
+    , ball(window, layer, rect.w, rect.h, paddle, wall)
+{}
