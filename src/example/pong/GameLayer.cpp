@@ -3,9 +3,8 @@
 
 using namespace ThorsAnvil::UI::Example::Pong;
 
-GameLayer::Paddle::Paddle(UI::Application& /*application*/, UI::Window& window, std::size_t layer, int windowWidth, int windowHeight)
+GameLayer::Paddle::Paddle(UI::Window& window, std::size_t layer, int windowWidth, int windowHeight)
     : Sprite(window, layer, 15)
-    //, application(application)
     , position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
     , windowWidth(windowWidth)
 {}
@@ -224,8 +223,8 @@ void GameLayer::Ball::reset()
     velocity    = {-4, -4};
 }
 
-GameLayer::GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
-    : paddle(application, window, layer, rect.w, rect.h)
+GameLayer::GameLayer(UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
+    : paddle(window, layer, rect.w, rect.h)
     , score(window, layer, scoreOfLastGame)
     , wall(window, layer, rect.w, rect.h, score)
     , ball(window, layer, rect.w, rect.h, paddle, wall)

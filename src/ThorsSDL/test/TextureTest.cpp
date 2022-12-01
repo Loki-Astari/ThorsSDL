@@ -13,7 +13,7 @@ TEST(TextureTest, TextureCreate)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
         ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
         ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
 
@@ -36,7 +36,7 @@ TEST(TextureTest, TextureCreateWithSDL_CreateTextureFromSurfaceFailing)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
         ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
         ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
 
@@ -61,7 +61,7 @@ TEST(TextureTest, TextureDrawCalcSrcCalcDst)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
         ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
         ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
 
@@ -90,7 +90,7 @@ TEST(TextureTest, TextureDrawSpecSrcCalcDst)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
         ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
         ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
 
@@ -119,7 +119,7 @@ TEST(TextureTest, TextureDrawCalcSrcSpecDst)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
         ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
         ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
 
@@ -148,7 +148,7 @@ TEST(TextureTest, TextureDrawSpecSrcSpecDst)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
         ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
         ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
 

@@ -9,7 +9,7 @@ TEST(WindowTest, WindowConstruction)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
     };
 
     EXPECT_NO_THROW(
@@ -31,7 +31,7 @@ TEST(WindowTest, WindowConstruction_WindowCreateFails)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
     };
 
     EXPECT_THROW(
@@ -54,7 +54,7 @@ TEST(WindowTest, WindowConstruction_RenderCreateFails)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
     };
 
     EXPECT_THROW(
@@ -77,7 +77,7 @@ TEST(WindowTest, WindowMoveConstruction)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          src(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          src("Title", {100, 100, 200, 200});
         ThorsAnvil::UI::Window          dst(std::move(src));
     };
 
@@ -100,8 +100,8 @@ TEST(WindowTest, WindowMoveAssignment)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          src(application, "Title", {100, 100, 200, 200});
-        ThorsAnvil::UI::Window          dst(application, "Next", {20, 20, 10, 10});
+        ThorsAnvil::UI::Window          src("Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          dst("Next", {20, 20, 10, 10});
 
         dst = std::move(src);
     };
@@ -140,7 +140,7 @@ TEST(WindowTest, WindowUpdateLayout)
     auto action = [&resetCount]()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
 
         MockSprite                      sprite(window, resetCount);
 

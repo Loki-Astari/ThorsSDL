@@ -58,7 +58,6 @@ class HighScoreLayer
     };
     class HighScoreTable: public UI::Sprite
     {
-        Application&                application;
         Window&                     window;
         UI::TextPen                 pen;
         int&                        scoreOfLastGame;
@@ -66,7 +65,7 @@ class HighScoreLayer
         std::vector<HighScore>      scores;
 
         public:
-            HighScoreTable(Application& application, Window& parent, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect);
+            HighScoreTable(Window& parent, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect);
             virtual void doDraw(DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
@@ -75,8 +74,8 @@ class HighScoreLayer
     HighScoreTable       highScoreTable;
 
     public:
-        HighScoreLayer(UI::Application& application, UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
-            : highScoreTable(application, window, layer, scoreOfLastGame, rect)
+        HighScoreLayer(UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
+            : highScoreTable(window, layer, scoreOfLastGame, rect)
         {}
 };
 

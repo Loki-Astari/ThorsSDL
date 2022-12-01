@@ -20,7 +20,7 @@ TEST(SpriteTest, WindowConstruction)
 
     auto action = [](){
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {10, 10, 20, 20});
+        ThorsAnvil::UI::Window          window("Title", {10, 10, 20, 20});
 
         TestSprite                      sprite(window, 0, 0);
         EXPECT_EQ(1, window.sprites.size());

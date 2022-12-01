@@ -18,19 +18,19 @@ class PongWindow: public UI::Window
     static int constexpr gameLayerId = 1;
 
     public:
-        PongWindow(UI::Application& application, std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
-            : Window(application, title, rect, winState, renState)
+        PongWindow(std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
+            : Window(title, rect, winState, renState)
             , scoreOfLastGame(0)
-            , gameLayer(application, *this, gameLayerId, scoreOfLastGame, rect)
-            , highScoreLayer(application, *this, highScoreLayerId, scoreOfLastGame, rect)
+            , gameLayer(*this, gameLayerId, scoreOfLastGame, rect)
+            , highScoreLayer(*this, highScoreLayerId, scoreOfLastGame, rect)
         {}
 };
 
 
 int main()
 {
-    UI::Application     application(UI::Video, UI::Fonts);
-    PongWindow          window(application, "Pong v1.0", {UI::windowUndefinedPos, UI::windowUndefinedPos, windowWidth, windowHeight}, {.grabFocus = true});
+    UI::Application    application(UI::Video, UI::Fonts);
+    PongWindow          window("Pong v1.0", {UI::windowUndefinedPos, UI::windowUndefinedPos, windowWidth, windowHeight}, {.grabFocus = true});
 
     application.eventLoop(60);
 }

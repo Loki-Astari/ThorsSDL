@@ -7,7 +7,7 @@
 
 using namespace ThorsAnvil::UI;
 
-bool Application::initialized = false;
+Application* Application::initialized = nullptr;
 
 Application::Application(InitValue init, InitLibs libs)
     : finished(false)
@@ -20,16 +20,29 @@ Application::Application(InitValue init, InitLibs libs)
 
     initSubSystem(libs);
 
-    initialized = true;
+    initialized = this;
 }
 
 Application::Application(InitLibs libs)
     : Application(Everything, libs)
 {}
 
-Application::~Application()
+Application& Application::getInstance()
 {
-    initialized = false;
+    if (initialized == nullptr)
+    {
+        throw std::runtime_error("No Application Exists");
+    }
+    return *initialized;
+}
+
+Application::~Application() noexcept(false)
+{
+    if (windows.size() != 0)
+    {
+        throw std::runtime_error("Killing Application with active windows");
+    }
+    initialized = nullptr;
 }
 
 void Application::initSubSystem(InitValue init)

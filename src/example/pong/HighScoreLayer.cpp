@@ -11,9 +11,8 @@
 
 using namespace ThorsAnvil::UI::Example::Pong;
 
-HighScoreLayer::HighScoreTable::HighScoreTable(UI::Application& application, UI::Window& parent, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
+HighScoreLayer::HighScoreTable::HighScoreTable(UI::Window& parent, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
     : Sprite(parent, layer, 10)
-    , application(application)
     , window(parent)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue)
     , scoreOfLastGame(scoreOfLastGame)
@@ -56,7 +55,7 @@ bool HighScoreLayer::HighScoreTable::doUpdateState()
     }
     if (keystates[SDL_SCANCODE_K])
     {
-        application.exitLoop();
+        Application::getInstance().exitLoop();
     }
     return true;
 }

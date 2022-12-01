@@ -15,7 +15,7 @@ class WindowEventHandler;
 class Application
 {
     private:
-        static bool initialized;
+        static Application* initialized;
         std::unique_ptr<SDL::Lib_Main>    sdl2;
         std::unique_ptr<SDL::Lib_TTF>     sdl2ttf;
 
@@ -28,7 +28,9 @@ class Application
     public:
         Application(InitValue init = Everything, InitLibs = NoLibs);
         Application(InitLibs libs);
-        ~Application();
+        ~Application() noexcept(false);
+
+        static Application& getInstance();
 
         Application(Application const&)             = delete;
         Application(Application&&)                  = delete;

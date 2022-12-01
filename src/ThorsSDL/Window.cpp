@@ -35,9 +35,8 @@ WindowRegister::~WindowRegister()
     window.unregisterWindow();
 }
 
-Window::Window(Application& application, std::string const& title, Rect const& rect, WindowState const& winState, RenderState const& renState)
+Window::Window(std::string const& title, Rect const& rect, WindowState const& winState, RenderState const& renState)
     : DrawContext(nullptr)
-    , application(application)
     , window(std::make_unique<SDL::Window>(title, rect, winState))
     , windowRegister(*this)
     , sprites{std::vector<Sprite*>{}}
@@ -53,7 +52,6 @@ Window::~Window()
 
 Window::Window(Window&& move) noexcept
     : DrawContext(std::move(move))
-    , application(move.application)
     , windowRegister(*this)
     , sprites{}
     , currentSpriteLayer(0)
@@ -61,7 +59,7 @@ Window::Window(Window&& move) noexcept
     std::swap(window,               move.window);
     std::swap(sprites,              move.sprites);
     std::swap(currentSpriteLayer,   move.currentSpriteLayer);
-    application.registerWindow(*this);
+    Application::getInstance().registerWindow(*this);
 }
 
 Window& Window::operator=(Window&& move) noexcept
@@ -81,7 +79,7 @@ void Window::registerWindow()
 {
     if (window)
     {
-        application.registerWindow(*this);
+        Application::getInstance().registerWindow(*this);
     }
 }
 
@@ -89,7 +87,7 @@ void Window::unregisterWindow()
 {
     if (window)
     {
-        application.unregisterWindow(*this);
+        Application::getInstance().unregisterWindow(*this);
     }
 }
 

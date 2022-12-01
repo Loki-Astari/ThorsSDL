@@ -62,12 +62,11 @@ class WindowRegister
         ~WindowRegister();
 };
 
-class Application;
 class Sprite;
 class Window: public WindowEventHandler, public DrawContext
 {
     public:
-        Window(Application& application, std::string const& title, Rect const& rect, WindowState const& winState = {}, RenderState const& renState = {});
+        Window(std::string const& title, Rect const& rect, WindowState const& winState = {}, RenderState const& renState = {});
         ~Window();
 
         Window(Window const&)             = delete;
@@ -98,7 +97,6 @@ class Window: public WindowEventHandler, public DrawContext
         FRIEND_TEST(::SpriteTest, WindowConstruction);
 
     private:
-        Application&                        application;
         std::unique_ptr<SDL::Window>        window;
         WindowRegister                      windowRegister;
         std::vector<std::vector<Sprite*>>   sprites;

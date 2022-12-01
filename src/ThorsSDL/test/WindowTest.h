@@ -15,8 +15,8 @@ struct Window ## Handler: public ThorsAnvil::UI::DebugWindow                    
     int& count;                                                                 \
     Uint32& eventType;                                                          \
     Uint32& winEventType;                                                       \
-    Window ## Handler(ThorsAnvil::UI::Application& application, int& count, Uint32& eventType, Uint32& winEventType)   \
-        : DebugWindow(application, "Test Window", {100, 100, 200, 200})         \
+    Window ## Handler(int& count, Uint32& eventType, Uint32& winEventType)   \
+        : DebugWindow("Test Window", {100, 100, 200, 200})         \
         , count(count)                                                          \
         , eventType(eventType)                                                  \
         , winEventType(winEventType)                                            \
@@ -54,7 +54,7 @@ TEST(Test, CheckEventHandler ## Handler)                                        
     auto action = [&count, &eventType, &winEventType, &windowId]()              \
     {                                                                           \
         ThorsAnvil::UI::Application     application;                            \
-        Window ## Handler               window(application, count, eventType, winEventType);    \
+        Window ## Handler               window(count, eventType, winEventType);    \
         windowId = window.getId();                                              \
                                                                                 \
         application.eventLoop(60, [&application](int){application.exitLoop();});            \

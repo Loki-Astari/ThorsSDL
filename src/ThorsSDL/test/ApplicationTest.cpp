@@ -312,7 +312,7 @@ TEST(ApplicationTest, CheckWindowIsRegisteredByCheckingCallsToGetWindowId)
     auto action = [&eventCountGot]()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Title", {100, 100, 200, 200});
+        ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
 
         application.eventLoop(10000, [&application, &eventCountGot](int eventCount){eventCountGot = eventCount; application.exitLoop();});
     };
@@ -406,7 +406,7 @@ TEST(ApplicationTest, ApplicationWithWindowThatNeedsDrawing)
     auto action = []()
     {
         ThorsAnvil::UI::Application     application;
-        ThorsAnvil::UI::Window          window(application, "Test", {10, 10, 20, 20});
+        ThorsAnvil::UI::Window          window("Test", {10, 10, 20, 20});
 
         application.eventLoop(10000, [&application](int){application.exitLoop();});
     };

@@ -20,12 +20,11 @@ class GameLayer
         int const   height          = 18;
         int const   width           = 60;
         int const   border          = 4;
-        //UI::Application& application;
         UI::Pen     pen{UI::C::black, UI::C::red};
         UI::Rect    position;
         int         windowWidth;
         public:
-            Paddle(UI::Application& application, UI::Window& window, std::size_t layer, int windowWidth, int windowHeight);
+            Paddle(UI::Window& window, std::size_t layer, int windowWidth, int windowHeight);
             void moveLeft();
             void moveRight();
             bool collision(UI::Pt& ball, UI::Pt& velocity) const;
@@ -104,7 +103,7 @@ class GameLayer
     Ball                ball;
 
     public:
-        GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect);
+        GameLayer(UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect);
 };
 
 }
