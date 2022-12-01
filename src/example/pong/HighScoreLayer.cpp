@@ -6,6 +6,8 @@
 #include "ThorsSDL/Pen.h"
 #include <vector>
 #include <algorithm>
+#include <iterator>
+#include <fstream>
 
 using namespace ThorsAnvil::UI::Example::Pong;
 
@@ -16,7 +18,11 @@ HighScoreLayer::HighScoreTable::HighScoreTable(UI::Application& application, UI:
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue)
     , scoreOfLastGame(scoreOfLastGame)
     , rect(rect)
-{}
+{
+    std::ifstream   highScore("HighScore.data");
+
+    std::copy(std::istream_iterator<HighScore>(highScore), std::istream_iterator<HighScore>(), std::back_inserter(scores));
+}
 
 void HighScoreLayer::HighScoreTable::doDraw(UI::DrawContext& context)
 {
@@ -62,7 +68,8 @@ void HighScoreLayer::HighScoreTable::reset()
     {
         std::cout << "Please Enter Your Name: ";
         std::string name;
-        std::cin >> name;
+        std::getline(std::cin, name);
+        name.erase(std::remove(std::begin(name),end(name), ','), std::end(name));
 
         const auto now = std::chrono::system_clock::now();
         //std::string date = std::format("{:%d/%m/%Y}", now);
@@ -72,5 +79,9 @@ void HighScoreLayer::HighScoreTable::reset()
 
         scores.insert(find, {name, date, scoreOfLastGame});
         scores.resize(std::min(scores.size(), static_cast<std::size_t>(5)));
+
+        std::ofstream   highScore("HighScore.data");
+
+        std::copy(std::begin(scores), std::end(scores), std::ostream_iterator<HighScore>(highScore));
     }
 }
