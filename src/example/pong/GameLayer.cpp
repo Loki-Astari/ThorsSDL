@@ -54,9 +54,9 @@ void GameLayer::Paddle::reset()
     position.x = (windowWidth/ 2) - (width / 2);
 }
 
-GameLayer::Score::Score(Window& parent, std::size_t layer)
+GameLayer::Score::Score(Window& parent, std::size_t layer, int& scoreOfLastGame)
     : Sprite(parent, layer, 16)
-    , score(0)
+    , score(scoreOfLastGame)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24)
     , scoreText(pen.createTextureFromString(parent, "Current Score: "))
 {}
@@ -224,9 +224,9 @@ void GameLayer::Ball::reset()
     velocity    = {-4, -4};
 }
 
-GameLayer::GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, UI::Rect const& rect)
+GameLayer::GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
     : paddle(application, window, layer, rect.w, rect.h)
-    , score(window, layer)
+    , score(window, layer, scoreOfLastGame)
     , wall(window, layer, rect.w, rect.h, score)
     , ball(window, layer, rect.w, rect.h, paddle, wall)
 {}

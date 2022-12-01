@@ -10,17 +10,19 @@ int constexpr           windowHeight    = 720;
 
 class PongWindow: public UI::Window
 {
-    ThorsAnvil::UI::Example::Pong::GameLayer           game;
-    ThorsAnvil::UI::Example::Pong::HighScoreLayer      highScore;
+    int                                             scoreOfLastGame;
+    ThorsAnvil::UI::Example::Pong::GameLayer        gameLayer;
+    ThorsAnvil::UI::Example::Pong::HighScoreLayer   highScoreLayer;
 
-    static int constexpr highScoreLayer = 0;
-    static int constexpr gameLayer = 1;
+    static int constexpr highScoreLayerId = 0;
+    static int constexpr gameLayerId = 1;
 
     public:
         PongWindow(UI::Application& application, std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(application, title, rect, winState, renState)
-            , game(application, *this, gameLayer, rect)
-            , highScore(application, *this, highScoreLayer, rect)
+            , scoreOfLastGame(0)
+            , gameLayer(application, *this, gameLayerId, scoreOfLastGame, rect)
+            , highScoreLayer(application, *this, highScoreLayerId, scoreOfLastGame, rect)
         {}
 };
 

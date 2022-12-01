@@ -36,11 +36,11 @@ class GameLayer
 
     class Score: public UI::Sprite
     {
-        int             score;
+        int&            score;
         UI::TextPen     pen;
         UI::Texture     scoreText;
         public:
-            Score(Window& parent, std::size_t layer);
+            Score(Window& parent, std::size_t layer, int& scoreOfLastGame);
             virtual void doDraw(DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
@@ -104,7 +104,7 @@ class GameLayer
     Ball                ball;
 
     public:
-        GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, UI::Rect const& rect);
+        GameLayer(UI::Application& application, UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect);
 };
 
 }

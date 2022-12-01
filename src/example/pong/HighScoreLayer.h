@@ -25,6 +25,7 @@ class HighScoreLayer
         Application&                application;
         Window&                     window;
         UI::TextPen                 pen;
+        int&                        scoreOfLastGame;
         UI::Rect                    rect;
         std::vector<HighScore>      scores{ {"Martin",  "1/1/2023",  150},
                                             {"Loki",    "2/1/2023",  140},
@@ -33,16 +34,17 @@ class HighScoreLayer
                                             {"Iron Man","5/1/2023",  110}
                                           };
         public:
-            HighScoreTable(Application& application, Window& parent, std::size_t layer, UI::Rect const& rect);
+            HighScoreTable(Application& application, Window& parent, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect);
             virtual void doDraw(DrawContext& context) override;
             virtual bool doUpdateState() override;
+            virtual void reset() override;
     };
 
     HighScoreTable       highScoreTable;
 
     public:
-        HighScoreLayer(UI::Application& application, UI::Window& window, std::size_t layer, UI::Rect const& rect)
-            : highScoreTable(application, window, layer, rect)
+        HighScoreLayer(UI::Application& application, UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
+            : highScoreTable(application, window, layer, scoreOfLastGame, rect)
         {}
 };
 

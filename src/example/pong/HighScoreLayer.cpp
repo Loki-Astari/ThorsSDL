@@ -5,14 +5,16 @@
 #include "ThorsSDL/Sprite.h"
 #include "ThorsSDL/Pen.h"
 #include <vector>
+#include <algorithm>
 
 using namespace ThorsAnvil::UI::Example::Pong;
 
-HighScoreLayer::HighScoreTable::HighScoreTable(UI::Application& application, UI::Window& parent, std::size_t layer, UI::Rect const& rect)
+HighScoreLayer::HighScoreTable::HighScoreTable(UI::Application& application, UI::Window& parent, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
     : Sprite(parent, layer, 10)
     , application(application)
     , window(parent)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue)
+    , scoreOfLastGame(scoreOfLastGame)
     , rect(rect)
 {}
 
@@ -51,4 +53,14 @@ bool HighScoreLayer::HighScoreTable::doUpdateState()
         application.exitLoop();
     }
     return true;
+}
+
+void HighScoreLayer::HighScoreTable::reset()
+{
+    auto find = std::find_if(std::begin(scores), std::end(scores), [scoreOfLastGame = this->scoreOfLastGame](HighScore const& item){return item.score < scoreOfLastGame;});
+    if (find != std::end(scores))
+    {
+        scores.insert(find, {"Temp", "Today", scoreOfLastGame});
+        scores.resize(std::min(scores.size(), static_cast<std::size_t>(5)));
+    }
 }
