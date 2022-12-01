@@ -36,7 +36,7 @@ void HighScoreLayer::HighScoreTable::doDraw(UI::DrawContext& context)
         dist += 50;
     }
 
-    UI::Texture instruct = pen.createTextureFromString(context, "Press: L to Play, Q to Quit.   Game:  Q: Moves paddle left, W: Moves paddle right");
+    UI::Texture instruct = pen.createTextureFromString(context, "Press: L to Play, K to Quit.   Game:  Q: Moves paddle left, W: Moves paddle right");
     instruct.doDraw({100, 600, 0, 0});
 }
 
@@ -48,7 +48,7 @@ bool HighScoreLayer::HighScoreTable::doUpdateState()
     {
         window.updateLayer(1);
     }
-    if (keystates[SDL_SCANCODE_Q])
+    if (keystates[SDL_SCANCODE_K])
     {
         application.exitLoop();
     }
@@ -60,7 +60,17 @@ void HighScoreLayer::HighScoreTable::reset()
     auto find = std::find_if(std::begin(scores), std::end(scores), [scoreOfLastGame = this->scoreOfLastGame](HighScore const& item){return item.score < scoreOfLastGame;});
     if (find != std::end(scores))
     {
-        scores.insert(find, {"Temp", "Today", scoreOfLastGame});
+        std::cout << "Please Enter Your Name: ";
+        std::string name;
+        std::cin >> name;
+
+        const auto now = std::chrono::system_clock::now();
+        //std::string date = std::format("{:%d/%m/%Y}", now);
+        char date[16] = {0};
+        std::time_t time = std::chrono::system_clock::to_time_t(now);
+        std::strftime(date, sizeof(date), "%Y/%m/%d", std::localtime(&time));
+
+        scores.insert(find, {name, date, scoreOfLastGame});
         scores.resize(std::min(scores.size(), static_cast<std::size_t>(5)));
     }
 }
