@@ -29,6 +29,15 @@ enum {
     , countSDL_RenderFillRects
     , countSDL_RenderDrawRects
 
+    , countSDL_CreateTextureFromSurface
+    , countSDL_DestroyTexture
+
+    , countTTF_RenderText_Solid
+    , countSDL_FreeSurface
+
+    , countSDL_QueryTexture
+    , countSDL_RenderCopy
+
     , countTTF_Init
     , countTTF_Quit
     , countTTF_OpenFont
@@ -76,6 +85,15 @@ struct MocksSDLActions
     std::function<int(SDL_Renderer*, SDL_Rect const*, int)>             mockSDL_RenderFillRects     = [](SDL_Renderer*, SDL_Rect const*, int){return 0;};
     std::function<int(SDL_Renderer*, SDL_Rect const*, int)>             mockSDL_RenderDrawRects     = [](SDL_Renderer*, SDL_Rect const*, int){return 0;};
 
+    std::function<SDL_Texture*(SDL_Renderer*, SDL_Surface*)>            mockSDL_CreateTextureFromSurface    = [](SDL_Renderer*, SDL_Surface*) -> SDL_Texture* {return reinterpret_cast<SDL_Texture*>(1);};
+    std::function<void(SDL_Texture*)>                                   mockSDL_DestroyTexture              = [](SDL_Texture*){};
+
+    std::function<SDL_Surface*(TTF_Font*, char const*, SDL_Color)>      mockTTF_RenderText_Solid            = [](TTF_Font*, char const*, SDL_Color) -> SDL_Surface* {return reinterpret_cast<SDL_Surface*>(1);};
+    std::function<void(SDL_Surface*)>                                   mockSDL_FreeSurface                 = [](SDL_Surface*){};
+
+    std::function<int(SDL_Texture*, Uint32*, int*, int*, int*)>         mockSDL_QueryTexture                = [](SDL_Texture*, Uint32*, int*, int*, int*){return 0;};
+    std::function<int(SDL_Renderer*, SDL_Texture*, SDL_Rect const*, SDL_Rect const*)>   mockSDL_RenderCopy  = [](SDL_Renderer*, SDL_Texture*, SDL_Rect const*, SDL_Rect const*){return 0;};
+
     std::function<int()>                                                mockTTF_Init                = [](){return 0;};
     std::function<void()>                                               mockTTF_Quit                = [](){};
     std::function<TTF_Font*(char const*, int)>                          mockTTF_OpenFont            = [](char const*, int){return reinterpret_cast<TTF_Font*>(1);};
@@ -107,6 +125,15 @@ class MockSDL
     MOCK_MEM_DECL(SDL_RenderFillRects);
     MOCK_MEM_DECL(SDL_RenderDrawRects);
 
+    MOCK_MEM_DECL(SDL_CreateTextureFromSurface);
+    MOCK_MEM_DECL(SDL_DestroyTexture);
+
+    MOCK_MEM_DECL(TTF_RenderText_Solid);
+    MOCK_MEM_DECL(SDL_FreeSurface);
+
+    MOCK_MEM_DECL(SDL_QueryTexture);
+    MOCK_MEM_DECL(SDL_RenderCopy);
+
     MOCK_MEM_DECL(TTF_Init);
     MOCK_MEM_DECL(TTF_Quit);
     MOCK_MEM_DECL(TTF_OpenFont);
@@ -136,6 +163,15 @@ class MockSDL
             , MOCK_MEM_INIT(SDL_RenderDrawRect,     [&action](SDL_Renderer* r, SDL_Rect const* rp)                  {++action.count[countSDL_RenderDrawRect];return action.mockSDL_RenderDrawRect(r, rp);})
             , MOCK_MEM_INIT(SDL_RenderFillRects,    [&action](SDL_Renderer* r, SDL_Rect const* rp, int c)           {++action.count[countSDL_RenderFillRects];return action.mockSDL_RenderFillRects(r, rp, c);})
             , MOCK_MEM_INIT(SDL_RenderDrawRects,    [&action](SDL_Renderer* r, SDL_Rect const* rp, int c)           {++action.count[countSDL_RenderDrawRects];return action.mockSDL_RenderDrawRects(r, rp, c);})
+
+            , MOCK_MEM_INIT(SDL_CreateTextureFromSurface,   [&action](SDL_Renderer* r, SDL_Surface* s)              {++action.count[countSDL_CreateTextureFromSurface];return action.mockSDL_CreateTextureFromSurface(r, s);})
+            , MOCK_MEM_INIT(SDL_DestroyTexture,     [&action](SDL_Texture* t)                                       {++action.count[countSDL_DestroyTexture];return action.mockSDL_DestroyTexture(t);})
+
+            , MOCK_MEM_INIT(TTF_RenderText_Solid,   [&action](TTF_Font* f, char const* m, SDL_Color c)              {++action.count[countTTF_RenderText_Solid];return action.mockTTF_RenderText_Solid(f, m, c);})
+            , MOCK_MEM_INIT(SDL_FreeSurface,        [&action](SDL_Surface* s)                                       {++action.count[countSDL_FreeSurface];return action.mockSDL_FreeSurface(s);})
+
+            , MOCK_MEM_INIT(SDL_QueryTexture,       [&action](SDL_Texture* t, Uint32* f, int* a, int* w, int* h)    {++action.count[countSDL_QueryTexture];return action.mockSDL_QueryTexture(t, f, a, w, h);})
+            , MOCK_MEM_INIT(SDL_RenderCopy,         [&action](SDL_Renderer* r, SDL_Texture* t, SDL_Rect const* d, SDL_Rect const* s)    {++action.count[countSDL_RenderCopy];return action.mockSDL_RenderCopy(r, t, d, s);})
 
             , MOCK_MEM_INIT(TTF_Init,               [&action]()                                                     {++action.count[countTTF_Init];return action.mockTTF_Init();})
             , MOCK_MEM_INIT(TTF_Quit,               [&action]()                                                     {++action.count[countTTF_Quit];return action.mockTTF_Quit();})
