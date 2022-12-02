@@ -6,7 +6,7 @@ using namespace ThorsAnvil::UI;
 
 Texture::Texture(DrawContext& drawContext, SDL_Surface& surface)
     : drawContext(drawContext)
-    , texture(SDL_CreateTextureFromSurface(drawContext.getSurface(), &surface), [](SDL_Texture* t){if (t){SDL_DestroyTexture(t);}})
+    , texture(SDL_CreateTextureFromSurface(drawContext.getRenderer(), &surface), [](SDL_Texture* t){if (t){SDL_DestroyTexture(t);}})
 {
     if (!texture)
     {
@@ -25,5 +25,5 @@ void Texture::doDraw(Rect dst, Rect src)
     {
         SDL_QueryTexture(texture.get(), nullptr, nullptr, &dst.w, &dst.h);
     }
-    SDL_RenderCopy(drawContext.getSurface(), texture.get(), rectSrc, &dst);
+    SDL_RenderCopy(drawContext.getRenderer(), texture.get(), rectSrc, &dst);
 }

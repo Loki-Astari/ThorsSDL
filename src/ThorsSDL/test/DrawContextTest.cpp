@@ -101,21 +101,21 @@ TEST(DrawContextTest, GetSurface)
     EXPECT_NO_THROW(
         ThorsAnvil::UI::DrawContext     src(reinterpret_cast<SDL_Window*>(1));
 
-        EXPECT_NE(nullptr, src.getSurface());
+        EXPECT_NE(nullptr, src.getRenderer());
 
         ThorsAnvil::UI::DrawContext     dst(std::move(src));
-        EXPECT_EQ(nullptr, src.getSurface());
-        EXPECT_NE(nullptr, dst.getSurface());
+        EXPECT_EQ(nullptr, src.getRenderer());
+        EXPECT_NE(nullptr, dst.getRenderer());
 
         ThorsAnvil::UI::DrawContext     dst2;
-        EXPECT_EQ(nullptr, dst2.getSurface());
+        EXPECT_EQ(nullptr, dst2.getRenderer());
 
         dst2 = std::move(src);
-        EXPECT_EQ(nullptr, dst2.getSurface());
+        EXPECT_EQ(nullptr, dst2.getRenderer());
 
         dst2 = std::move(dst);
-        EXPECT_NE(nullptr, dst2.getSurface());
-        EXPECT_EQ(nullptr, dst.getSurface());
+        EXPECT_NE(nullptr, dst2.getRenderer());
+        EXPECT_EQ(nullptr, dst.getRenderer());
     );
 
     EXPECT_EQ(1, actions.count[countSDL_CreateRenderer]);

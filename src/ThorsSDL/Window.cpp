@@ -118,15 +118,15 @@ void Window::draw()
 {
     Color const& background = getBackgroundColor();
 
-    SDL_SetRenderDrawColor(getSurface(), background.r, background.g, background.b, background.alpha);
-    SDL_RenderClear(getSurface());
+    SDL_SetRenderDrawColor(getRenderer(), background.r, background.g, background.b, background.alpha);
+    SDL_RenderClear(getRenderer());
 
     for (auto const& sprite: sprites[currentSpriteLayer])
     {
         sprite->doDraw(*this);
     }
 
-    SDL_RenderPresent(getSurface());
+    SDL_RenderPresent(getRenderer());
 }
 
 void Window::addSprite(Sprite& sprite, std::size_t layer)

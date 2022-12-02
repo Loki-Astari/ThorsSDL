@@ -33,7 +33,7 @@ class DrawContext
         friend class Texture;
         friend class Window;
         FRIEND_TEST(::DrawContextTest, GetSurface);
-        SDL_Renderer* getSurface() const {return renderer.get() ? *renderer : nullptr;}
+        SDL_Renderer* getRenderer() const {return renderer.get() ? *renderer : nullptr;}
     private:
         std::unique_ptr<SDL::Renderer>   renderer;
 };
