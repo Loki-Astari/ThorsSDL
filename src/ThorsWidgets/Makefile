@@ -1,8 +1,9 @@
 THORSANVIL_ROOT             = $(realpath ../../)
 
-TARGET                      = ThorsWidgets.slib
+TARGET_E                      = ThorsWidgets.slib
+TARGET						= WidgetTest.app
 CXXFLAGS					+= $(SDL_CFLAGS)
 LDLIBS						+= $(SDL_LIBS)
-LINKLIBS					+= ThorsSDL
+LINK_LIBS					+= ThorsSDL
 
 include $(THORSANVIL_ROOT)/build/tools/Makefile
