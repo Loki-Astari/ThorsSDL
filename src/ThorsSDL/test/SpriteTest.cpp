@@ -2,6 +2,7 @@
 #include "test/MockSDL.h"
 #include "Application.h"
 #include "Window.h"
+#include "DrawContext.h"
 #include "Sprite.h"
 
 class TestSprite: public ThorsAnvil::UI::Sprite
@@ -9,7 +10,7 @@ class TestSprite: public ThorsAnvil::UI::Sprite
     public:
         using Sprite::Sprite;
 
-        virtual void doDraw(DrawContext&)   override    {}
+        virtual void doDraw(ThorsAnvil::UI::DrawContext&)   override    {}
         virtual bool doUpdateState()        override    {return true;}
 };
 

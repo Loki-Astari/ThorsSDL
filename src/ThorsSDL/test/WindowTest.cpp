@@ -126,7 +126,7 @@ class MockSprite: public ThorsAnvil::UI::Sprite
             , resetCount(resetCount)
         {}
 
-        virtual void doDraw(DrawContext& drawContext)   {}
+        virtual void doDraw(ThorsAnvil::UI::DrawContext& drawContext)   {}
         virtual bool doUpdateState()                    {return true;}
         virtual void reset()                            {++resetCount;Sprite::reset();}
 };

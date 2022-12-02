@@ -9,7 +9,7 @@ namespace ThorsAnvil::UI
 {
 
 class Window;
-class Sprite: public DrawContext
+class Sprite
 {
     Window&             parent;
     TimePoint           lastUpdate;
