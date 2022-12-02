@@ -2,7 +2,7 @@
 #define THORSANVIL_UI_TEST_APPLICATION_TEST_H
 
 #include "test/MockSDL.h"
-#include "DebugApplication.h"
+#include "Application.h"
 #include <stdexcept>
 
 #define HANDLER_TEST(Test, Handler, EventType, EventId)                  HANDLER_TEST_FULL(Test, Handler, EventType, EventId, false, 0)
