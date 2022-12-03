@@ -1,29 +1,34 @@
 #ifndef THORSANVIL_UI_SPRITE_H
 #define THORSANVIL_UI_SPRITE_H
 
-#include "ThorsSDLConfig.h"
-#include "DrawContext.h"
+#include "ThorsGraphicsConfig.h"
+#include "GraphicView.h"
 #include "Util.h"
 
 namespace ThorsAnvil::UI
 {
+    class DrawContext;
+}
 
-class Window;
+namespace ThorsAnvil::Graphics
+{
+
+class GraphicView;
 class Sprite
 {
-    Window&             parent;
-    TimePoint           lastUpdate;
+    GraphicView&        parent;
+    UI::TimePoint       lastUpdate;
     int                 updatePeriod;
 
     public:
-        Sprite(Window& parent, std::size_t layer, int millisecondUpdateTime);
+        Sprite(GraphicView& parent, int millisecondUpdateTime);
         virtual ~Sprite();
 
         void updateState();
 
-        virtual void doDraw(DrawContext& drawContext)   = 0;
-        virtual bool doUpdateState()                    = 0;
-        virtual void reset() {}
+        virtual void doDraw(UI::DrawContext& drawContext)   = 0;
+        virtual bool doUpdateState()                        = 0;
+        virtual void reset();
 };
 
 }

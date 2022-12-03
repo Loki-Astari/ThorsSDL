@@ -18506,7 +18506,7 @@ END
   fi
 fi
 
-ac_config_headers="$ac_config_headers config.h src/ThorsSDL/ThorsSDLConfig.h:config.h.in src/ThorsWidgets/ThorsWidgetsConfig.h:config.h.in"
+ac_config_headers="$ac_config_headers config.h src/ThorsSDL/ThorsSDLConfig.h:config.h.in src/ThorsGraphics/ThorsGraphicsConfig.h:config.h.in src/ThorsWidgets/ThorsWidgetsConfig.h:config.h.in"
 
 ac_config_files="$ac_config_files Makefile.extra Makefile.config:build/autotools/build/Makefile.config.in:Makefile.config.in"
 
@@ -19621,6 +19621,7 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "src/ThorsSDL/ThorsSDLConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsSDL/ThorsSDLConfig.h:config.h.in" ;;
+    "src/ThorsGraphics/ThorsGraphicsConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsGraphics/ThorsGraphicsConfig.h:config.h.in" ;;
     "src/ThorsWidgets/ThorsWidgetsConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsWidgets/ThorsWidgetsConfig.h:config.h.in" ;;
     "Makefile.extra") CONFIG_FILES="$CONFIG_FILES Makefile.extra" ;;
     "Makefile.config") CONFIG_FILES="$CONFIG_FILES Makefile.config:build/autotools/build/Makefile.config.in:Makefile.config.in" ;;

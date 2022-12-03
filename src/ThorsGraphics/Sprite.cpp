@@ -1,15 +1,15 @@
 #include "Sprite.h"
-#include "Window.h"
+#include "GraphicView.h"
 
-using namespace ThorsAnvil::UI;
+using namespace ThorsAnvil::Graphics;
 
 
-Sprite::Sprite(Window& parent, std::size_t layer, int millisecondUpdateTime)
+Sprite::Sprite(GraphicView& parent, int millisecondUpdateTime)
     : parent(parent)
     , lastUpdate{}
     , updatePeriod(millisecondUpdateTime)
 {
-    parent.addSprite(*this, layer);
+    parent.addSprite(*this);
 }
 
 Sprite::~Sprite()
@@ -19,7 +19,7 @@ Sprite::~Sprite()
 
 void Sprite::updateState()
 {
-    TimePoint   now =  std::chrono::system_clock::now();
+    UI::TimePoint   now =  std::chrono::system_clock::now();
     if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdate).count() >= updatePeriod)
     {
         if (doUpdateState())
@@ -28,3 +28,14 @@ void Sprite::updateState()
         }
     }
 }
+
+void Sprite::doDraw(UI::DrawContext& /*drawContext*/)
+{}
+
+bool Sprite::doUpdateState()
+{
+    return true;
+}
+
+void Sprite::reset()
+{}
