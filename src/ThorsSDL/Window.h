@@ -4,12 +4,13 @@
 #include "ThorsSDLConfig.h"
 #include "ThorsSDL.h"
 #include "DrawContext.h"
+#include "View.h"
 #include <gtest/gtest_prod.h>
 #include <string>
 #include <iostream>
 #include <vector>
 
-class SpriteTest_WindowConstruction_Test;
+
 namespace ThorsAnvil::UI
 {
 
@@ -62,7 +63,6 @@ class WindowRegister
         ~WindowRegister();
 };
 
-class Sprite;
 class Window: public WindowEventHandler, public DrawContext
 {
     public:
@@ -75,18 +75,15 @@ class Window: public WindowEventHandler, public DrawContext
         Window& operator=(Window&& move) noexcept;
 
     public:
-        void    updateLayer(std::size_t layer);
+        void    updateView(std::size_t nextView);
         void    updateState();
         void    draw();
         Uint32  getId() const;
 
+        void    addView(View& sprite);
+        void    remView(View& sprite);
     private:
         virtual Color   getBackgroundColor() {return {96, 128, 255, 255};}
-
-    private:
-        friend class Sprite;
-        void    addSprite(Sprite& sprite, std::size_t layer);
-        void    remSprite(Sprite& sprite);
 
     private:
         friend class WindowRegister;
@@ -94,13 +91,10 @@ class Window: public WindowEventHandler, public DrawContext
         void unregisterWindow();
 
     private:
-        FRIEND_TEST(::SpriteTest, WindowConstruction);
-
-    private:
         std::unique_ptr<SDL::Window>        window;
         WindowRegister                      windowRegister;
-        std::vector<std::vector<Sprite*>>   sprites;
-        std::size_t                         currentSpriteLayer;
+        std::vector<View*>                  views;
+        std::size_t                         currentView;
 };
 
 class DebugWindow: public Window

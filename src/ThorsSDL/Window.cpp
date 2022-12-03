@@ -1,6 +1,6 @@
 #include "Window.h"
 #include "Application.h"
-#include "Sprite.h"
+#include "View.h"
 
 using namespace ThorsAnvil::UI;
 
@@ -39,8 +39,8 @@ Window::Window(std::string const& title, Rect const& rect, WindowState const& wi
     : DrawContext(nullptr)
     , window(std::make_unique<SDL::Window>(title, rect, winState))
     , windowRegister(*this)
-    , sprites{std::vector<Sprite*>{}}
-    , currentSpriteLayer(0)
+    , views{}
+    , currentView(0)
 {
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
@@ -53,12 +53,12 @@ Window::~Window()
 Window::Window(Window&& move) noexcept
     : DrawContext(std::move(move))
     , windowRegister(*this)
-    , sprites{}
-    , currentSpriteLayer(0)
+    , views{}
+    , currentView(0)
 {
-    std::swap(window,               move.window);
-    std::swap(sprites,              move.sprites);
-    std::swap(currentSpriteLayer,   move.currentSpriteLayer);
+    std::swap(window,       move.window);
+    std::swap(views,        move.views);
+    std::swap(currentView,  move.currentView);
     Application::getInstance().registerWindow(*this);
 }
 
@@ -66,9 +66,9 @@ Window& Window::operator=(Window&& move) noexcept
 {
     unregisterWindow();
 
-    window              = std::exchange(move.window, nullptr);
-    sprites             = std::exchange(move.sprites, {});
-    currentSpriteLayer  = std::exchange(move.currentSpriteLayer, 0);
+    window      = std::exchange(move.window, nullptr);
+    views       = std::exchange(move.views, {});
+    currentView = std::exchange(move.currentView, 0);
     static_cast<DrawContext&>(*this) = std::move(move);
 
     registerWindow();
@@ -91,21 +91,20 @@ void Window::unregisterWindow()
     }
 }
 
-void Window::updateLayer(std::size_t layer)
+void Window::updateView(std::size_t nextView)
 {
-    sprites.resize(std::max(sprites.size(), layer+1));
-    currentSpriteLayer = layer;
-    for (auto& sprite: sprites[currentSpriteLayer])
+    currentView = nextView;
+    if (currentView < views.size())
     {
-        sprite->reset();
+        views[currentView]->reset();
     }
 }
 
 void Window::updateState()
 {
-    for (auto& sprite: sprites[currentSpriteLayer])
+    if (currentView < views.size())
     {
-        sprite->updateState();
+        views[currentView]->updateState();
     }
 }
 
@@ -121,28 +120,24 @@ void Window::draw()
     SDL_SetRenderDrawColor(getRenderer(), background.r, background.g, background.b, background.alpha);
     SDL_RenderClear(getRenderer());
 
-    for (auto const& sprite: sprites[currentSpriteLayer])
+    if (currentView < views.size())
     {
-        sprite->doDraw(*this);
+        views[currentView]->doDraw(*this);
     }
 
     SDL_RenderPresent(getRenderer());
 }
 
-void Window::addSprite(Sprite& sprite, std::size_t layer)
+void Window::addView(View& view)
 {
-    sprites.resize(std::max(sprites.size(), layer + 1));
-    sprites[layer].emplace_back(&sprite);
+    views.emplace_back(&view);
 }
 
-void Window::remSprite(Sprite& sprite)
+void Window::remView(View& view)
 {
-    for (auto& spriteLayer: sprites)
+    auto find = std::find(std::begin(views), std::end(views), &view);
+    if (find != std::end(views))
     {
-        auto find = std::find(std::begin(spriteLayer), std::end(spriteLayer), &sprite);
-        if (find != std::end(spriteLayer))
-        {
-            spriteLayer.erase(find);
-        }
+        views.erase(find);
     }
 }

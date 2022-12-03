@@ -1,5 +1,4 @@
 #include "test/WindowTest.h"
-#include "Sprite.h"
 
 TEST(WindowTest, WindowConstruction)
 {
@@ -117,34 +116,18 @@ TEST(WindowTest, WindowMoveAssignment)
     EXPECT_EQ(5, actions.count[countSDL_GetWindowID]);
 }
 
-class MockSprite: public ThorsAnvil::UI::Sprite
-{
-    int&    resetCount;
-    public:
-        MockSprite(ThorsAnvil::UI::Window& parent, int& resetCount)
-            : Sprite(parent, 0, 10)
-            , resetCount(resetCount)
-        {}
-
-        virtual void doDraw(ThorsAnvil::UI::DrawContext& drawContext)   {}
-        virtual bool doUpdateState()                    {return true;}
-        virtual void reset()                            {++resetCount;Sprite::reset();}
-};
-
-TEST(WindowTest, WindowUpdateLayout)
+TEST(WindowTest, WindowAddView)
 {
     MocksSDLActions     actions;
     MockSDL             mockActivate(actions);
-    int                 resetCount = 0;
 
-    auto action = [&resetCount]()
+    auto action = []()
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
-
-        MockSprite                      sprite(window, resetCount);
-
-        window.updateLayer(0);
+        ThorsAnvil::UI::View            view;
+        window.addView(view);
+        window.remView(view);
     };
 
     EXPECT_NO_THROW(
@@ -156,6 +139,5 @@ TEST(WindowTest, WindowUpdateLayout)
     EXPECT_EQ(1, actions.count[countSDL_CreateRenderer]);
     EXPECT_EQ(1, actions.count[countSDL_DestroyRenderer]);
     EXPECT_EQ(2, actions.count[countSDL_GetWindowID]);
-    EXPECT_EQ(1, resetCount);
 }
 

@@ -407,6 +407,11 @@ TEST(ApplicationTest, ApplicationWithWindowThatNeedsDrawing)
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Test", {10, 10, 20, 20});
+        ThorsAnvil::UI::View            view;
+
+        window.addView(view);
+        window.addView(view);
+        window.updateView(1);
 
         application.eventLoop(10000, [&application](int){application.exitLoop();});
     };
