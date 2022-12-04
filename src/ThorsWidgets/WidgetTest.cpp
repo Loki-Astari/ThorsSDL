@@ -1,12 +1,16 @@
-#include "Widget.h"
 #include "ThorsSDL/Application.h"
 #include "ThorsSDL/Window.h"
-#include "ThorsSDL/Util.h"
+#include "WidgetView.h"
 
 int main()
 {
-    ThorsAnvil::UI::Application     application;
-    ThorsAnvil::UI::Window          window("Widget Example v1.0", {ThorsAnvil::UI::windowUndefinedPos, ThorsAnvil::UI::windowUndefinedPos, 500, 500});
+    ThorsAnvil::UI::Application         application;
+    ThorsAnvil::UI::Window              window("Test Widgets", {100, 100, 200, 200});
 
-    application.eventLoop(60);
+    ThorsAnvil::Widgets::WidgetView     view;
+    window.addView(view);
+
+    application.eventLoop(1000);
+
+    std::cout << "WidgetTest\n";
 }

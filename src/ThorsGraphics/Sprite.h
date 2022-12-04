@@ -3,7 +3,7 @@
 
 #include "ThorsGraphicsConfig.h"
 #include "GraphicView.h"
-#include "Util.h"
+#include "ThorsSDL/Util.h"
 
 namespace ThorsAnvil::UI
 {
