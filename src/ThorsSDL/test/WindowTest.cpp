@@ -1,4 +1,5 @@
 #include "test/WindowTest.h"
+#include "View.h"
 
 TEST(WindowTest, WindowConstruction)
 {

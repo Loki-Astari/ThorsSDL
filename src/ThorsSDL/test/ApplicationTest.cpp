@@ -2,6 +2,7 @@
 #include "test/ApplicationTest.h"
 #include "Application.h"
 #include "Window.h"
+#include "View.h"
 #include <stdexcept>
 
 TEST(ApplicationTest, CreateAnApplication)

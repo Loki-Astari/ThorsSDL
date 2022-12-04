@@ -3,8 +3,9 @@
 
 #include "ThorsSDLConfig.h"
 #include "ThorsSDL.h"
+#include "Util.h"
 #include <gtest/gtest_prod.h>
-#include <iostream>
+#include <memory>
 
 class DrawContextTest_GetSurface_Test;
 namespace ThorsAnvil::UI

@@ -4,11 +4,10 @@
 #include "ThorsSDLConfig.h"
 #include "ThorsSDL.h"
 #include "DrawContext.h"
-#include "View.h"
-#include <gtest/gtest_prod.h>
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 
 namespace ThorsAnvil::UI
@@ -63,6 +62,7 @@ class WindowRegister
         ~WindowRegister();
 };
 
+class View;
 class Window: public WindowEventHandler, public DrawContext
 {
     public:

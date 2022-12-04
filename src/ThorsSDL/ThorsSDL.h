@@ -5,6 +5,7 @@
 #include "Util.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <iostream>
 
 namespace ThorsAnvil::UI
 {

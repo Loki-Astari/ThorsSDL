@@ -5,6 +5,7 @@
 #include "ThorsSDL.h"
 #include "Util.h"
 #include <gtest/gtest_prod.h>
+#include <memory>
 
 class TextureTest_TextureCreate_Test;
 class TextureTest_TextureCreateWithSDL_CreateTextureFromSurfaceFailing_Test;

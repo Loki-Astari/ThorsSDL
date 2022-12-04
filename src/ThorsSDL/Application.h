@@ -6,6 +6,7 @@
 #include "Util.h"
 #include <functional>
 #include <map>
+#include <memory>
 
 namespace ThorsAnvil::UI
 {

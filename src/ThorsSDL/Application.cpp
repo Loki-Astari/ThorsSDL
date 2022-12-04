@@ -1,7 +1,6 @@
 #include "Application.h"
 #include "Window.h"
 #include <stdexcept>
-#include <iostream>
 #include <chrono>
 
 

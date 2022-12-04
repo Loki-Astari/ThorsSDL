@@ -2,7 +2,6 @@
 #define THORSANVIL_UI_VIEW_H
 
 #include "ThorsSDLConfig.h"
-#include "ThorsSDL.h"
 
 namespace ThorsAnvil::UI
 {
