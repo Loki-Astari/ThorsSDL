@@ -1,4 +1,4 @@
-#include "HighScoreLayer.h"
+#include "HighScoreView.h"
 
 #include "ThorsSDL/Application.h"
 #include "ThorsSDL/Window.h"
@@ -9,21 +9,22 @@
 #include <iterator>
 #include <fstream>
 
-using namespace ThorsAnvil::UI::Example::Pong;
+using namespace ThorsAnvil::Example::Pong;
 
-HighScoreLayer::HighScoreTable::HighScoreTable(UI::Window& parent, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
-    : Sprite(parent, layer, 10)
-    , window(parent)
+HighScoreView::HighScoreTable::HighScoreTable(GR::GraphicView& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
+    : Sprite(view, 10)
+    //, window(parent)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue)
     , scoreOfLastGame(scoreOfLastGame)
     , rect(rect)
+    , startGame(std::move(startGame))
 {
     std::ifstream   highScore("HighScore.data");
 
     std::copy(std::istream_iterator<HighScore>(highScore), std::istream_iterator<HighScore>(), std::back_inserter(scores));
 }
 
-void HighScoreLayer::HighScoreTable::doDraw(UI::DrawContext& context)
+void HighScoreView::HighScoreTable::doDraw(UI::DrawContext& context)
 {
     UI::Texture title   = pen.createTextureFromString(context, "High Score Table");
     title.doDraw({rect.w / 2 - 100, 100, 0, 0});
@@ -45,22 +46,22 @@ void HighScoreLayer::HighScoreTable::doDraw(UI::DrawContext& context)
     instruct.doDraw({100, 600, 0, 0});
 }
 
-bool HighScoreLayer::HighScoreTable::doUpdateState()
+bool HighScoreView::HighScoreTable::doUpdateState()
 {
     int numkeys = 0;
     Uint8 const* keystates = SDL_GetKeyboardState(&numkeys);
     if (keystates[SDL_SCANCODE_L])
     {
-        window.updateLayer(1);
+        startGame();
     }
     if (keystates[SDL_SCANCODE_K])
     {
-        Application::getInstance().exitLoop();
+        UI::Application::getInstance().exitLoop();
     }
     return true;
 }
 
-void HighScoreLayer::HighScoreTable::reset()
+void HighScoreView::HighScoreTable::reset()
 {
     auto find = std::find_if(std::begin(scores), std::end(scores), [scoreOfLastGame = this->scoreOfLastGame](HighScore const& item){return item.score < scoreOfLastGame;});
     if (find != std::end(scores))
@@ -84,3 +85,7 @@ void HighScoreLayer::HighScoreTable::reset()
         std::copy(std::begin(scores), std::end(scores), std::ostream_iterator<HighScore>(highScore));
     }
 }
+
+HighScoreView::HighScoreView(int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
+    : highScoreTable(*this, scoreOfLastGame, rect, std::move(startGame))
+{}

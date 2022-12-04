@@ -1,18 +1,18 @@
-#ifndef THORSANVIL_UI_EXAMPLE_PONG_HIGH_SCORE_LAYER
-#define THORSANVIL_UI_EXAMPLE_PONG_HIGH_SCORE_LAYER
+#ifndef THORSANVIL_UI_EXAMPLE_PONG_HIGH_SCORE_VIEW
+#define THORSANVIL_UI_EXAMPLE_PONG_HIGH_SCORE_VIEW
 
-#include "ThorsSDL/Application.h"
-#include "ThorsSDL/Window.h"
-#include "ThorsSDL/Sprite.h"
+#include "ThorsGraphics/GraphicView.h"
+#include "ThorsGraphics/Sprite.h"
 #include "ThorsSDL/Pen.h"
 #include <vector>
 
-namespace ThorsAnvil::UI::Example::Pong
+namespace ThorsAnvil::Example::Pong
 {
 
 namespace UI = ThorsAnvil::UI;
+namespace GR = ThorsAnvil::Graphics;
 
-class HighScoreLayer
+class HighScoreView: public GR::GraphicView
 {
     struct HighScore
     {
@@ -56,17 +56,18 @@ class HighScoreLayer
             return stream << data.name << ", " << data.date << ", " << data.score << "\n";
         }
     };
-    class HighScoreTable: public UI::Sprite
+    class HighScoreTable: public Graphics::Sprite
     {
-        Window&                     window;
+        //Window&                     window;
         UI::TextPen                 pen;
         int&                        scoreOfLastGame;
         UI::Rect                    rect;
         std::vector<HighScore>      scores;
+        std::function<void()>       startGame;
 
         public:
-            HighScoreTable(Window& parent, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect);
-            virtual void doDraw(DrawContext& context) override;
+            HighScoreTable(GR::GraphicView& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
+            virtual void doDraw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
     };
@@ -74,9 +75,7 @@ class HighScoreLayer
     HighScoreTable       highScoreTable;
 
     public:
-        HighScoreLayer(UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
-            : highScoreTable(window, layer, scoreOfLastGame, rect)
-        {}
+        HighScoreView(int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
 };
 
 }

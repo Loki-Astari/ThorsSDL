@@ -1,20 +1,20 @@
-#ifndef THORSANVIL_UI_EXAMPLE_PONG_GAME_LAYER
-#define THORSANVIL_UI_EXAMPLE_PONG_GAME_LAYER
+#ifndef THORSANVIL_UI_EXAMPLE_PONG_GAME_VIEW
+#define THORSANVIL_UI_EXAMPLE_PONG_GAME_VIEW
 
-#include "ThorsSDL/Application.h"
-#include "ThorsSDL/Window.h"
-#include "ThorsSDL/Sprite.h"
 #include "ThorsSDL/Pen.h"
+#include "ThorsGraphics/Sprite.h"
+#include "ThorsGraphics/GraphicView.h"
 #include <vector>
 
-namespace ThorsAnvil::UI::Example::Pong
+namespace ThorsAnvil::Example::Pong
 {
 
 namespace UI = ThorsAnvil::UI;
+namespace GR = ThorsAnvil::Graphics;
 
-class GameLayer
+class GameView: public GR::GraphicView
 {
-    class Paddle: public UI::Sprite
+    class Paddle: public GR::Sprite
     {
         int const   speed           = 10;
         int const   height          = 18;
@@ -24,29 +24,29 @@ class GameLayer
         UI::Rect    position;
         int         windowWidth;
         public:
-            Paddle(UI::Window& window, std::size_t layer, int windowWidth, int windowHeight);
+            Paddle(GR::GraphicView& view, int windowWidth, int windowHeight);
             void moveLeft();
             void moveRight();
             bool collision(UI::Pt& ball, UI::Pt& velocity) const;
-            virtual void doDraw(DrawContext& context) override;
+            virtual void doDraw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
     };
 
-    class Score: public UI::Sprite
+    class Score: public GR::Sprite
     {
         int&            score;
         UI::TextPen     pen;
-        UI::Texture     scoreText;
+        //UI::Texture     scoreText;
         public:
-            Score(Window& parent, std::size_t layer, int& scoreOfLastGame);
-            virtual void doDraw(DrawContext& context) override;
+            Score(GR::GraphicView& view, int& scoreOfLastGame);
+            virtual void doDraw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
             void addPoints(int value);
     };
 
-    class Wall: public UI::Sprite
+    class Wall: public GR::Sprite
     {
         struct Brick
         {
@@ -72,28 +72,28 @@ class GameLayer
         int const   offset;             // offset from left of screen.
         Score&      score;
         public:
-            Wall(Window& window, std::size_t layer, int windowWidth, int /*windowHeight*/, Score& score);
+            Wall(GR::GraphicView& view, int windowWidth, int /*windowHeight*/, Score& score);
             virtual bool doUpdateState() override;
-            virtual void doDraw(DrawContext& window) override;
+            virtual void doDraw(UI::DrawContext& window) override;
             virtual void reset() override;
             bool collision(UI::Pt& ball, UI::Pt& velocity);
             bool doCollisionCheck(UI::Pt& ball, UI::Pt& velocity);
     };
 
-    class Ball: public UI::Sprite
+    class Ball: public GR::Sprite
     {
         int const       radius          = 5;
         int const       windowWidth;
         int const       windowHeight;
-        Window&         window;
         Paddle const&   paddle;
         Wall&           wall;
         UI::Pen         pen{UI::C::white, UI::C::white};
         UI::Pt          pos;
         UI::Pt          velocity;
+        std::function<void()>   endGame;
         public:
-            Ball(Window& parent, std::size_t layer, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall);
-            virtual void doDraw(DrawContext& context) override;
+            Ball(GR::GraphicView& view, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall, std::function<void()>&& endGame);
+            virtual void doDraw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
     };
@@ -103,7 +103,7 @@ class GameLayer
     Ball                ball;
 
     public:
-        GameLayer(UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect);
+        GameView(int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& endGame);
 };
 
 }

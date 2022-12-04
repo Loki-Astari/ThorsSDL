@@ -1,36 +1,36 @@
-#include "GameLayer.h"
+#include "GameView.h"
 #include "ThorsSDL/DrawContext.h"
 
-using namespace ThorsAnvil::UI::Example::Pong;
+using namespace ThorsAnvil::Example::Pong;
 
-GameLayer::Paddle::Paddle(UI::Window& window, std::size_t layer, int windowWidth, int windowHeight)
-    : Sprite(window, layer, 15)
+GameView::Paddle::Paddle(GR::GraphicView& view, int windowWidth, int windowHeight)
+    : Sprite(view, 15)
     , position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
     , windowWidth(windowWidth)
 {}
 
-void GameLayer::Paddle::moveLeft()
+void GameView::Paddle::moveLeft()
 {
     position.x = std::max(0, position.x - speed);
 }
 
-void GameLayer::Paddle::moveRight()
+void GameView::Paddle::moveRight()
 {
     position.x = std::min(windowWidth - width, position.x + speed);
 }
 
-bool GameLayer::Paddle::collision(UI::Pt& ball, UI::Pt& velocity) const
+bool GameView::Paddle::collision(UI::Pt& ball, UI::Pt& velocity) const
 {
     bool hit = position.bounce(ball, velocity);
     return hit;
 }
 
-void GameLayer::Paddle::doDraw(DrawContext& context)
+void GameView::Paddle::doDraw(ThorsAnvil::UI::DrawContext& context)
 {
     pen.drawRect(context, position);
 }
 
-bool GameLayer::Paddle::doUpdateState()
+bool GameView::Paddle::doUpdateState()
 {
     bool updated = false;
     int numkeys = 0;
@@ -48,43 +48,43 @@ bool GameLayer::Paddle::doUpdateState()
     return updated;
 }
 
-void GameLayer::Paddle::reset()
+void GameView::Paddle::reset()
 {
     position.x = (windowWidth/ 2) - (width / 2);
 }
 
-GameLayer::Score::Score(Window& parent, std::size_t layer, int& scoreOfLastGame)
-    : Sprite(parent, layer, 16)
+GameView::Score::Score(GR::GraphicView& view, int& scoreOfLastGame)
+    : Sprite(view, 16)
     , score(scoreOfLastGame)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24)
-    , scoreText(pen.createTextureFromString(parent, "Current Score: "))
 {}
 
-void GameLayer::Score::doDraw(DrawContext& context)
+void GameView::Score::doDraw(ThorsAnvil::UI::DrawContext& context)
 {
+    UI::Texture     scoreText(pen.createTextureFromString(context, "Current Score: "));
     scoreText.doDraw();
 
     UI::Texture     scoreValue = pen.createTextureFromString(context, std::to_string(score).c_str());
     scoreValue.doDraw({250, 0, 0, 0});
 }
 
-bool GameLayer::Score::doUpdateState()
+bool GameView::Score::doUpdateState()
 {
     return false;
 }
 
-void GameLayer::Score::reset()
+void GameView::Score::reset()
 {
     score = 0;
 }
 
-void GameLayer::Score::addPoints(int value)
+void GameView::Score::addPoints(int value)
 {
     score += value;
 }
 
-GameLayer::Wall::Wall(Window& window, std::size_t layer, int windowWidth, int /*windowHeight*/, Score& score)
-    : Sprite(window, layer, 10000)
+GameView::Wall::Wall(GR::GraphicView& view, int windowWidth, int /*windowHeight*/, Score& score)
+    : Sprite(view, 10000)
     , brickWidth((windowWidth / bricksPerRow) - cementSpace)
     , offset((windowWidth - ((brickWidth + cementSpace) * bricksPerRow)) / 2)
     , score(score)
@@ -92,12 +92,12 @@ GameLayer::Wall::Wall(Window& window, std::size_t layer, int windowWidth, int /*
     reset();
 }
 
-bool GameLayer::Wall::doUpdateState()
+bool GameView::Wall::doUpdateState()
 {
     return true;
 }
 
-void GameLayer::Wall::doDraw(DrawContext& window)
+void GameView::Wall::doDraw(ThorsAnvil::UI::DrawContext& window)
 {
     for (int row = 0; row < rowCount; ++row)
     {
@@ -111,7 +111,7 @@ void GameLayer::Wall::doDraw(DrawContext& window)
     }
 }
 
-void GameLayer::Wall::reset()
+void GameView::Wall::reset()
 {
     bricks.clear();
     for (int row = 0; row < rowCount; ++row)
@@ -124,7 +124,7 @@ void GameLayer::Wall::reset()
     }
 }
 
-bool GameLayer::Wall::collision(UI::Pt& ball, UI::Pt& velocity)
+bool GameView::Wall::collision(UI::Pt& ball, UI::Pt& velocity)
 {
     bool hit = false;
     while (doCollisionCheck(ball, velocity))
@@ -142,7 +142,7 @@ bool GameLayer::Wall::collision(UI::Pt& ball, UI::Pt& velocity)
     return hit;
 }
 
-bool GameLayer::Wall::doCollisionCheck(UI::Pt& ball, UI::Pt& velocity)
+bool GameView::Wall::doCollisionCheck(UI::Pt& ball, UI::Pt& velocity)
 {
     int col = ball.x / (brickWidth + cementSpace);
     int row = (ball.y - border) / (brickHeight + cementSpace);
@@ -172,23 +172,24 @@ bool GameLayer::Wall::doCollisionCheck(UI::Pt& ball, UI::Pt& velocity)
     return false;
 }
 
-GameLayer::Ball::Ball(Window& parent, std::size_t layer, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall)
-    : Sprite(parent, layer, 15)
+GameView::Ball::Ball(GR::GraphicView& view, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall, std::function<void()>&& endGame)
+    : Sprite(view, 15)
     , windowWidth(windowWidth)
     , windowHeight(windowHeight)
-    , window(parent)
+    //, window(parent)
     , paddle(paddle)
     , wall(wall)
     , pos{windowWidth / 2, windowHeight / 2}
     , velocity{-4, -4}
+    , endGame(std::move(endGame))
 {}
 
-void GameLayer::Ball::doDraw(DrawContext& context)
+void GameView::Ball::doDraw(ThorsAnvil::UI::DrawContext& context)
 {
     pen.drawRect(context, {pos.x - radius, pos.y - radius, 2*radius, 2*radius});
 }
 
-bool GameLayer::Ball::doUpdateState()
+bool GameView::Ball::doUpdateState()
 {
     if (!paddle.collision(pos, velocity) && !wall.collision(pos, velocity))
     {
@@ -200,7 +201,7 @@ bool GameLayer::Ball::doUpdateState()
     }
     if (pos.y > windowHeight)
     {
-        window.updateLayer(0);
+        endGame();
     }
 
     // Check with collision with walls.
@@ -217,15 +218,15 @@ bool GameLayer::Ball::doUpdateState()
     return true;
 }
 
-void GameLayer::Ball::reset()
+void GameView::Ball::reset()
 {
     pos         = {windowWidth / 2, windowHeight / 2};
     velocity    = {-4, -4};
 }
 
-GameLayer::GameLayer(UI::Window& window, std::size_t layer, int& scoreOfLastGame, UI::Rect const& rect)
-    : paddle(window, layer, rect.w, rect.h)
-    , score(window, layer, scoreOfLastGame)
-    , wall(window, layer, rect.w, rect.h, score)
-    , ball(window, layer, rect.w, rect.h, paddle, wall)
+GameView::GameView(int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& endGame)
+    : paddle(*this, rect.w, rect.h)
+    , score(*this, scoreOfLastGame)
+    , wall(*this, rect.w, rect.h, score)
+    , ball(*this, rect.w, rect.h, paddle, wall, std::move(endGame))
 {}

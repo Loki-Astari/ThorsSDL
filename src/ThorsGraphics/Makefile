@@ -1,6 +1,6 @@
 THORSANVIL_ROOT             = $(realpath ../../)
 
-TARGET                      = ThorsGraphic.slib
+TARGET                      = ThorsGraphics.slib
 CXXFLAGS					+= $(SDL_CFLAGS)
 LDLIBS						+= $(SDL_LIBS)
 LINK_LIBS					+= ThorsSDL

@@ -1,6 +1,7 @@
+#include "GameView.h"
+#include "HighScoreView.h"
 #include "ThorsSDL/Application.h"
-#include "GameLayer.h"
-#include "HighScoreLayer.h"
+#include "ThorsSDL/Window.h"
 #include <vector>
 
 namespace UI = ThorsAnvil::UI;
@@ -11,19 +12,22 @@ int constexpr           windowHeight    = 720;
 class PongWindow: public UI::Window
 {
     int                                             scoreOfLastGame;
-    ThorsAnvil::UI::Example::Pong::GameLayer        gameLayer;
-    ThorsAnvil::UI::Example::Pong::HighScoreLayer   highScoreLayer;
+    ThorsAnvil::Example::Pong::GameView             gameView;
+    ThorsAnvil::Example::Pong::HighScoreView        highScoreView;
 
-    static int constexpr highScoreLayerId = 0;
-    static int constexpr gameLayerId = 1;
+    static int constexpr highScoreViewId = 0;
+    static int constexpr gameViewId = 1;
 
     public:
         PongWindow(std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(title, rect, winState, renState)
             , scoreOfLastGame(0)
-            , gameLayer(*this, gameLayerId, scoreOfLastGame, rect)
-            , highScoreLayer(*this, highScoreLayerId, scoreOfLastGame, rect)
-        {}
+            , gameView(scoreOfLastGame, rect, [window = this](){window->updateView(highScoreViewId);})
+            , highScoreView(scoreOfLastGame, rect, [window = this](){window->updateView(gameViewId);})
+        {
+            addView(highScoreView);
+            addView(gameView);
+        }
 };
 
 
