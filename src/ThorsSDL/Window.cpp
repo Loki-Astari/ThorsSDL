@@ -122,7 +122,7 @@ void Window::draw()
 
     if (currentView < views.size())
     {
-        views[currentView]->doDraw(*this);
+        views[currentView]->draw(*this);
     }
 
     SDL_RenderPresent(getRenderer());

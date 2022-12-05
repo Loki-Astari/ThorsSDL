@@ -13,7 +13,7 @@ class View
         virtual ~View();
         virtual void updateState();
         virtual void reset();
-        virtual void doDraw(DrawContext& context);
+        virtual void draw(DrawContext& context);
 };
 
 }

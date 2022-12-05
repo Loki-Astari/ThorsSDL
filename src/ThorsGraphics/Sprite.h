@@ -26,7 +26,7 @@ class Sprite
 
         void updateState();
 
-        virtual void doDraw(UI::DrawContext& drawContext)   = 0;
+        virtual void draw(UI::DrawContext& drawContext)     = 0;
         virtual bool doUpdateState()                        = 0;
         virtual void reset();
 };

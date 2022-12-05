@@ -29,7 +29,7 @@ void Sprite::updateState()
     }
 }
 
-void Sprite::doDraw(UI::DrawContext& /*drawContext*/)
+void Sprite::draw(UI::DrawContext& /*drawContext*/)
 {}
 
 bool Sprite::doUpdateState()

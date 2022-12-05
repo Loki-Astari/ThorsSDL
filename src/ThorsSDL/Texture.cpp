@@ -14,7 +14,7 @@ Texture::Texture(DrawContext& drawContext, SDL_Surface& surface)
     }
 }
 
-void Texture::doDraw(Rect dst, Rect src)
+void Texture::draw(Rect dst, Rect src)
 {
     Rect*    rectSrc = &src;
     if (src.w == 0 || src.h == 0)

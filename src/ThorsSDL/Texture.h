@@ -36,7 +36,7 @@ class Texture
         Texture(DrawContext& drawContext, SDL_Surface& surface);
     public:
 
-        void doDraw(Rect dst = zero, Rect src = zero);
+        void draw(Rect dst = zero, Rect src = zero);
 };
 
 }

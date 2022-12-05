@@ -2,8 +2,8 @@
 
 #include "ThorsSDL/Application.h"
 #include "ThorsSDL/Window.h"
-#include "ThorsSDL/Sprite.h"
 #include "ThorsSDL/Pen.h"
+#include "ThorsGraphics/Sprite.h"
 #include <vector>
 #include <algorithm>
 #include <iterator>
@@ -24,10 +24,10 @@ HighScoreView::HighScoreTable::HighScoreTable(GR::GraphicView& view, int& scoreO
     std::copy(std::istream_iterator<HighScore>(highScore), std::istream_iterator<HighScore>(), std::back_inserter(scores));
 }
 
-void HighScoreView::HighScoreTable::doDraw(UI::DrawContext& context)
+void HighScoreView::HighScoreTable::draw(UI::DrawContext& context)
 {
     UI::Texture title   = pen.createTextureFromString(context, "High Score Table");
-    title.doDraw({rect.w / 2 - 100, 100, 0, 0});
+    title.draw({rect.w / 2 - 100, 100, 0, 0});
 
     int dist = 200;
     for (auto const& score: scores)
@@ -36,14 +36,14 @@ void HighScoreView::HighScoreTable::doDraw(UI::DrawContext& context)
         UI::Texture date    = pen.createTextureFromString(context, score.date);
         UI::Texture valu    = pen.createTextureFromString(context, std::to_string(score.score));
 
-        name.doDraw({rect.w / 2 - 300, dist, 0, 0});
-        date.doDraw({rect.w / 2 - 100, dist, 0, 0});
-        valu.doDraw({rect.w / 2 + 200, dist, 0, 0});
+        name.draw({rect.w / 2 - 300, dist, 0, 0});
+        date.draw({rect.w / 2 - 100, dist, 0, 0});
+        valu.draw({rect.w / 2 + 200, dist, 0, 0});
         dist += 50;
     }
 
     UI::Texture instruct = pen.createTextureFromString(context, "Press: L to Play, K to Quit.   Game:  Q: Moves paddle left, W: Moves paddle right");
-    instruct.doDraw({100, 600, 0, 0});
+    instruct.draw({100, 600, 0, 0});
 }
 
 bool HighScoreView::HighScoreTable::doUpdateState()

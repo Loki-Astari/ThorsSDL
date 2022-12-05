@@ -12,5 +12,5 @@ void View::updateState()
 void View::reset()
 {}
 
-void View::doDraw(DrawContext& /*context*/)
+void View::draw(DrawContext& /*context*/)
 {}

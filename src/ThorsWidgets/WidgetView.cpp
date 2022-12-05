@@ -6,38 +6,38 @@ using namespace ThorsAnvil::Widgets;
 
 void WidgetView::updateState()
 {
-    for (auto const& sprite: sprites)
+    for (auto const& widget: widgets)
     {
-        sprite->updateState();
+        widget->updateState();
     }
 }
 
 void WidgetView::WidgetView::reset()
 {
-    for (auto const& sprite: sprites)
+    for (auto const& widget: widgets)
     {
-        sprite->reset();
+        widget->reset();
     }
 }
 
-void WidgetView::doDraw(ThorsAnvil::UI::DrawContext& context)
+void WidgetView::draw(ThorsAnvil::UI::DrawContext& context)
 {
-    for (auto const& sprite: sprites)
+    for (auto const& widget: widgets)
     {
-        sprite->doDraw(context);
+        widget->draw(context);
     }
 }
 
-void WidgetView::addWidget(Widget& sprite)
+void WidgetView::addWidget(Widget& widget)
 {
-    sprites.emplace_back(&sprite);
+    widgets.emplace_back(&widget);
 }
 
-void WidgetView::remWidget(Widget& sprite)
+void WidgetView::remWidget(Widget& widget)
 {
-    auto find = std::find(std::begin(sprites), std::end(sprites), &sprite);
-    if (find != std::end(sprites))
+    auto find = std::find(std::begin(widgets), std::end(widgets), &widget);
+    if (find != std::end(widgets))
     {
-        sprites.erase(find);
+        widgets.erase(find);
     }
 }

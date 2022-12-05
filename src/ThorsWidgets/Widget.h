@@ -1,5 +1,5 @@
-#ifndef THORSANVIL_UI_WIDGET_H
-#define THORSANVIL_UI_WIDGET_H
+#ifndef THORSANVIL_WIDGETS_WIDGET_H
+#define THORSANVIL_WIDGETS_WIDGET_H
 
 #include "ThorsWidgetsConfig.h"
 #include "ThorsSDL/Util.h"
@@ -12,22 +12,26 @@ namespace ThorsAnvil::UI
 namespace ThorsAnvil::Widgets
 {
 
+class Layout;
 class WidgetView;
 class Widget
 {
     WidgetView&        parent;
     UI::TimePoint       lastUpdate;
-    int                 updatePeriod;
 
     public:
-        Widget(WidgetView& parent, int millisecondUpdateTime);
+        Widget(WidgetView& parent);
         virtual ~Widget();
 
-        void updateState();
-
-        virtual void doDraw(UI::DrawContext& drawContext)   = 0;
-        virtual bool doUpdateState()                        = 0;
+        virtual void draw(UI::DrawContext& drawContext)     = 0;
+        virtual void updateState()                          = 0;
         virtual void reset();
+
+    public:
+        // Layout Functions;
+        virtual UI::Pt  preferredLayout(Layout const& layout) const = 0;
+        virtual void    performLayout(Layout const& layout)         = 0;
+
 };
 
 }

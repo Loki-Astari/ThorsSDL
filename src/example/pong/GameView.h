@@ -28,7 +28,7 @@ class GameView: public GR::GraphicView
             void moveLeft();
             void moveRight();
             bool collision(UI::Pt& ball, UI::Pt& velocity) const;
-            virtual void doDraw(UI::DrawContext& context) override;
+            virtual void draw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
     };
@@ -40,7 +40,7 @@ class GameView: public GR::GraphicView
         //UI::Texture     scoreText;
         public:
             Score(GR::GraphicView& view, int& scoreOfLastGame);
-            virtual void doDraw(UI::DrawContext& context) override;
+            virtual void draw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
             void addPoints(int value);
@@ -74,7 +74,7 @@ class GameView: public GR::GraphicView
         public:
             Wall(GR::GraphicView& view, int windowWidth, int /*windowHeight*/, Score& score);
             virtual bool doUpdateState() override;
-            virtual void doDraw(UI::DrawContext& window) override;
+            virtual void draw(UI::DrawContext& window) override;
             virtual void reset() override;
             bool collision(UI::Pt& ball, UI::Pt& velocity);
             bool doCollisionCheck(UI::Pt& ball, UI::Pt& velocity);
@@ -93,7 +93,7 @@ class GameView: public GR::GraphicView
         std::function<void()>   endGame;
         public:
             Ball(GR::GraphicView& view, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall, std::function<void()>&& endGame);
-            virtual void doDraw(UI::DrawContext& context) override;
+            virtual void draw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
     };

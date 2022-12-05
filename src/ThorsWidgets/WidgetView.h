@@ -19,12 +19,12 @@ class Widget;
 class WidgetView: public UI::View
 {
     FRIEND_TEST(::WidgetViewTest, CheckWidgetStored);
-    std::vector<Widget*>        sprites;
+    std::vector<Widget*>        widgets;
 
     public:
         virtual void updateState() override;
         virtual void reset() override;
-        virtual void doDraw(UI::DrawContext& context) override;
+        virtual void draw(UI::DrawContext& context) override;
 
         void addWidget(Widget& sprite);
         void remWidget(Widget& sprite);

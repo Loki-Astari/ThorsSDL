@@ -25,7 +25,7 @@ bool GameView::Paddle::collision(UI::Pt& ball, UI::Pt& velocity) const
     return hit;
 }
 
-void GameView::Paddle::doDraw(ThorsAnvil::UI::DrawContext& context)
+void GameView::Paddle::draw(ThorsAnvil::UI::DrawContext& context)
 {
     pen.drawRect(context, position);
 }
@@ -59,13 +59,13 @@ GameView::Score::Score(GR::GraphicView& view, int& scoreOfLastGame)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24)
 {}
 
-void GameView::Score::doDraw(ThorsAnvil::UI::DrawContext& context)
+void GameView::Score::draw(ThorsAnvil::UI::DrawContext& context)
 {
     UI::Texture     scoreText(pen.createTextureFromString(context, "Current Score: "));
-    scoreText.doDraw();
+    scoreText.draw();
 
     UI::Texture     scoreValue = pen.createTextureFromString(context, std::to_string(score).c_str());
-    scoreValue.doDraw({250, 0, 0, 0});
+    scoreValue.draw({250, 0, 0, 0});
 }
 
 bool GameView::Score::doUpdateState()
@@ -97,7 +97,7 @@ bool GameView::Wall::doUpdateState()
     return true;
 }
 
-void GameView::Wall::doDraw(ThorsAnvil::UI::DrawContext& window)
+void GameView::Wall::draw(ThorsAnvil::UI::DrawContext& window)
 {
     for (int row = 0; row < rowCount; ++row)
     {
@@ -184,7 +184,7 @@ GameView::Ball::Ball(GR::GraphicView& view, int windowWidth, int windowHeight, P
     , endGame(std::move(endGame))
 {}
 
-void GameView::Ball::doDraw(ThorsAnvil::UI::DrawContext& context)
+void GameView::Ball::draw(ThorsAnvil::UI::DrawContext& context)
 {
     pen.drawRect(context, {pos.x - radius, pos.y - radius, 2*radius, 2*radius});
 }

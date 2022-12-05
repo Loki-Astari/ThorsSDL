@@ -1,5 +1,7 @@
 THORSANVIL_ROOT             = $(realpath ../../)
 
+%/Windows.o:				FILE_WARNING_FLAGS += -Wno-unused-private-field
+
 TARGET_E                      = ThorsWidgets.slib
 TARGET						= WidgetTest.app
 CXXFLAGS					+= $(SDL_CFLAGS)

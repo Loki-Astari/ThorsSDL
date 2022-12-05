@@ -4,10 +4,9 @@
 using namespace ThorsAnvil::Widgets;
 
 
-Widget::Widget(WidgetView& parent, int millisecondUpdateTime)
+Widget::Widget(WidgetView& parent)
     : parent(parent)
     , lastUpdate{}
-    , updatePeriod(millisecondUpdateTime)
 {
     parent.addWidget(*this);
 }
@@ -18,24 +17,10 @@ Widget::~Widget()
 }
 
 void Widget::updateState()
-{
-    UI::TimePoint   now =  std::chrono::system_clock::now();
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdate).count() >= updatePeriod)
-    {
-        if (doUpdateState())
-        {
-            lastUpdate = now;
-        }
-    }
-}
-
-void Widget::doDraw(UI::DrawContext& /*drawContext*/)
 {}
 
-bool Widget::doUpdateState()
-{
-    return true;
-}
+void Widget::draw(UI::DrawContext& /*drawContext*/)
+{}
 
 void Widget::reset()
 {}

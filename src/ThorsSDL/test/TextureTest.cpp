@@ -67,7 +67,7 @@ TEST(TextureTest, TextureDrawCalcSrcCalcDst)
 
         ThorsAnvil::UI::Texture         texture(window, *surface);
 
-        texture.doDraw({0,0,0,0},{0,0,0,0});
+        texture.draw({0,0,0,0},{0,0,0,0});
     };
 
     EXPECT_NO_THROW(
@@ -96,7 +96,7 @@ TEST(TextureTest, TextureDrawSpecSrcCalcDst)
 
         ThorsAnvil::UI::Texture         texture(window, *surface);
 
-        texture.doDraw({0,0,0,0},{0,0,10,10});
+        texture.draw({0,0,0,0},{0,0,10,10});
     };
 
     EXPECT_NO_THROW(
@@ -125,7 +125,7 @@ TEST(TextureTest, TextureDrawCalcSrcSpecDst)
 
         ThorsAnvil::UI::Texture         texture(window, *surface);
 
-        texture.doDraw({0,0,10,10},{0,0,0,0});
+        texture.draw({0,0,10,10},{0,0,0,0});
     };
 
     EXPECT_NO_THROW(
@@ -154,7 +154,7 @@ TEST(TextureTest, TextureDrawSpecSrcSpecDst)
 
         ThorsAnvil::UI::Texture         texture(window, *surface);
 
-        texture.doDraw({0,0,10,10},{0,0,10,10});
+        texture.draw({0,0,10,10},{0,0,10,10});
     };
 
     EXPECT_NO_THROW(

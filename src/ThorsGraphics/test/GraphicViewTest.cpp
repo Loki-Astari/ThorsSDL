@@ -13,7 +13,7 @@ struct MockSprite: public ThorsAnvil::Graphics::Sprite
     int updateCount = 0;
     int resetCount  = 0;
 
-        virtual void doDraw(ThorsAnvil::UI::DrawContext& drawContext)   {++drawCount;Sprite::doDraw(drawContext);}
+        virtual void draw(ThorsAnvil::UI::DrawContext& drawContext)     {++drawCount;Sprite::draw(drawContext);}
         virtual bool doUpdateState()                                    {++updateCount;return Sprite::doUpdateState();}
         virtual void reset()                                            {++resetCount;Sprite::reset();}
 };
@@ -47,7 +47,7 @@ TEST(GraphicViewTest, RunDraw)
         ThorsAnvil::Graphics::GraphicView   view;
         MockSprite                          sprite(view, 0);
 
-        view.doDraw(*reinterpret_cast<ThorsAnvil::UI::DrawContext*>(1));
+        view.draw(*reinterpret_cast<ThorsAnvil::UI::DrawContext*>(1));
 
         EXPECT_EQ(1, sprite.drawCount);
         EXPECT_EQ(0, sprite.updateCount);

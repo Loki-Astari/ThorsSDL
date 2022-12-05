@@ -20,11 +20,11 @@ void GraphicView::GraphicView::reset()
     }
 }
 
-void GraphicView::doDraw(ThorsAnvil::UI::DrawContext& context)
+void GraphicView::draw(ThorsAnvil::UI::DrawContext& context)
 {
     for (auto const& sprite: sprites)
     {
-        sprite->doDraw(context);
+        sprite->draw(context);
     }
 }
 

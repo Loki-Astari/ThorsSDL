@@ -67,7 +67,7 @@ class HighScoreView: public GR::GraphicView
 
         public:
             HighScoreTable(GR::GraphicView& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
-            virtual void doDraw(UI::DrawContext& context) override;
+            virtual void draw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
     };

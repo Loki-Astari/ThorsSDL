@@ -10,7 +10,7 @@ class TestSprite: public ThorsAnvil::Graphics::Sprite
     public:
         using Sprite::Sprite;
 
-        virtual void doDraw(ThorsAnvil::UI::DrawContext&)   override    {}
+        virtual void draw(ThorsAnvil::UI::DrawContext&)   override    {}
         virtual bool doUpdateState()        override    {return true;}
 };
 
