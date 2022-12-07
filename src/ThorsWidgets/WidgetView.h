@@ -2,7 +2,7 @@
 #define THORSANVIL_WIDGETS_WIDGET_VIEW_H
 
 #include "ThorsWidgetsConfig.h"
-#include "ThorsSDL/View.h"
+#include "Widget.h"
 #include <gtest/gtest_prod.h>
 #include <vector>
 
@@ -16,18 +16,23 @@ namespace ThorsAnvil::Widgets
 {
 
 class Widget;
-class WidgetView: public UI::View
+class Layout;
+class WidgetView: public Widget
 {
     FRIEND_TEST(::WidgetViewTest, CheckWidgetStored);
+    Layout&                     layout;
     std::vector<Widget*>        widgets;
 
     public:
-        virtual void updateState() override;
-        virtual void reset() override;
-        virtual void draw(UI::DrawContext& context) override;
+        WidgetView(WidgetView& parent, Layout& layout);
 
         void addWidget(Widget& sprite);
         void remWidget(Widget& sprite);
+
+        // Widget
+        virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    override;
+        virtual UI::Sz  preferredLayout(Theme const& theme)                             override;
+        virtual void    performLayout(UI::Pt topLeft, Theme const& theme)               override;
 };
 
 }

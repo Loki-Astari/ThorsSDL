@@ -14,6 +14,7 @@ namespace ThorsAnvil::Widgets
 
 class Layout;
 class WidgetView;
+class Theme;
 class Widget
 {
     WidgetView&        parent;
@@ -23,14 +24,9 @@ class Widget
         Widget(WidgetView& parent);
         virtual ~Widget();
 
-        virtual void draw(UI::DrawContext& drawContext)     = 0;
-        virtual void updateState()                          = 0;
-        virtual void reset();
-
-    public:
-        // Layout Functions;
-        virtual UI::Pt  preferredLayout(Layout const& layout) const = 0;
-        virtual void    performLayout(Layout const& layout)         = 0;
+        virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)= 0;
+        virtual UI::Sz  preferredLayout(Theme const& theme)                         = 0;
+        virtual void    performLayout(UI::Pt topLeft, Theme const& theme)           = 0;
 
 };
 

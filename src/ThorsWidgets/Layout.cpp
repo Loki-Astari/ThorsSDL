@@ -1,5 +1,6 @@
 #include "Layout.h"
 #include "Widget.h"
+#include <algorithm>
 
 using namespace ThorsAnvil::Widgets;
 
@@ -7,12 +8,25 @@ using namespace ThorsAnvil::Widgets;
 Layout::~Layout()
 {}
 
-UI::Pt BoxLayout::preferredLayout(Widget& widget) const
+ThorsAnvil::UI::Sz BoxLayout::getSize(Theme const& /*theme*/)
 {
-    return widget.preferredLayout(*this);
-}
+    ThorsAnvil::UI::Sz  result{0, 0};
+    for (auto const& size: layoutSize)
+    {
+        result.x    = std::max(result.x, size.x);
+        result.y    += size.y + 2;
+    }
+    result.y -= 2; // Don't need the offset after last element.
 
-void BoxLayout::performLayout(Widget& widget) const
-{
-    widget.performLayout(*this);
+    ThorsAnvil::UI::Sz  offset{0,0};
+
+    // Horizontally center each widget
+    for (auto const& size: layoutSize)
+    {
+        offset.x    = (result.x - size.x) / 2;
+        offsetPoint.emplace_back(offset);
+
+        offset.y    += size.y + 2;
+    }
+    return result;
 }

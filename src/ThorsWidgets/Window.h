@@ -3,25 +3,31 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "WidgetView.h"
+#include "ThorsSDL/View.h"
 
 namespace ThorsAnvil::Widgets
 {
 
 class Theme;
 class Layout;
-class Window: public WidgetView
+class Window: public WidgetView, public UI::View
 {
     Theme&          theme;
-    Layout&         layout;
+    UI::Sz          size;
 
     public:
-        Window(Theme& theme, Layout& layout);
-        //virtual void updateState() override;
-        //virtual void reset() override;
-        //virtual void doDraw(UI::DrawContext& context) override;
+        Window(Layout& layout, Theme& theme);
+        void tile();
 
-        //void addWidget(Widget& sprite);
-        //void remWidget(Widget& sprite);
+        virtual void draw(UI::DrawContext& context) override;
+        virtual UI::Sz reset() override;
+#if 0
+        Widget:
+            virtual void    drawWidget(UI::DrawContext& drawContext, Theme& theme)= 0;
+            virtual UI::Sz  preferredLayout() const                         = 0;
+            virtual void    performLayout(UI::Pt topLeft)                   = 0;
+#endif
+
 };
 
 }

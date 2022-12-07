@@ -1,32 +1,14 @@
 #include "WidgetView.h"
 #include "Widget.h"
+#include "Layout.h"
 #include "ThorsSDL/DrawContext.h"
 
 using namespace ThorsAnvil::Widgets;
 
-void WidgetView::updateState()
-{
-    for (auto const& widget: widgets)
-    {
-        widget->updateState();
-    }
-}
-
-void WidgetView::WidgetView::reset()
-{
-    for (auto const& widget: widgets)
-    {
-        widget->reset();
-    }
-}
-
-void WidgetView::draw(ThorsAnvil::UI::DrawContext& context)
-{
-    for (auto const& widget: widgets)
-    {
-        widget->draw(context);
-    }
-}
+WidgetView::WidgetView(WidgetView& parent, Layout& layout)
+    : Widget(parent)
+    , layout(layout)
+{}
 
 void WidgetView::addWidget(Widget& widget)
 {
@@ -39,5 +21,33 @@ void WidgetView::remWidget(Widget& widget)
     if (find != std::end(widgets))
     {
         widgets.erase(find);
+    }
+}
+
+void WidgetView::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
+{
+    for (auto widget: widgets)
+    {
+        widget->drawWidget(drawContext, theme);
+    }
+}
+
+ThorsAnvil::UI::Sz WidgetView::preferredLayout(Theme const& theme)
+{
+    layout.clear();
+    for (auto widget: widgets)
+    {
+        layout.addWidget(widget->preferredLayout(theme));
+    }
+    return layout.getSize(theme);
+}
+
+void WidgetView::performLayout(ThorsAnvil::UI::Pt topLeft, Theme const& theme)
+{
+    int index = 0;
+    for (auto widget: widgets)
+    {
+        ThorsAnvil::UI::Sz offset = layout.getOffset(index++);
+        widget->performLayout(topLeft + offset, theme);
     }
 }

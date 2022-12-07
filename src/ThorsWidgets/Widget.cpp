@@ -15,12 +15,3 @@ Widget::~Widget()
 {
     parent.remWidget(*this);
 }
-
-void Widget::updateState()
-{}
-
-void Widget::draw(UI::DrawContext& /*drawContext*/)
-{}
-
-void Widget::reset()
-{}

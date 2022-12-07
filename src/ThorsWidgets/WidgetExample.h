@@ -3,24 +3,21 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
+#include "ThorsSDL/Util.h"
 
 namespace ThorsAnvil::Widgets
 {
 
 class WidgetExample: public Widget
 {
+    UI::Pt      topLeft;
     public:
         WidgetExample(WidgetView& parent);
         virtual ~WidgetExample();
 
-        virtual void draw(UI::DrawContext& drawContext)     override;
-        virtual void updateState()                          override;
-        virtual void reset()                                override;
-
-    public:
-        // Layout Functions;
-        virtual UI::Pt  preferredLayout(Layout const& layout) const override;
-        virtual void    performLayout(Layout const& layout) override;
+        virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme) override;
+        virtual UI::Sz  preferredLayout(Theme const& theme)                          override;
+        virtual void    performLayout(UI::Pt topLeft, Theme const& theme)            override;
 };
 
 }

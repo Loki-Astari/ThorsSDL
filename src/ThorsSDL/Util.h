@@ -29,6 +29,21 @@ struct Sz: SDL_Point
     }
 };
 
+inline Sz operator-(Pt const& lhs, Pt const& rhs)
+{
+    return {rhs.x - lhs.x, rhs.y - lhs.y};
+}
+inline Pt& operator+=(Pt& lhs, Sz const& rhs)
+{
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    return lhs;
+}
+inline Pt operator+(Pt lhs, Sz const& rhs)
+{
+    return lhs += rhs;
+}
+
 enum CollisionPoint {Miss, TopLeft, Top, TopRight, Right, BotRight, Bot, BotLeft, Left};
 
 struct Rect: SDL_Rect

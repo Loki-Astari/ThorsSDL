@@ -1,14 +1,27 @@
 #include "ThorsSDL/Application.h"
 #include "ThorsSDL/Window.h"
+#include "Window.h"
 #include "WidgetView.h"
+#include "Layout.h"
+#include "Theme.h"
+#include "WidgetExample.h"
 
 int main()
 {
     ThorsAnvil::UI::Application         application;
     ThorsAnvil::UI::Window              window("Test Widgets", {100, 100, 200, 200});
 
-    ThorsAnvil::Widgets::WidgetView     view;
-    window.addView(view);
+    ThorsAnvil::Widgets::BoxLayout      layout;
+    ThorsAnvil::Widgets::Theme          theme;
+    ThorsAnvil::Widgets::Window         widgetWindow(layout, theme);
+    window.addView(widgetWindow);
+
+    ThorsAnvil::Widgets::WidgetExample  item1(widgetWindow);
+    ThorsAnvil::Widgets::WidgetExample  item2(widgetWindow);
+    ThorsAnvil::Widgets::WidgetExample  item3(widgetWindow);
+    ThorsAnvil::Widgets::WidgetExample  item4(widgetWindow);
+
+    widgetWindow.tile();
 
     application.eventLoop(1000);
 

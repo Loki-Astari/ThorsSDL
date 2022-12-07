@@ -3,6 +3,7 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "ThorsSDL/Util.h"
+#include <vector>
 
 namespace ThorsAnvil::Widgets
 {
@@ -10,20 +11,31 @@ namespace ThorsAnvil::Widgets
 namespace UI = ThorsAnvil::UI;
 
 class Widget;
+class Theme;
 class Layout
 {
+    protected:
+        std::vector<UI::Sz>     layoutSize;
+        std::vector<UI::Sz>     offsetPoint;
     public:
         virtual ~Layout();
 
-        virtual UI::Pt  preferredLayout(Widget& widget) const = 0;
-        virtual void    performLayout(Widget& widget)   const = 0;
+        // preferredLayout
+        void clear()                {layoutSize.clear();}
+        void addWidget(UI::Sz size) {layoutSize.emplace_back(size);}
+
+        // Calculates size.
+        virtual UI::Sz getSize(Theme const& theme)    = 0;
+
+        // performLayout
+        UI::Sz getOffset(int index) {return offsetPoint[index];}
+
 };
 
 class BoxLayout: public Layout
 {
     public:
-        virtual UI::Pt  preferredLayout(Widget& widget) const;
-        virtual void    performLayout(Widget& widget)   const;
+        virtual UI::Sz getSize(Theme const& theme) override;
 };
 
 }
