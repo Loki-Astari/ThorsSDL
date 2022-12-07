@@ -12,12 +12,13 @@ void GraphicView::updateState()
     }
 }
 
-void GraphicView::GraphicView::reset()
+ThorsAnvil::UI::Sz GraphicView::GraphicView::reset()
 {
     for (auto const& sprite: sprites)
     {
         sprite->reset();
     }
+    return {0, 0};
 }
 
 void GraphicView::draw(ThorsAnvil::UI::DrawContext& context)

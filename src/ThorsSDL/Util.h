@@ -21,6 +21,14 @@ struct Pt: SDL_Point
     }
 };
 
+struct Sz: SDL_Point
+{
+    friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Sz const& point)
+    {
+        return s << "Sz: {" << point.x << ", " << point.y << "}";
+    }
+};
+
 enum CollisionPoint {Miss, TopLeft, Top, TopRight, Right, BotRight, Bot, BotLeft, Left};
 
 struct Rect: SDL_Rect

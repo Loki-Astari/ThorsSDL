@@ -9,8 +9,10 @@ View::~View()
 void View::updateState()
 {}
 
-void View::reset()
-{}
+Sz View::reset()
+{
+    return {0, 0};
+}
 
 void View::draw(DrawContext& /*context*/)
 {}

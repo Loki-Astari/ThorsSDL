@@ -80,6 +80,14 @@ void Application::eventLoop(int fps, std::function<void(int)>&& eventDone)
     const int millisondsToWaitPerDrawCycle = 1000 / fps;
     userEventDone   = std::move(eventDone);
 
+    for (auto& window: windows)
+    {
+        if (window.second->isVisable())
+        {
+            window.second->updateView();
+        }
+    }
+
     try
     {
         while (!finished)

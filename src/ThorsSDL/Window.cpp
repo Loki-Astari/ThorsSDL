@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "Application.h"
 #include "View.h"
+#include "Util.h"
 
 using namespace ThorsAnvil::UI;
 
@@ -91,12 +92,21 @@ void Window::unregisterWindow()
     }
 }
 
+void Window::updateView()
+{
+    updateView(currentView);
+}
+
 void Window::updateView(std::size_t nextView)
 {
     currentView = nextView;
     if (currentView < views.size())
     {
-        views[currentView]->reset();
+        Sz size = views[currentView]->reset();
+        if (size.x != 0 && size.y != 0)
+        {
+            SDL_SetWindowSize(*window, size.x, size.y);
+        }
     }
 }
 
@@ -126,6 +136,12 @@ void Window::draw()
     }
 
     SDL_RenderPresent(getRenderer());
+}
+
+bool Window::isVisable() const
+{
+    Uint32 flags = SDL_GetWindowFlags(*window);
+    return (flags & SDL_WINDOW_SHOWN) != 0;
 }
 
 void Window::addView(View& view)

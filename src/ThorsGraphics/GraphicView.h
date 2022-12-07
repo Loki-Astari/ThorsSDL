@@ -23,7 +23,7 @@ class GraphicView: public UI::View
 
     public:
         virtual void updateState() override;
-        virtual void reset() override;
+        virtual UI::Sz reset() override;
         virtual void draw(UI::DrawContext& context) override;
 
         void addSprite(Sprite& sprite);
