@@ -11,8 +11,7 @@ Application* Application::initialized = nullptr;
 Application::Application(InitValue init, InitLibs libs)
     : finished(false)
 {
-    if (initialized)
-    {
+    if (initialized) {
         throw std::runtime_error("Attempt to re-initialize SDL");
     }
     sdl2 = std::make_unique<SDL::Lib_Main>(init);
@@ -28,8 +27,7 @@ Application::Application(InitLibs libs)
 
 Application& Application::getInstance()
 {
-    if (initialized == nullptr)
-    {
+    if (initialized == nullptr) {
         throw std::runtime_error("No Application Exists");
     }
     return *initialized;
@@ -37,8 +35,7 @@ Application& Application::getInstance()
 
 Application::~Application() noexcept(false)
 {
-    if (windows.size() != 0)
-    {
+    if (windows.size() != 0) {
         throw std::runtime_error("Killing Application with active windows");
     }
     initialized = nullptr;
@@ -47,8 +44,7 @@ Application::~Application() noexcept(false)
 void Application::initSubSystem(InitValue init)
 {
     auto result = SDL_InitSubSystem(static_cast<Uint32>(init));
-    if (result != 0)
-    {
+    if (result != 0) {
         throw std::runtime_error("Failed to init sub system");
     }
 }
@@ -60,16 +56,14 @@ void Application::quitSubSystem(InitValue init)
 
 void Application::initSubSystem(InitLibs init)
 {
-    if (init & Fonts)
-    {
+    if (init & Fonts) {
         sdl2ttf = std::make_unique<SDL::Lib_TTF>();
     }
 }
 
 void Application::quitSubSystem(InitLibs init)
 {
-    if (init & Fonts)
-    {
+    if (init & Fonts) {
         sdl2ttf.reset();
     }
 }
@@ -82,8 +76,7 @@ void Application::eventLoop(int fps, std::function<void(int)>&& eventDone)
 
     for (auto& window: windows)
     {
-        if (window.second->isVisable())
-        {
+        if (window.second->isVisable()) {
             window.second->updateView();
         }
     }
@@ -130,8 +123,7 @@ void Application::unregisterWindow(Window& window)
 WindowEventHandler& Application::getWindowHander(Uint32 windowId)
 {
     auto find = windows.find(windowId);
-    if (find != windows.end())
-    {
+    if (find != windows.end()) {
         return *find->second;
     }
 
@@ -143,16 +135,14 @@ void Application::updateState(int eventCount)
 {
     userEventDone(eventCount);
 
-    for (auto& window: windows)
-    {
+    for (auto& window: windows) {
         window.second->updateState();
     }
 }
 
 void Application::drawWindows()
 {
-    for (auto& window: windows)
-    {
+    for (auto& window: windows) {
         window.second->draw();
     }
 }
@@ -555,8 +545,7 @@ void DebugApplication::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 {
     static long long count = 0;
     ++count;
-    if (count % 100 == 0)
-    {
+    if (count % 100 == 0) {
         std::cerr << "handleEventMouseMove\n";
     }
     Application::handleEventMouseMove(event);

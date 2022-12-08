@@ -78,16 +78,14 @@ Window& Window::operator=(Window&& move) noexcept
 
 void Window::registerWindow()
 {
-    if (window)
-    {
+    if (window) {
         Application::getInstance().registerWindow(*this);
     }
 }
 
 void Window::unregisterWindow()
 {
-    if (window)
-    {
+    if (window) {
         Application::getInstance().unregisterWindow(*this);
     }
 }
@@ -103,8 +101,7 @@ void Window::updateView(std::size_t nextView)
     if (currentView < views.size())
     {
         Sz size = views[currentView]->reset();
-        if (size.x != 0 && size.y != 0)
-        {
+        if (size.x != 0 && size.y != 0) {
             SDL_SetWindowSize(*window, size.x, size.y);
         }
     }
@@ -112,8 +109,7 @@ void Window::updateView(std::size_t nextView)
 
 void Window::updateState()
 {
-    if (currentView < views.size())
-    {
+    if (currentView < views.size()) {
         views[currentView]->updateState();
     }
 }
@@ -130,8 +126,7 @@ void Window::draw()
     SDL_SetRenderDrawColor(getRenderer(), background.r, background.g, background.b, background.alpha);
     SDL_RenderClear(getRenderer());
 
-    if (currentView < views.size())
-    {
+    if (currentView < views.size()) {
         views[currentView]->draw(*this);
     }
 
@@ -152,8 +147,7 @@ void Window::addView(View& view)
 void Window::remView(View& view)
 {
     auto find = std::find(std::begin(views), std::end(views), &view);
-    if (find != std::end(views))
-    {
+    if (find != std::end(views)) {
         views.erase(find);
     }
 }

@@ -18,16 +18,14 @@ void WidgetView::addWidget(Widget& widget)
 void WidgetView::remWidget(Widget& widget)
 {
     auto find = std::find(std::begin(widgets), std::end(widgets), &widget);
-    if (find != std::end(widgets))
-    {
+    if (find != std::end(widgets)) {
         widgets.erase(find);
     }
 }
 
 void WidgetView::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 {
-    for (auto widget: widgets)
-    {
+    for (auto widget: widgets) {
         widget->drawWidget(drawContext, theme);
     }
 }
@@ -35,8 +33,7 @@ void WidgetView::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 ThorsAnvil::UI::Sz WidgetView::preferredLayout(Theme const& theme)
 {
     layout.clear();
-    for (auto widget: widgets)
-    {
+    for (auto widget: widgets) {
         layout.addWidget(widget->preferredLayout(theme));
     }
     return layout.getSize(theme);

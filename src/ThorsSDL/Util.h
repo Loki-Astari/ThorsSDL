@@ -71,16 +71,13 @@ struct Rect: SDL_Rect
         bool    hitBottom       = (point.y >= (y + h) && (point.y + vel.y) < (y + h))
                                && (botIntersect >= x && botIntersect < (x + w));
 
-        if (hitLeft)
-        {
+        if (hitLeft) {
             return hitTop ? TopLeft : hitBottom ? BotLeft : Left;
         }
-        else if (hitRight)
-        {
+        else if (hitRight) {
             return hitTop ? TopRight : hitBottom ? BotRight : Right;
         }
-        else
-        {
+        else {
             return hitTop ? Top : hitBottom ? Bot : Miss;
         }
     }

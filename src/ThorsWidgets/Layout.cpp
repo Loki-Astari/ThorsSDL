@@ -16,6 +16,7 @@ ThorsAnvil::UI::Sz BoxLayout::getSize(Theme const& /*theme*/)
         result.x    = std::max(result.x, size.x);
         result.y    += size.y + 2;
     }
+
     result.y -= 2; // Don't need the offset after last element.
 
     ThorsAnvil::UI::Sz  offset{0,0};

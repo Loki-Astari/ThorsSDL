@@ -144,8 +144,7 @@ struct BaseWrapper
 {
     BaseWrapper(int state, char const* message)
     {
-        if (state != 0)
-        {
+        if (state != 0) {
             throw std::runtime_error(message);
         }
     }

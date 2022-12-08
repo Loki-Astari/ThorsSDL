@@ -22,8 +22,7 @@ void Sprite::updateState()
     UI::TimePoint   now =  std::chrono::system_clock::now();
     if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdate).count() >= updatePeriod)
     {
-        if (doUpdateState())
-        {
+        if (doUpdateState()) {
             lastUpdate = now;
         }
     }
