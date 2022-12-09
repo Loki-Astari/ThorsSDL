@@ -2,12 +2,16 @@
 #define THORSANVIL_WIDGETS_THEME_H
 
 #include "ThorsWidgetsConfig.h"
+#include "ThorsSDL/Util.h"
 
 namespace ThorsAnvil::Widgets
 {
 
-class Theme
+struct Theme
 {
+    int         viewPadding     = 2;            // Space between elements in a view
+    UI::Rect    viewBorder      = {2, 2, 2, 2}; // Space around all elements to display border;
+                                                // Left, Top, Right, Bottom
 };
 
 }

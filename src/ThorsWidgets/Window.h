@@ -8,7 +8,7 @@
 namespace ThorsAnvil::Widgets
 {
 
-class Theme;
+struct Theme;
 class Layout;
 class Window: public WidgetView, public UI::View
 {

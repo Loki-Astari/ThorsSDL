@@ -25,16 +25,22 @@ void WidgetView::remWidget(Widget& widget)
 
 void WidgetView::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 {
-    for (auto widget: widgets) {
-        widget->drawWidget(drawContext, theme);
+    for (auto widget: widgets)
+    {
+        if (widget->isVisible()) {
+            widget->drawWidget(drawContext, theme);
+        }
     }
 }
 
 ThorsAnvil::UI::Sz WidgetView::preferredLayout(Theme const& theme)
 {
     layout.clear();
-    for (auto widget: widgets) {
-        layout.addWidget(widget->preferredLayout(theme));
+    for (auto widget: widgets)
+    {
+        if (widget->isVisible()) {
+            layout.addWidget(widget->preferredLayout(theme));
+        }
     }
     return layout.getSize(theme);
 }
@@ -44,7 +50,10 @@ void WidgetView::performLayout(ThorsAnvil::UI::Pt topLeft, Theme const& theme)
     int index = 0;
     for (auto widget: widgets)
     {
-        ThorsAnvil::UI::Sz offset = layout.getOffset(index++);
-        widget->performLayout(topLeft + offset, theme);
+        if (widget->isVisible())
+        {
+            ThorsAnvil::UI::Sz offset = layout.getOffset(index++);
+            widget->performLayout(topLeft + offset, theme);
+        }
     }
 }

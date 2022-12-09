@@ -4,9 +4,10 @@
 using namespace ThorsAnvil::Widgets;
 
 
-Widget::Widget(WidgetView& parent)
+Widget::Widget(WidgetView& parent, bool visible)
     : parent(parent)
     , lastUpdate{}
+    , visible{visible}
 {
     parent.addWidget(*this);
 }

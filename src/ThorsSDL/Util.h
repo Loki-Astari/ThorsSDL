@@ -15,6 +15,8 @@ using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
 
 struct Pt: SDL_Point
 {
+    int&        operator[](int axis)        {return axis == 0 ? x : y;}
+    int const&  operator[](int axis) const  {return axis == 0 ? x : y;}
     friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Pt const& point)
     {
         return s << "Pt: {" << point.x << ", " << point.y << "}";
@@ -23,6 +25,8 @@ struct Pt: SDL_Point
 
 struct Sz: SDL_Point
 {
+    int&        operator[](int axis)        {return axis == 0 ? x : y;}
+    int const&  operator[](int axis) const  {return axis == 0 ? x : y;}
     friend std::ostream& operator<<(std::ostream& s, ThorsAnvil::UI::Sz const& point)
     {
         return s << "Sz: {" << point.x << ", " << point.y << "}";
@@ -48,6 +52,8 @@ enum CollisionPoint {Miss, TopLeft, Top, TopRight, Right, BotRight, Bot, BotLeft
 
 struct Rect: SDL_Rect
 {
+    int&        operator[](int axis)            {switch (axis) {case 0: return x; case 1: return y; case 2: return w; case 3: return h;} return x;}
+    int const&  operator[](int axis) const      {switch (axis) {case 0: return x; case 1: return y; case 2: return w; case 3: return h;} return x;}
     bool contains(Pt const& pt)         const   { return (pt.x >= x && pt.x < (x + w) && pt.y >= y && pt.y < (y + h));}
     bool xIntersect(Rect const& rect)   const   { return (rect.x < x && (rect.x + rect.w) >= x) || (rect.x >= x && rect.x < (x + w));}
     bool yIntersect(Rect const& rect)   const   { return (rect.y < y && (rect.y + rect.h) >= y) || (rect.y >= y && rect.y < (y + h));}

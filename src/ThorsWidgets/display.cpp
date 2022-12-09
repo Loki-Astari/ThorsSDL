@@ -11,7 +11,7 @@ int main()
     ThorsAnvil::UI::Application         application;
     ThorsAnvil::UI::Window              window("Test Widgets", {100, 100, 200, 200});
 
-    ThorsAnvil::Widgets::BoxLayout      layout;
+    ThorsAnvil::Widgets::VertBoxLayout  layout(ThorsAnvil::Widgets::Center);
     ThorsAnvil::Widgets::Theme          theme;
     ThorsAnvil::Widgets::Window         widgetWindow(layout, theme);
     window.addView(widgetWindow);
