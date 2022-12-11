@@ -29,6 +29,9 @@ class WidgetLabel: public Widget
 
         virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size) override;
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme) override;
+
+        virtual UI::Sz  addOffset(Theme const& theme, UI::Sz size) const;
+        virtual void    centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) const;
 };
 
 }

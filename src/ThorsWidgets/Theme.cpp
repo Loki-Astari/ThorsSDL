@@ -1,6 +1,8 @@
 #include "Theme.h"
 #include "WidgetView.h"
 #include "WidgetLabel.h"
+#include "WidgetButton.h"
+#include "ThorsSDL/Pen.h"
 
 using namespace ThorsAnvil::Widgets;
 
@@ -12,6 +14,17 @@ void Theme::drawWidget(UI::DrawContext&, WidgetLabel const& label) const
 {
     UI::Pt point = label.getDrawPosition();
     UI::Sz size  = label.getDrawSize();
+    label.centerText(*this, point, size);
 
     label.texture.draw({point.x, point.y, size.x, size.y});
+}
+
+void Theme::drawWidget(UI::DrawContext& drawContext, WidgetButton const& button) const
+{
+    drawWidget(drawContext, dynamic_cast<WidgetLabel const&>(button));
+
+    UI::Pen pen(UI::C::white);
+    UI::Pt point = button.getDrawPosition();
+    UI::Sz size  = button.getDrawSize();
+    pen.drawRect(drawContext, {point.x, point.y, size.x, size.y});
 }

@@ -6,6 +6,7 @@
 #include "Theme.h"
 #include "WidgetExample.h"
 #include "WidgetLabel.h"
+#include "WidgetButton.h"
 
 int main()
 {
@@ -23,6 +24,7 @@ int main()
     ThorsAnvil::Widgets::WidgetExample  item4(widgetWindow);
     ThorsAnvil::Widgets::WidgetExample  item5(widgetWindow);
     ThorsAnvil::Widgets::WidgetLabel    label(widgetWindow, "This is some text", "Brush Script", 36, ThorsAnvil::UI::C::darkgrey);
+    ThorsAnvil::Widgets::WidgetButton   button(widgetWindow, "This is some text", "Brush Script", 36, ThorsAnvil::UI::C::darkgrey);
 
     widgetWindow.tile();
 
