@@ -11,8 +11,8 @@ int main()
     ThorsAnvil::UI::Application         application;
     ThorsAnvil::UI::Window              window("Test Widgets", {100, 100, 200, 200});
 
-    //ThorsAnvil::Widgets::VertBoxLayout    layout(ThorsAnvil::Widgets::Center);
-    ThorsAnvil::Widgets::GridLayout     layout(3, ThorsAnvil::Widgets::Middle, ThorsAnvil::Widgets::Center);
+    ThorsAnvil::Widgets::VertBoxLayout    layout(ThorsAnvil::Widgets::Center);
+    //ThorsAnvil::Widgets::GridLayout     layout(3, ThorsAnvil::Widgets::Middle, ThorsAnvil::Widgets::Center);
     ThorsAnvil::Widgets::Theme          theme;
     ThorsAnvil::Widgets::Window         widgetWindow(layout, theme);
     window.addView(widgetWindow);
