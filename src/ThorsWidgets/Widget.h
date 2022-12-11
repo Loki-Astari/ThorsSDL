@@ -18,16 +18,24 @@ struct Theme;
 class Widget
 {
     WidgetView&         parent;
+    UI::Pt              topLeft;
+    UI::Sz              size;
     UI::TimePoint       lastUpdate;
     bool                visible;
 
+    protected:
+        UI::Pt const&  getDrawPosition()    const   {return topLeft;}
+        UI::Sz const&  getDrawSize()        const   {return size;}
+
     public:
-        Widget(WidgetView& parent, bool visible = true);
+        Widget(WidgetView& parent, UI::Sz size, bool visible = true);
         virtual ~Widget();
 
-        virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)= 0;
-        virtual UI::Sz  preferredLayout(Theme const& theme)                         = 0;
-        virtual void    performLayout(UI::Pt topLeft, Theme const& theme)           = 0;
+        UI::Sz          preferredLayout(Theme const& theme);
+        void            performLayout(UI::Pt newTopLeft, Theme const& theme);
+        virtual UI::Sz  doPreferredLayout(Theme const& /*theme*/, UI::Sz size)          {return size;}
+        virtual void    doPerformLayout(UI::Pt /*newTopLeft*/, Theme const& /*theme*/)  {}
+        virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    = 0;
 
 
         bool    isVisible() const   {return visible;}

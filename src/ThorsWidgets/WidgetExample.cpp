@@ -6,7 +6,7 @@ using namespace ThorsAnvil::Widgets;
 
 
 WidgetExample::WidgetExample(WidgetView& parent)
-    : Widget(parent)
+    : Widget(parent, {20, 20})
 {}
 
 WidgetExample::~WidgetExample()
@@ -14,16 +14,8 @@ WidgetExample::~WidgetExample()
 
 void WidgetExample::drawWidget(UI::DrawContext& drawContext, Theme const& /*theme*/)
 {
-    ThorsAnvil::UI::Pen     red{ThorsAnvil::UI::C::red};
-    red.drawRect(drawContext, {topLeft.x, topLeft.y, 20, 20});
-}
-
-ThorsAnvil::UI::Sz WidgetExample::preferredLayout(Theme const& /*theme*/)
-{
-    return {20, 20};
-}
-
-void WidgetExample::performLayout(UI::Pt tl, Theme const& /*theme*/)
-{
-    topLeft = tl;
+    ThorsAnvil::UI::Pen         red{ThorsAnvil::UI::C::red};
+    ThorsAnvil::UI::Pt const&   topLeft = getDrawPosition();
+    ThorsAnvil::UI::Sz const&   size = getDrawSize();
+    red.drawRect(drawContext, {topLeft.x, topLeft.y, size.x, size.y});
 }

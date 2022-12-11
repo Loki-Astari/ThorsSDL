@@ -31,8 +31,8 @@ class WidgetView: public Widget
 
         // Widget
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    override;
-        virtual UI::Sz  preferredLayout(Theme const& theme)                             override;
-        virtual void    performLayout(UI::Pt topLeft, Theme const& theme)               override;
+        virtual UI::Sz  doPreferredLayout(Theme const& theme, UI::Sz size)              override;
+        virtual void    doPerformLayout(UI::Pt topLeft, Theme const& theme)             override;
 };
 
 }

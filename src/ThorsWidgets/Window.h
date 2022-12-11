@@ -24,8 +24,8 @@ class Window: public WidgetView, public UI::View
 #if 0
         Widget:
             virtual void    drawWidget(UI::DrawContext& drawContext, Theme& theme)= 0;
-            virtual UI::Sz  preferredLayout() const                         = 0;
-            virtual void    performLayout(UI::Pt topLeft)                   = 0;
+            virtual UI::Sz  doPreferredLayout(.....) const                  = 0;
+            virtual void    doPerformLayout(UI::Pt topLeft)                 = 0;
 #endif
 
 };

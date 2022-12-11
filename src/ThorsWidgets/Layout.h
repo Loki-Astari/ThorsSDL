@@ -15,22 +15,28 @@ class Widget;
 struct Theme;
 class Layout
 {
+    bool    removeNonVisibleWidgets;
     protected:
         std::vector<UI::Sz>     layoutSize;
         std::vector<UI::Sz>     offsetPoint;
+
     public:
+        Layout(bool removeNonVisibleWidgets = false);
         virtual ~Layout();
 
-        // preferredLayout
-        void clear()                {layoutSize.clear();}
-        void addWidget(UI::Sz size) {layoutSize.emplace_back(size);}
+        UI::Sz  preferredLayout(Theme const& theme, std::vector<Widget*>& widgets);
+        void    performLayout(UI::Pt topLeft, Theme const& theme, std::vector<Widget*>& widgets);
+        void    drawWidget(UI::DrawContext& drawContext, Theme const& theme, std::vector<Widget*>& widgets);
 
-        // Calculates size.
+        virtual int maxWidgets()                const {return 1000;}
+
+    private:
+        // This is called by preferredLayout() after we have retrieved the size of all "visible" children.
+        // This function should use this size information to calculate the size of the bounding box to hold
+        // all the children and store the offset of each "visible" child within the bounding box.
+        // Note: performLayout() will call performLayout() on each child passing it the absolute top left of
+        //       its position so that it knows where it will be drawn.
         virtual UI::Sz getSize(Theme const& theme)    = 0;
-
-        // performLayout
-        UI::Sz getOffset(int index) {return offsetPoint[index];}
-
 };
 
 enum Orientation {Horz, Vert};
@@ -140,6 +146,85 @@ class BoxLayout: public Layout
 
 using HorzBoxLayout = BoxLayout<Horz>;
 using VertBoxLayout = BoxLayout<Vert>;
+
+template<int Xmax, int Ymax>
+class GridLayout: public Layout
+{
+    HorzAlign       hAlign;
+    VertAlign       vAlign;
+    public:
+        GridLayout(HorzAlign hAlign, VertAlign vAlign)
+            : hAlign(hAlign)
+            , vAlign(vAlign)
+        {}
+        virtual int maxWidgets() const override {return Xmax * Ymax;}
+        virtual UI::Sz getSize(Theme const& theme) override
+        {
+            UI::Sz  mazElementSize{0, 0};
+
+            // Step 1:  Calculate the dimensions of each Grid box.
+            //          This will take the largest X size of widgets and the largest Y size.
+            //          In the grid each cell will be the same size.
+            for (int y = 0; y < Ymax; ++y)
+            {
+                for (int x = 0; x < Xmax; ++x)
+                {
+                    std::size_t index = y * Xmax + x;
+                    if (index >= layoutSize.size()) {
+                        continue;
+                    }
+
+                    mazElementSize.x    = std::max(mazElementSize.x, layoutSize[index].x);
+                    mazElementSize.y    = std::max(mazElementSize.y, layoutSize[index].y);
+                }
+            }
+
+            // Step 2:  Calculate the size of the View.
+            //          Border / Padding / size of cell taken into account.
+            int xSize   = (theme.viewBorder.x + theme.viewBorder.w) + (Xmax *  (mazElementSize.x + theme.viewPadding)) - (Xmax == 0 ? 0 : theme.viewPadding);
+            int ySize   = (theme.viewBorder.y + theme.viewBorder.h) + (Ymax *  (mazElementSize.y + theme.viewPadding)) - (Ymax == 0 ? 0 : theme.viewPadding);
+
+            UI::Sz  result{xSize, ySize};
+
+            // Step 3:  Calculate the offset from the top left of each widget
+            //          Take into account alignment.
+            for (int y = 0; y < Ymax; ++y)
+            {
+                for (int x = 0; x < Xmax; ++x)
+                {
+                    std::size_t index = y * Xmax + x;
+                    if (index >= layoutSize.size()) {
+                        continue;
+                    }
+
+                    int xOffset;
+                    int yOffset;
+                    switch (hAlign)
+                    {
+                        case 0: xOffset = 0; break;
+                        case 1: xOffset = (mazElementSize.x - layoutSize[index].x) / 2; break;
+                        case 2: xOffset = mazElementSize.x - layoutSize[index].x;
+                    }
+                    switch (vAlign)
+                    {
+                        case 0: yOffset = 0; break;
+                        case 1: yOffset = (mazElementSize.y - layoutSize[index].y) / 2; break;
+                        case 2: yOffset = mazElementSize.y - layoutSize[index].y;
+                    }
+
+                    // Position from top left is border + cell size + padding size + alignment offset.
+                    int xPos = theme.viewBorder.x + (x * (mazElementSize.x + theme.viewPadding)) + xOffset;
+                    int yPos = theme.viewBorder.y + (y * (mazElementSize.y + theme.viewPadding)) + yOffset;
+
+                    offsetPoint.emplace_back(ThorsAnvil::UI::Sz{xPos, yPos});
+                }
+            }
+
+            // Return the size of the view.
+            // Calculated in Step 2
+            return result;
+        }
+};
 
 }
 

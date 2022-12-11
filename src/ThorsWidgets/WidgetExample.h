@@ -10,14 +10,11 @@ namespace ThorsAnvil::Widgets
 
 class WidgetExample: public Widget
 {
-    UI::Pt      topLeft;
     public:
         WidgetExample(WidgetView& parent);
         virtual ~WidgetExample();
 
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme) override;
-        virtual UI::Sz  preferredLayout(Theme const& theme)                          override;
-        virtual void    performLayout(UI::Pt topLeft, Theme const& theme)            override;
 };
 
 }
