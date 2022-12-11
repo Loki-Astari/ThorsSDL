@@ -24,7 +24,7 @@ class Layout
         Layout(bool removeNonVisibleWidgets = false);
         virtual ~Layout();
 
-        UI::Sz  preferredLayout(Theme const& theme, std::vector<Widget*>& widgets);
+        UI::Sz  preferredLayout(UI::DrawContext& drawContext, Theme const& theme, std::vector<Widget*>& widgets);
         void    performLayout(UI::Pt topLeft, Theme const& theme, std::vector<Widget*>& widgets);
         void    drawWidget(UI::DrawContext& drawContext, Theme const& theme, std::vector<Widget*>& widgets);
 

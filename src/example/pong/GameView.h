@@ -6,6 +6,11 @@
 #include "ThorsGraphics/GraphicView.h"
 #include <vector>
 
+namespace ThorsAnvil::UI
+{
+    class Window;
+}
+
 namespace ThorsAnvil::Example::Pong
 {
 
@@ -103,7 +108,7 @@ class GameView: public GR::GraphicView
     Ball                ball;
 
     public:
-        GameView(int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& endGame);
+        GameView(UI::Window& window, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& endGame);
 };
 
 }

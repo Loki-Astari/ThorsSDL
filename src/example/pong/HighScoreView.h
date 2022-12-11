@@ -6,6 +6,11 @@
 #include "ThorsSDL/Pen.h"
 #include <vector>
 
+namespace ThorsAnvil::UI
+{
+    class Window;
+}
+
 namespace ThorsAnvil::Example::Pong
 {
 
@@ -75,7 +80,7 @@ class HighScoreView: public GR::GraphicView
     HighScoreTable       highScoreTable;
 
     public:
-        HighScoreView(int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
+        HighScoreView(UI::Window& window, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
 };
 
 }

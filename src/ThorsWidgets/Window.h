@@ -5,8 +5,15 @@
 #include "WidgetView.h"
 #include "ThorsSDL/View.h"
 
+namespace ThorsAnvil::UI
+{
+    class Window;
+}
+
 namespace ThorsAnvil::Widgets
 {
+
+namespace UI = ThorsAnvil::UI;
 
 struct Theme;
 class Layout;
@@ -16,7 +23,7 @@ class Window: public WidgetView, public UI::View
     UI::Sz          size;
 
     public:
-        Window(Layout& layout, Theme& theme);
+        Window(UI::Window& window, Layout& layout, Theme& theme);
         void tile();
 
         virtual void draw(UI::DrawContext& context) override;

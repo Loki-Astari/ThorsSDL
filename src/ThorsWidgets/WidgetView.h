@@ -15,6 +15,8 @@ class WidgetViewTest_CheckWidgetStored_Test;
 namespace ThorsAnvil::Widgets
 {
 
+namespace UI = ThorsAnvil::UI;
+
 class Widget;
 class Layout;
 class WidgetView: public Widget
@@ -31,7 +33,7 @@ class WidgetView: public Widget
 
         // Widget
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    override;
-        virtual UI::Sz  doPreferredLayout(Theme const& theme, UI::Sz size)              override;
+        virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size)              override;
         virtual void    doPerformLayout(UI::Pt topLeft, Theme const& theme)             override;
 };
 

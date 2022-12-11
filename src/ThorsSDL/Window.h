@@ -82,6 +82,8 @@ class Window: public WindowEventHandler, public DrawContext
         bool    isVisable() const;
         Uint32  getId() const;
 
+    private:
+        friend class View;
         void    addView(View& sprite);
         void    remView(View& sprite);
     private:

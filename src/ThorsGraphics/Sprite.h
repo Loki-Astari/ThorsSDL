@@ -13,6 +13,8 @@ namespace ThorsAnvil::UI
 namespace ThorsAnvil::Graphics
 {
 
+namespace UI = ThorsAnvil::UI;
+
 class GraphicView;
 class Sprite
 {

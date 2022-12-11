@@ -12,8 +12,8 @@ int constexpr           windowHeight    = 720;
 class PongWindow: public UI::Window
 {
     int                                             scoreOfLastGame;
-    ThorsAnvil::Example::Pong::GameView             gameView;
     ThorsAnvil::Example::Pong::HighScoreView        highScoreView;
+    ThorsAnvil::Example::Pong::GameView             gameView;
 
     static int constexpr highScoreViewId = 0;
     static int constexpr gameViewId = 1;
@@ -22,11 +22,9 @@ class PongWindow: public UI::Window
         PongWindow(std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(title, rect, winState, renState)
             , scoreOfLastGame(0)
-            , gameView(scoreOfLastGame, rect, [window = this](){window->updateView(highScoreViewId);})
-            , highScoreView(scoreOfLastGame, rect, [window = this](){window->updateView(gameViewId);})
+            , highScoreView(*this, scoreOfLastGame, rect, [window = this](){window->updateView(gameViewId);})
+            , gameView(*this, scoreOfLastGame, rect, [window = this](){window->updateView(highScoreViewId);})
         {
-            addView(highScoreView);
-            addView(gameView);
         }
 };
 

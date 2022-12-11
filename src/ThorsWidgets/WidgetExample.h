@@ -8,6 +8,8 @@
 namespace ThorsAnvil::Widgets
 {
 
+namespace UI = ThorsAnvil::UI;
+
 class WidgetExample: public Widget
 {
     public:

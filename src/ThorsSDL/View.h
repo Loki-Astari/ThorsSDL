@@ -7,14 +7,19 @@
 namespace ThorsAnvil::UI
 {
 
+class Window;
 class DrawContext;
 class View
 {
+    Window& parent;
     public:
+        View(Window& parent);
         virtual ~View();
         virtual void updateState();
         virtual Sz reset();
         virtual void draw(DrawContext& context);
+
+        DrawContext& getDrawContext();
 };
 
 }

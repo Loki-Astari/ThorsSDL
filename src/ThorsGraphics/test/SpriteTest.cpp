@@ -20,8 +20,10 @@ TEST(SpriteTest, Construct)
     MockSDL             mockActivate(actions);
 
     auto action = [](){
-        ThorsAnvil::Graphics::GraphicView   view;
-        TestSprite                      sprite(view, 0);
+        ThorsAnvil::UI::Application         application;
+        ThorsAnvil::UI::Window              window("Test", {10, 10, 100, 100});
+        ThorsAnvil::Graphics::GraphicView   view(window);
+        TestSprite                          sprite(view, 0);
     };
 
     EXPECT_NO_THROW(

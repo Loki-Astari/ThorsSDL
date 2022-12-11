@@ -8,13 +8,18 @@
 namespace ThorsAnvil::Widgets
 {
 
+namespace UI = ThorsAnvil::UI;
+
+class WidgetView;
+class WidgetLabel;
 struct Theme
 {
     int         viewPadding     = 2;            // Space between elements in a view
-    UI::Rect    viewBorder      = {2, 2, 2, 2}; // Space around all elements to display border;
-                                                // Left, Top, Right, Bottom
+    UI::Rect    viewBorder      = {2, 2, 2, 2}; // Space around all elements to display border; Left, Top, Right, Bottom
+    UI::Rect    labelBorder     = {2, 2, 2, 2};
 
-    std::function<void(UI::DrawContext&)>   drawWidgetView = [](UI::DrawContext&){};
+    virtual void drawWidget(UI::DrawContext&, WidgetView const&) const;
+    virtual void drawWidget(UI::DrawContext&, WidgetLabel const&) const;
 };
 
 }

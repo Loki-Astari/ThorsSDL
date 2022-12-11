@@ -22,7 +22,7 @@ class TextPen;
 class DrawContext;
 class Texture
 {
-    DrawContext&                    drawContext;
+    DrawContext*                    drawContext;
     std::shared_ptr<SDL_Texture>    texture;
 
     private:
@@ -35,8 +35,15 @@ class Texture
         FRIEND_TEST(::TextureTest, TextureDrawSpecSrcSpecDst);
         Texture(DrawContext& drawContext, SDL_Surface& surface);
     public:
+        Texture();
+        Texture(Texture& copy)              = default;
+        Texture(Texture&& move)             = default;
 
-        void draw(Rect dst = zero, Rect src = zero);
+        Texture& operator=(Texture& copt)   = default;
+        Texture& operator=(Texture&& move)  = default;
+
+        Sz size() const;
+        void draw(Rect dst = zero, Rect src = zero) const;
 };
 
 }

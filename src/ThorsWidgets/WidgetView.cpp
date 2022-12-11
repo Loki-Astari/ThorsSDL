@@ -25,16 +25,16 @@ void WidgetView::remWidget(Widget& widget)
 
 void WidgetView::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 {
-    theme.drawWidgetView(drawContext);
+    theme.drawWidget(drawContext, *this);
     layout.drawWidget(drawContext, theme, widgets);
 }
 
-ThorsAnvil::UI::Sz WidgetView::doPreferredLayout(Theme const& theme, ThorsAnvil::UI::Sz /*size*/)
+UI::Sz WidgetView::doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz /*size*/)
 {
-    return layout.preferredLayout(theme, widgets);
+    return layout.preferredLayout(drawContext, theme, widgets);
 }
 
-void WidgetView::doPerformLayout(ThorsAnvil::UI::Pt topLeft, Theme const& theme)
+void WidgetView::doPerformLayout(UI::Pt topLeft, Theme const& theme)
 {
     layout.performLayout(topLeft, theme, widgets);
 }

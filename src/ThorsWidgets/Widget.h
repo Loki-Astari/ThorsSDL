@@ -12,6 +12,8 @@ namespace ThorsAnvil::UI
 namespace ThorsAnvil::Widgets
 {
 
+namespace UI = ThorsAnvil::UI;
+
 enum WidgetType {Unknown, Label};
 
 class Layout;
@@ -33,9 +35,9 @@ class Widget
         Widget(WidgetView& parent, UI::Sz size, bool visible = true);
         virtual ~Widget();
 
-        UI::Sz          preferredLayout(Theme const& theme);
+        UI::Sz          preferredLayout(UI::DrawContext& context, Theme const& theme);
         void            performLayout(UI::Pt newTopLeft, Theme const& theme);
-        virtual UI::Sz  doPreferredLayout(Theme const& /*theme*/, UI::Sz size)          {return size;}
+        virtual UI::Sz  doPreferredLayout(UI::DrawContext& /*drawContext*/, Theme const& /*theme*/, UI::Sz size)          {return size;}
         virtual void    doPerformLayout(UI::Pt /*newTopLeft*/, Theme const& /*theme*/)  {}
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    = 0;
 

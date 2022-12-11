@@ -24,7 +24,9 @@ TEST(GraphicViewTest, CheckSpriteStored)
     MockSDL             mockActivate(actions);
 
     auto action = [](){
-        ThorsAnvil::Graphics::GraphicView   view;
+        ThorsAnvil::UI::Application         application;
+        ThorsAnvil::UI::Window              window("Test", {10, 10, 100, 100});
+        ThorsAnvil::Graphics::GraphicView   view(window);
 
         {
             MockSprite  sprite(view, 0);
@@ -44,7 +46,9 @@ TEST(GraphicViewTest, RunDraw)
     MockSDL             mockActivate(actions);
 
     auto action = [](){
-        ThorsAnvil::Graphics::GraphicView   view;
+        ThorsAnvil::UI::Application         application;
+        ThorsAnvil::UI::Window              window("Test", {10, 10, 100, 100});
+        ThorsAnvil::Graphics::GraphicView   view(window);
         MockSprite                          sprite(view, 0);
 
         view.draw(*reinterpret_cast<ThorsAnvil::UI::DrawContext*>(1));
@@ -65,7 +69,9 @@ TEST(GraphicViewTest, RunUpdate)
     MockSDL             mockActivate(actions);
 
     auto action = [](){
-        ThorsAnvil::Graphics::GraphicView   view;
+        ThorsAnvil::UI::Application         application;
+        ThorsAnvil::UI::Window              window("Test", {10, 10, 100, 100});
+        ThorsAnvil::Graphics::GraphicView   view(window);
         MockSprite                          sprite(view, 0);
 
         view.updateState();
@@ -86,7 +92,9 @@ TEST(GraphicViewTest, RunReset)
     MockSDL             mockActivate(actions);
 
     auto action = [](){
-        ThorsAnvil::Graphics::GraphicView   view;
+        ThorsAnvil::UI::Application         application;
+        ThorsAnvil::UI::Window              window("Test", {10, 10, 100, 100});
+        ThorsAnvil::Graphics::GraphicView   view(window);
         MockSprite                          sprite(view, 0);
 
         view.reset();

@@ -4,6 +4,10 @@
 
 using namespace ThorsAnvil::Graphics;
 
+GraphicView::GraphicView(UI::Window& window)
+    : View(window)
+{}
+
 void GraphicView::updateState()
 {
     for (auto const& sprite: sprites) {
@@ -11,7 +15,7 @@ void GraphicView::updateState()
     }
 }
 
-ThorsAnvil::UI::Sz GraphicView::GraphicView::reset()
+UI::Sz GraphicView::GraphicView::reset()
 {
     for (auto const& sprite: sprites) {
         sprite->reset();
@@ -19,7 +23,7 @@ ThorsAnvil::UI::Sz GraphicView::GraphicView::reset()
     return {0, 0};
 }
 
-void GraphicView::draw(ThorsAnvil::UI::DrawContext& context)
+void GraphicView::draw(UI::DrawContext& context)
 {
     for (auto const& sprite: sprites) {
         sprite->draw(context);

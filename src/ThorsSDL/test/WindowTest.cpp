@@ -126,9 +126,7 @@ TEST(WindowTest, WindowAddView)
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
-        ThorsAnvil::UI::View            view;
-        window.addView(view);
-        window.remView(view);
+        ThorsAnvil::UI::View            view(window);
     };
 
     EXPECT_NO_THROW(

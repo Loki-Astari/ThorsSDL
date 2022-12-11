@@ -86,6 +86,7 @@ void HighScoreView::HighScoreTable::reset()
     }
 }
 
-HighScoreView::HighScoreView(int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
-    : highScoreTable(*this, scoreOfLastGame, rect, std::move(startGame))
+HighScoreView::HighScoreView(UI::Window& window, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
+    : GraphicView(window)
+    , highScoreTable(*this, scoreOfLastGame, rect, std::move(startGame))
 {}

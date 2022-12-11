@@ -11,7 +11,7 @@ Layout::Layout(bool removeNonVisibleWidgets)
 Layout::~Layout()
 {}
 
-ThorsAnvil::UI::Sz Layout::preferredLayout(Theme const& theme, std::vector<Widget*>& widgets)
+UI::Sz Layout::preferredLayout(UI::DrawContext& drawContext, Theme const& theme, std::vector<Widget*>& widgets)
 {
     layoutSize.clear();
 
@@ -21,13 +21,13 @@ ThorsAnvil::UI::Sz Layout::preferredLayout(Theme const& theme, std::vector<Widge
         if (removeNonVisibleWidgets && !widget->isVisible()) {
             continue;
         }
-        layoutSize.emplace_back(widget->preferredLayout(theme));
+        layoutSize.emplace_back(widget->preferredLayout(drawContext, theme));
         ++index;
     }
     return getSize(theme, widgets);
 }
 
-void Layout::performLayout(ThorsAnvil::UI::Pt topLeft, Theme const& theme, std::vector<Widget*>& widgets)
+void Layout::performLayout(UI::Pt topLeft, Theme const& theme, std::vector<Widget*>& widgets)
 {
     int index = 0;
     for (auto widget: widgets)
@@ -35,7 +35,7 @@ void Layout::performLayout(ThorsAnvil::UI::Pt topLeft, Theme const& theme, std::
         if (removeNonVisibleWidgets && !widget->isVisible()) {
             continue;
         }
-        ThorsAnvil::UI::Sz offset = offsetPoint[index];
+        UI::Sz offset = offsetPoint[index];
         widget->performLayout(topLeft + offset, theme);
         ++index;
     }
@@ -55,7 +55,7 @@ void Layout::drawWidget(UI::DrawContext& drawContext, Theme const& theme, std::v
 }
 
 template<Orientation orientation>
-ThorsAnvil::UI::Sz BoxLayout<orientation>::getSize(Theme const& theme, std::vector<Widget*>& widgets)
+UI::Sz BoxLayout<orientation>::getSize(Theme const& theme, std::vector<Widget*>& widgets)
 {
     // See Layout and WidgetView for how this is being used.
     // Step 1:  Clear the layoutSize container.
@@ -72,7 +72,7 @@ ThorsAnvil::UI::Sz BoxLayout<orientation>::getSize(Theme const& theme, std::vect
     //                    The Hight or Width is the size of the largest element.
 
     // Start off with a size zero.
-    ThorsAnvil::UI::Sz  result{0, 0};
+    UI::Sz  result{0, 0};
 
     // Add the size of each widget (plus padding)
     for (auto const& size: layoutSize)
@@ -91,7 +91,7 @@ ThorsAnvil::UI::Sz BoxLayout<orientation>::getSize(Theme const& theme, std::vect
 
     // The location of the first widget is relative to the top left.
     // Taking into account the border.
-    ThorsAnvil::UI::Sz  offset{theme.viewBorder.x, theme.viewBorder.y};
+    UI::Sz  offset{theme.viewBorder.x, theme.viewBorder.y};
     // std::cerr << "TL: " << offset << "\n";
 
     // Loop over the widget size information and calculate the offset of each
@@ -152,7 +152,7 @@ GridLayout::GridLayout(int width, HorzAlign hAlign, VertAlign vAlign)
     , vAlign(vAlign)
 {}
 
-ThorsAnvil::UI::Sz GridLayout::getSize(Theme const& theme, std::vector<Widget*>& /*widgets*/)
+UI::Sz GridLayout::getSize(Theme const& theme, std::vector<Widget*>& /*widgets*/)
 {
     UI::Sz  mazElementSize{0, 0};
 
@@ -216,7 +216,7 @@ ThorsAnvil::UI::Sz GridLayout::getSize(Theme const& theme, std::vector<Widget*>&
             int xPos = theme.viewBorder.x + (x * (mazElementSize.x + theme.viewPadding)) + xOffset;
             int yPos = theme.viewBorder.y + (y * (mazElementSize.y + theme.viewPadding)) + yOffset;
 
-            offsetPoint.emplace_back(ThorsAnvil::UI::Sz{xPos, yPos});
+            offsetPoint.emplace_back(UI::Sz{xPos, yPos});
         }
     }
 

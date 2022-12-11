@@ -4,7 +4,7 @@
 using namespace ThorsAnvil::Widgets;
 
 
-Widget::Widget(WidgetView& parent, ThorsAnvil::UI::Sz size, bool visible)
+Widget::Widget(WidgetView& parent, UI::Sz size, bool visible)
     : parent(parent)
     , size(size)
     , lastUpdate{}
@@ -18,9 +18,9 @@ Widget::~Widget()
     parent.remWidget(*this);
 }
 
-ThorsAnvil::UI::Sz Widget::preferredLayout(Theme const& theme)
+UI::Sz Widget::preferredLayout(UI::DrawContext& drawContext, Theme const& theme)
 {
-    size = doPreferredLayout(theme, size);
+    size = doPreferredLayout(drawContext, theme, size);
     return size;
 }
 

@@ -4,8 +4,12 @@
 
 using namespace ThorsAnvil::UI;
 
+Texture::Texture()
+    : drawContext(nullptr)
+{}
+
 Texture::Texture(DrawContext& drawContext, SDL_Surface& surface)
-    : drawContext(drawContext)
+    : drawContext(&drawContext)
     , texture(SDL_CreateTextureFromSurface(drawContext.getRenderer(), &surface), [](SDL_Texture* t){if (t){SDL_DestroyTexture(t);}})
 {
     if (!texture) {
@@ -13,14 +17,26 @@ Texture::Texture(DrawContext& drawContext, SDL_Surface& surface)
     }
 }
 
-void Texture::draw(Rect dst, Rect src)
+Sz Texture::size() const
 {
-    Rect*    rectSrc = &src;
-    if (src.w == 0 || src.h == 0) {
-        rectSrc = nullptr;
+    Sz  size{0, 0};
+    if (drawContext && texture) {
+        SDL_QueryTexture(texture.get(), nullptr, nullptr, &size.x, &size.y);
     }
-    if (dst.w == 0 || dst.h == 0) {
-        SDL_QueryTexture(texture.get(), nullptr, nullptr, &dst.w, &dst.h);
+    return size;
+}
+
+void Texture::draw(Rect dst, Rect src) const
+{
+    if (drawContext && texture)
+    {
+        Rect*    rectSrc = &src;
+        if (src.w == 0 || src.h == 0) {
+            rectSrc = nullptr;
+        }
+        if (dst.w == 0 || dst.h == 0) {
+            SDL_QueryTexture(texture.get(), nullptr, nullptr, &dst.w, &dst.h);
+        }
+        SDL_RenderCopy(drawContext->getRenderer(), texture.get(), rectSrc, &dst);
     }
-    SDL_RenderCopy(drawContext.getRenderer(), texture.get(), rectSrc, &dst);
 }
