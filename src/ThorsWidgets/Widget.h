@@ -12,6 +12,8 @@ namespace ThorsAnvil::UI
 namespace ThorsAnvil::Widgets
 {
 
+enum WidgetType {Unknown, Label};
+
 class Layout;
 class WidgetView;
 struct Theme;
@@ -38,7 +40,8 @@ class Widget
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    = 0;
 
 
-        bool    isVisible() const   {return visible;}
+        virtual WidgetType  type() const        {return Unknown;}
+        bool                isVisible() const   {return visible;}
 
 };
 

@@ -28,15 +28,13 @@ class Layout
         void    performLayout(UI::Pt topLeft, Theme const& theme, std::vector<Widget*>& widgets);
         void    drawWidget(UI::DrawContext& drawContext, Theme const& theme, std::vector<Widget*>& widgets);
 
-        virtual int maxWidgets()                const {return 1000;}
-
     private:
         // This is called by preferredLayout() after we have retrieved the size of all "visible" children.
         // This function should use this size information to calculate the size of the bounding box to hold
         // all the children and store the offset of each "visible" child within the bounding box.
         // Note: performLayout() will call performLayout() on each child passing it the absolute top left of
         //       its position so that it knows where it will be drawn.
-        virtual UI::Sz getSize(Theme const& theme)    = 0;
+        virtual UI::Sz getSize(Theme const& theme, std::vector<Widget*>& widgets)    = 0;
 };
 
 enum Orientation {Horz, Vert};
@@ -68,16 +66,11 @@ struct BoxLayoutTraits<Vert>
 template<Orientation orientation>
 class BoxLayout: public Layout
 {
-    using Align = typename BoxLayoutTraits<orientation>::Align;
     static int constexpr majorAxis   = BoxLayoutTraits<orientation>::majorAxis;
     static int constexpr minorAxis   = BoxLayoutTraits<orientation>::minorAxis;
 
-    Align align;
     public:
-        BoxLayout(Align align)
-            : align(align)
-        {}
-        virtual UI::Sz getSize(Theme const& theme) override
+        virtual UI::Sz getSize(Theme const& theme, std::vector<Widget*>& widgets) override
         {
             // See Layout and WidgetView for how this is being used.
             // Step 1:  Clear the layoutSize container.
@@ -118,18 +111,12 @@ class BoxLayout: public Layout
 
             // Loop over the widget size information and calculate the offset of each
             // visible element based on the alignment.
-            for (auto const& size: layoutSize)
+            for (std::size_t index = 0; index < layoutSize.size(); ++index)
             {
-                switch (align)
-                {
-                    std::cerr << "Align: " << align << "\n";
-                    // Aligns either:
-                    //      Left / Middle / Right
-                    // or   Top / Center / Bottom
-                    case 0: std::cerr << "0\n"; offset[minorAxis]   = theme.viewBorder[minorAxis]; break;
-                    case 1: std::cerr << "1\n"; offset[minorAxis]   = (result[minorAxis] - size[minorAxis]) / 2; break;
-                    case 2: std::cerr << "2\n"; offset[minorAxis]   = result[minorAxis] - size[minorAxis] - theme.viewBorder[minorAxis + 2]; break;
-                }
+                auto const& size = layoutSize[index];
+                Widget& widget = *widgets[index];
+
+                offset[minorAxis]   = alignWidget(theme, result, size, widget);
 
                 // Store the information
                 offsetPoint.emplace_back(offset);
@@ -142,88 +129,56 @@ class BoxLayout: public Layout
             // Returns the size of the rectangle
             return result;
         }
+        virtual int alignWidget(Theme const& theme, UI::Sz fitIntoSize, UI::Sz widgetSize, Widget const& widget) = 0;
 };
 
-using HorzBoxLayout = BoxLayout<Horz>;
-using VertBoxLayout = BoxLayout<Vert>;
+template<Orientation orientation>
+class SimpleBoxLayout: public BoxLayout<orientation>
+{
+    using Align = typename BoxLayoutTraits<orientation>::Align;
+    static int constexpr minorAxis   = BoxLayoutTraits<orientation>::minorAxis;
 
-template<int Xmax, int Ymax>
+    Align align;
+
+    public:
+        SimpleBoxLayout(Align align)
+            : align(align)
+        {}
+        virtual int alignWidget(Theme const& theme, UI::Sz fitIntoSize, UI::Sz widgetSize, Widget const& /*widget*/) override
+        {
+            switch (align)
+            {
+                std::cerr << "Align: " << align << "\n";
+                // Aligns either:
+                //      Left / Middle / Right
+                // or   Top / Center / Bottom
+                case 0: std::cerr << "0\n"; return theme.viewBorder[minorAxis];
+                case 1: std::cerr << "1\n"; return (fitIntoSize[minorAxis] - widgetSize[minorAxis]) / 2;
+                case 2: std::cerr << "2\n"; return fitIntoSize[minorAxis] - widgetSize[minorAxis] - theme.viewBorder[minorAxis + 2];
+            }
+            return 0;
+        }
+};
+
+using HorzBoxLayout = SimpleBoxLayout<Horz>;
+using VertBoxLayout = SimpleBoxLayout<Vert>;
+
+class GroupLayout: public BoxLayout<Vert>
+{
+    static int constexpr minorAxis   = BoxLayoutTraits<Vert>::minorAxis;
+
+    public:
+        virtual int alignWidget(Theme const& theme, UI::Sz fitIntoSize, UI::Sz widgetSize, Widget const& widget) override;
+};
+
 class GridLayout: public Layout
 {
+    int             xMax;
     HorzAlign       hAlign;
     VertAlign       vAlign;
     public:
-        GridLayout(HorzAlign hAlign, VertAlign vAlign)
-            : hAlign(hAlign)
-            , vAlign(vAlign)
-        {}
-        virtual int maxWidgets() const override {return Xmax * Ymax;}
-        virtual UI::Sz getSize(Theme const& theme) override
-        {
-            UI::Sz  mazElementSize{0, 0};
-
-            // Step 1:  Calculate the dimensions of each Grid box.
-            //          This will take the largest X size of widgets and the largest Y size.
-            //          In the grid each cell will be the same size.
-            for (int y = 0; y < Ymax; ++y)
-            {
-                for (int x = 0; x < Xmax; ++x)
-                {
-                    std::size_t index = y * Xmax + x;
-                    if (index >= layoutSize.size()) {
-                        continue;
-                    }
-
-                    mazElementSize.x    = std::max(mazElementSize.x, layoutSize[index].x);
-                    mazElementSize.y    = std::max(mazElementSize.y, layoutSize[index].y);
-                }
-            }
-
-            // Step 2:  Calculate the size of the View.
-            //          Border / Padding / size of cell taken into account.
-            int xSize   = (theme.viewBorder.x + theme.viewBorder.w) + (Xmax *  (mazElementSize.x + theme.viewPadding)) - (Xmax == 0 ? 0 : theme.viewPadding);
-            int ySize   = (theme.viewBorder.y + theme.viewBorder.h) + (Ymax *  (mazElementSize.y + theme.viewPadding)) - (Ymax == 0 ? 0 : theme.viewPadding);
-
-            UI::Sz  result{xSize, ySize};
-
-            // Step 3:  Calculate the offset from the top left of each widget
-            //          Take into account alignment.
-            for (int y = 0; y < Ymax; ++y)
-            {
-                for (int x = 0; x < Xmax; ++x)
-                {
-                    std::size_t index = y * Xmax + x;
-                    if (index >= layoutSize.size()) {
-                        continue;
-                    }
-
-                    int xOffset;
-                    int yOffset;
-                    switch (hAlign)
-                    {
-                        case 0: xOffset = 0; break;
-                        case 1: xOffset = (mazElementSize.x - layoutSize[index].x) / 2; break;
-                        case 2: xOffset = mazElementSize.x - layoutSize[index].x;
-                    }
-                    switch (vAlign)
-                    {
-                        case 0: yOffset = 0; break;
-                        case 1: yOffset = (mazElementSize.y - layoutSize[index].y) / 2; break;
-                        case 2: yOffset = mazElementSize.y - layoutSize[index].y;
-                    }
-
-                    // Position from top left is border + cell size + padding size + alignment offset.
-                    int xPos = theme.viewBorder.x + (x * (mazElementSize.x + theme.viewPadding)) + xOffset;
-                    int yPos = theme.viewBorder.y + (y * (mazElementSize.y + theme.viewPadding)) + yOffset;
-
-                    offsetPoint.emplace_back(ThorsAnvil::UI::Sz{xPos, yPos});
-                }
-            }
-
-            // Return the size of the view.
-            // Calculated in Step 2
-            return result;
-        }
+        GridLayout(int width, HorzAlign hAlign, VertAlign vAlign);
+        virtual UI::Sz getSize(Theme const& theme, std::vector<Widget*>& widgets) override;
 };
 
 }
