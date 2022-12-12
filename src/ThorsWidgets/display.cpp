@@ -25,7 +25,7 @@ int main()
     ThorsAnvil::Widgets::WidgetExample  item4(widgetsView);
     ThorsAnvil::Widgets::WidgetExample  item5(widgetsView);
     ThorsAnvil::Widgets::WidgetLabel    label(widgetsView, "This is some text");
-    ThorsAnvil::Widgets::WidgetButton   button(widgetsView, "This is some text");
+    ThorsAnvil::Widgets::WidgetButton   button(widgetsView, "This is some text", [](){std::cerr << "Button Pressed\n";});
 
     widgetsView.tile();
 

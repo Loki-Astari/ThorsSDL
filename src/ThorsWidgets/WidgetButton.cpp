@@ -4,6 +4,13 @@
 
 using namespace ThorsAnvil::Widgets;
 
+WidgetButton::WidgetButton(WidgetView& parent, std::string const& text,
+                           ButtonAction&& action,
+                           UI::Sz minSize, bool visible)
+    : WidgetLabel(parent, text, minSize, visible)
+    , action(std::move(action))
+{}
+
 #if 0
 UI::Sz WidgetButton::doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size)
 {
@@ -67,6 +74,7 @@ Widget* WidgetButton::handleEventMouseUpInWidget(Widget* mouseDownIn)
         return mouseDownIn;
     }
     state = Up;
+    action();
     return nullptr;
 }
 

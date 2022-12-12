@@ -12,15 +12,19 @@ namespace ThorsAnvil::Widgets
 namespace UI = ThorsAnvil::UI;
 
 enum ButtonState {Up, Hover, Down, DownOutside};
+using ButtonAction = std::function<void()>;
 
 struct Theme;
 class WidgetButton: public WidgetLabel
 {
     friend struct Theme;
     ButtonState     state   = Up;
+    ButtonAction    action;
 
     public:
-        using WidgetLabel::WidgetLabel;
+        WidgetButton(WidgetView& parent, std::string const& text,
+                     ButtonAction&& action = [](){},
+                     UI::Sz minSize = {0, 0}, bool visible = true);
 
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme) override;
 
