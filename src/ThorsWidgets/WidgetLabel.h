@@ -17,14 +17,8 @@ class WidgetLabel: public Widget
     friend struct Theme;
     UI::Texture     texture;
     std::string     text;
-    std::string     font;
-    int             point;
-    UI::Color       color;
     public:
-        WidgetLabel(WidgetView& parent,
-                    std::string const& text,
-                    std::string const& font = "Arial", int point = 12,
-                    UI::Color color = UI::C::white,
+        WidgetLabel(WidgetView& parent, std::string const& text,
                     UI::Sz minSize = {0, 0}, bool visible = true);
 
         virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size) override;
@@ -32,6 +26,8 @@ class WidgetLabel: public Widget
 
         virtual UI::Sz  addOffset(Theme const& theme, UI::Sz size) const;
         virtual void    centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) const;
+
+        virtual UI::TextPen const&    getTextPen(Theme const& theme);
 };
 
 }

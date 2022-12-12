@@ -29,3 +29,24 @@ void Widget::performLayout(UI::Pt newTopLeft, Theme const& theme)
     topLeft = newTopLeft;
     doPerformLayout(newTopLeft, theme);
 }
+
+bool Widget::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
+{
+    UI::Rect rect = getBoundingRect();
+
+    if (!rect.contains({event.x, event.y}))
+    {
+        return false;
+    }
+    handleEventMouseMoveInWidgetAction(event);
+    return true;
+}
+
+void Widget::handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& /*event*/)
+{}
+
+void Widget::handleEventMouseMoveEnterWidget()
+{}
+
+void Widget::handleEventMouseMoveLeaveWidget()
+{}

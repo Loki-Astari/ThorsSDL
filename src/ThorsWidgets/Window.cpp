@@ -27,3 +27,18 @@ UI::Sz Window::reset()
 {
     return size;
 }
+
+void Window::handleEventWindowEnter(SDL_WindowEvent const& /*event*/)
+{
+    handleEventMouseMoveEnterWidget();
+}
+
+void Window::handleEventWindowLeave(SDL_WindowEvent const& /*event*/)
+{
+    handleEventMouseMoveLeaveWidget();
+}
+
+void Window::handleEventMouseMove(SDL_MouseMotionEvent const& event)
+{
+    WidgetView::handleEventMouseMoveInWidget(event);
+}

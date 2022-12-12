@@ -6,22 +6,14 @@ using namespace ThorsAnvil::Widgets;
 
 WidgetLabel::WidgetLabel(WidgetView& parent,
                          std::string const& text,
-                         std::string const& font, int point,
-                         UI::Color color,
                          UI::Sz minSize, bool visible)
     : Widget(parent, minSize, visible)
     , text(text)
-    , font(font)
-    , point(point)
-    , color(color)
 {}
 
 UI::Sz WidgetLabel::doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz /*size*/)
 {
-    static const std::string fontPath = "/System/Library/Fonts/Supplemental/";
-
-    UI::TextPen pen(fontPath + font + ".ttf", point, color);
-    texture = pen.createTextureFromString(drawContext, text);
+    texture = getTextPen(theme).createTextureFromString(drawContext, text);
     return addOffset(theme, texture.size());
 }
 
@@ -43,5 +35,11 @@ void WidgetLabel::centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) 
 
 void WidgetLabel::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 {
+    texture = getTextPen(theme).createTextureFromString(drawContext, text);
     theme.drawWidget(drawContext, *this);
+}
+
+UI::TextPen const& WidgetLabel::getTextPen(Theme const& theme)
+{
+    return theme.normalTextPen;
 }

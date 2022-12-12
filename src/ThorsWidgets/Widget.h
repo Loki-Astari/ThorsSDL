@@ -30,6 +30,7 @@ class Widget
     protected:
         UI::Pt const&  getDrawPosition()    const   {return topLeft;}
         UI::Sz const&  getDrawSize()        const   {return size;}
+        UI::Rect       getBoundingRect()    const   {return {topLeft.x, topLeft.y, size.x, size.y};}
 
     public:
         Widget(WidgetView& parent, UI::Sz size, bool visible = true);
@@ -45,6 +46,12 @@ class Widget
         virtual WidgetType  type() const        {return Unknown;}
         bool                isVisible() const   {return visible;}
 
+        bool    handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event);
+        virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event);
+
+
+        virtual void    handleEventMouseMoveEnterWidget();
+        virtual void    handleEventMouseMoveLeaveWidget();
 };
 
 }

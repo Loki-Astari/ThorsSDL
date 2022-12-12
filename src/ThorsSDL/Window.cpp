@@ -151,3 +151,7 @@ void Window::remView(View& view)
         views.erase(find);
     }
 }
+
+void Window::handleEventWindowEnter(SDL_WindowEvent const& event)   {if (currentView < views.size()) {views[currentView]->handleEventWindowEnter(event);}}
+void Window::handleEventWindowLeave(SDL_WindowEvent const& event)   {if (currentView < views.size()) {views[currentView]->handleEventWindowLeave(event);}}
+void Window::handleEventMouseMove(SDL_MouseMotionEvent const& event){if (currentView < views.size()) {views[currentView]->handleEventMouseMove(event);}}

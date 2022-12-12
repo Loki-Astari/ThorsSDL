@@ -8,6 +8,7 @@ using namespace ThorsAnvil::Widgets;
 WidgetView::WidgetView(WidgetView& parent, Layout& layout)
     : Widget(parent, {0, 0})
     , layout(layout)
+    , mouseOver(nullptr)
 {}
 
 void WidgetView::addWidget(Widget& widget)
@@ -37,4 +38,39 @@ UI::Sz WidgetView::doPreferredLayout(UI::DrawContext& drawContext, Theme const& 
 void WidgetView::doPerformLayout(UI::Pt topLeft, Theme const& theme)
 {
     layout.performLayout(topLeft, theme, widgets);
+}
+
+void WidgetView::handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event)
+{
+    for (auto& widget: widgets)
+    {
+        if (widget->handleEventMouseMoveInWidget(event))
+        {
+            if (widget != mouseOver)
+            {
+                if (mouseOver != nullptr) {
+                    mouseOver->handleEventMouseMoveLeaveWidget();
+                }
+                mouseOver = widget;
+                mouseOver->handleEventMouseMoveEnterWidget();
+            }
+            return;
+        }
+    }
+    if (mouseOver)
+    {
+        mouseOver->handleEventMouseMoveLeaveWidget();
+        mouseOver = nullptr;
+    }
+}
+
+void WidgetView::handleEventMouseMoveEnterWidget()
+{}
+
+void WidgetView::handleEventMouseMoveLeaveWidget()
+{
+    if (mouseOver) {
+        mouseOver->handleEventMouseMoveLeaveWidget();
+    }
+    mouseOver = nullptr;
 }

@@ -2,6 +2,7 @@
 #define THORSANVIL_UI_VIEW_H
 
 #include "ThorsSDLConfig.h"
+#include "WindowEventHandler.h"
 #include "Util.h"
 
 namespace ThorsAnvil::UI
@@ -9,7 +10,7 @@ namespace ThorsAnvil::UI
 
 class Window;
 class DrawContext;
-class View
+class View: public WindowEventHandler
 {
     Window& parent;
     public:

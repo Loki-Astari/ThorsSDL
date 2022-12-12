@@ -24,6 +24,7 @@ class WidgetView: public Widget
     FRIEND_TEST(::WidgetViewTest, CheckWidgetStored);
     Layout&                     layout;
     std::vector<Widget*>        widgets;
+    Widget*                     mouseOver;
 
     public:
         WidgetView(WidgetView& parent, Layout& layout);
@@ -35,6 +36,10 @@ class WidgetView: public Widget
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    override;
         virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size)              override;
         virtual void    doPerformLayout(UI::Pt topLeft, Theme const& theme)             override;
+
+        virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event) override;
+        virtual void    handleEventMouseMoveEnterWidget() override;
+        virtual void    handleEventMouseMoveLeaveWidget() override;
 };
 
 }

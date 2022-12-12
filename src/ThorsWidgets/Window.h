@@ -28,13 +28,10 @@ class Window: public WidgetView, public UI::View
 
         virtual void draw(UI::DrawContext& context) override;
         virtual UI::Sz reset() override;
-#if 0
-        Widget:
-            virtual void    drawWidget(UI::DrawContext& drawContext, Theme& theme)= 0;
-            virtual UI::Sz  doPreferredLayout(.....) const                  = 0;
-            virtual void    doPerformLayout(UI::Pt topLeft)                 = 0;
-#endif
 
+        virtual void handleEventWindowEnter(SDL_WindowEvent const& event) override;
+        virtual void handleEventWindowLeave(SDL_WindowEvent const& event) override;
+        virtual void handleEventMouseMove(SDL_MouseMotionEvent const& event) override;
 };
 
 }

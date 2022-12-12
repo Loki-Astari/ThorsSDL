@@ -14,14 +14,20 @@ namespace UI = ThorsAnvil::UI;
 struct Theme;
 class WidgetButton: public WidgetLabel
 {
+    friend struct Theme;
+    bool    mouseInButton   = false;
+
     public:
         using WidgetLabel::WidgetLabel;
 
-        //virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size) override;
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme) override;
 
         virtual UI::Sz  addOffset(Theme const& theme, UI::Sz size) const override;
         virtual void    centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) const override;
+        virtual void    handleEventMouseMoveEnterWidget() override;
+        virtual void    handleEventMouseMoveLeaveWidget() override;
+
+        virtual UI::TextPen const& getTextPen(Theme const& theme) override;
 };
 
 }

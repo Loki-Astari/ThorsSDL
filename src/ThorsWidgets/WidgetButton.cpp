@@ -31,4 +31,19 @@ void WidgetButton::centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size)
 void WidgetButton::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 {
     theme.drawWidget(drawContext, *this);
+    WidgetLabel::drawWidget(drawContext, theme);
+}
+
+void WidgetButton::handleEventMouseMoveEnterWidget()
+{
+    mouseInButton = true;
+}
+void WidgetButton::handleEventMouseMoveLeaveWidget()
+{
+    mouseInButton = false;
+}
+
+UI::TextPen const& WidgetButton::getTextPen(Theme const& theme)
+{
+    return mouseInButton ? theme.hoverTextPen : theme.normalTextPen;
 }
