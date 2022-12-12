@@ -2,7 +2,7 @@
 #include "WidgetView.h"
 #include "WidgetLabel.h"
 #include "WidgetButton.h"
-#include "ThorsSDL/Pen.h"
+#include "ThorsUI/Pen.h"
 
 using namespace ThorsAnvil::Widgets;
 

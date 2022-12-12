@@ -3,8 +3,8 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "WidgetLabel.h"
-#include "ThorsSDL/Texture.h"
-#include "ThorsSDL/Util.h"
+#include "ThorsUI/Texture.h"
+#include "ThorsUI/Util.h"
 
 namespace ThorsAnvil::Widgets
 {

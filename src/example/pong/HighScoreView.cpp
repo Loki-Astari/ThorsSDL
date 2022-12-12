@@ -1,8 +1,8 @@
 #include "HighScoreView.h"
 
-#include "ThorsSDL/Application.h"
-#include "ThorsSDL/Window.h"
-#include "ThorsSDL/Pen.h"
+#include "ThorsUI/Application.h"
+#include "ThorsUI/Window.h"
+#include "ThorsUI/Pen.h"
 #include "ThorsGraphics/Sprite.h"
 #include <vector>
 #include <algorithm>
@@ -11,7 +11,7 @@
 
 using namespace ThorsAnvil::Example::Pong;
 
-HighScoreView::HighScoreTable::HighScoreTable(GR::GraphicView& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
+HighScoreView::HighScoreTable::HighScoreTable(GR::View& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
     : Sprite(view, 10)
     //, window(parent)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue)
@@ -87,6 +87,6 @@ void HighScoreView::HighScoreTable::reset()
 }
 
 HighScoreView::HighScoreView(UI::Window& window, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
-    : GraphicView(window)
+    : GR::View(window)
     , highScoreTable(*this, scoreOfLastGame, rect, std::move(startGame))
 {}

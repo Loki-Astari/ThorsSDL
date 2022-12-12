@@ -1,7 +1,7 @@
 #include "GameView.h"
 #include "HighScoreView.h"
-#include "ThorsSDL/Application.h"
-#include "ThorsSDL/Window.h"
+#include "ThorsUI/Application.h"
+#include "ThorsUI/Window.h"
 #include <vector>
 
 namespace UI = ThorsAnvil::UI;

@@ -1,9 +1,9 @@
 #ifndef THORSANVIL_UI_EXAMPLE_PONG_GAME_VIEW
 #define THORSANVIL_UI_EXAMPLE_PONG_GAME_VIEW
 
-#include "ThorsSDL/Pen.h"
+#include "ThorsUI/Pen.h"
 #include "ThorsGraphics/Sprite.h"
-#include "ThorsGraphics/GraphicView.h"
+#include "ThorsGraphics/View.h"
 #include <vector>
 
 namespace ThorsAnvil::UI
@@ -17,7 +17,7 @@ namespace ThorsAnvil::Example::Pong
 namespace UI = ThorsAnvil::UI;
 namespace GR = ThorsAnvil::Graphics;
 
-class GameView: public GR::GraphicView
+class GameView: public GR::View
 {
     class Paddle: public GR::Sprite
     {
@@ -29,7 +29,7 @@ class GameView: public GR::GraphicView
         UI::Rect    position;
         int         windowWidth;
         public:
-            Paddle(GR::GraphicView& view, int windowWidth, int windowHeight);
+            Paddle(GR::View& view, int windowWidth, int windowHeight);
             void moveLeft();
             void moveRight();
             bool collision(UI::Pt& ball, UI::Pt& velocity) const;
@@ -44,7 +44,7 @@ class GameView: public GR::GraphicView
         UI::TextPen     pen;
         //UI::Texture     scoreText;
         public:
-            Score(GR::GraphicView& view, int& scoreOfLastGame);
+            Score(GR::View& view, int& scoreOfLastGame);
             virtual void draw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;
@@ -77,7 +77,7 @@ class GameView: public GR::GraphicView
         int const   offset;             // offset from left of screen.
         Score&      score;
         public:
-            Wall(GR::GraphicView& view, int windowWidth, int /*windowHeight*/, Score& score);
+            Wall(GR::View& view, int windowWidth, int /*windowHeight*/, Score& score);
             virtual bool doUpdateState() override;
             virtual void draw(UI::DrawContext& window) override;
             virtual void reset() override;
@@ -97,7 +97,7 @@ class GameView: public GR::GraphicView
         UI::Pt          velocity;
         std::function<void()>   endGame;
         public:
-            Ball(GR::GraphicView& view, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall, std::function<void()>&& endGame);
+            Ball(GR::View& view, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall, std::function<void()>&& endGame);
             virtual void draw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;

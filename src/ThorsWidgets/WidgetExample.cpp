@@ -1,6 +1,6 @@
 #include "WidgetExample.h"
 #include "WidgetView.h"
-#include "ThorsSDL/Pen.h"
+#include "ThorsUI/Pen.h"
 
 using namespace ThorsAnvil::Widgets;
 

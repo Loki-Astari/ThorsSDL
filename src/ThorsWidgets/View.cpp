@@ -1,15 +1,15 @@
-#include "Window.h"
+#include "View.h"
 
 using namespace ThorsAnvil::Widgets;
 
-Window::Window(UI::Window& window, Layout& layout, Theme& theme)
+View::View(UI::Window& window, Layout& layout, Theme& theme)
     : WidgetView(*this, layout)
-    , View(window)
+    , UI::View(window)
     , theme(theme)
     , size{0, 0}
 {}
 
-void Window::tile()
+void View::tile()
 {
     UI::DrawContext&    context = getDrawContext();
     size = preferredLayout(context, theme);
@@ -18,27 +18,27 @@ void Window::tile()
     performLayout({2,2}, theme);
 }
 
-void Window::draw(UI::DrawContext& context)
+void View::draw(UI::DrawContext& context)
 {
     drawWidget(context, theme);
 }
 
-UI::Sz Window::reset()
+UI::Sz View::reset()
 {
     return size;
 }
 
-void Window::handleEventWindowEnter(SDL_WindowEvent const& /*event*/)
+void View::handleEventWindowEnter(SDL_WindowEvent const& /*event*/)
 {
     handleEventMouseMoveEnterWidget();
 }
 
-void Window::handleEventWindowLeave(SDL_WindowEvent const& /*event*/)
+void View::handleEventWindowLeave(SDL_WindowEvent const& /*event*/)
 {
     handleEventMouseMoveLeaveWidget();
 }
 
-void Window::handleEventMouseMove(SDL_MouseMotionEvent const& event)
+void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 {
     WidgetView::handleEventMouseMoveInWidget(event);
 }

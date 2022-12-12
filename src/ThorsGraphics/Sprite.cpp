@@ -1,10 +1,10 @@
 #include "Sprite.h"
-#include "GraphicView.h"
+#include "View.h"
 
 using namespace ThorsAnvil::Graphics;
 
 
-Sprite::Sprite(GraphicView& parent, int millisecondUpdateTime)
+Sprite::Sprite(View& parent, int millisecondUpdateTime)
     : parent(parent)
     , lastUpdate{}
     , updatePeriod(millisecondUpdateTime)

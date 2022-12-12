@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 #include "test/MockSDL.h"
-#include "ThorsSDL/Application.h"
-#include "ThorsSDL/Window.h"
-#include "ThorsSDL/DrawContext.h"
+#include "ThorsUI/Application.h"
+#include "ThorsUI/Window.h"
+#include "ThorsUI/DrawContext.h"
 #include "Sprite.h"
 
 class TestSprite: public ThorsAnvil::Graphics::Sprite
@@ -22,7 +22,7 @@ TEST(SpriteTest, Construct)
     auto action = [](){
         ThorsAnvil::UI::Application         application;
         ThorsAnvil::UI::Window              window("Test", {10, 10, 100, 100});
-        ThorsAnvil::Graphics::GraphicView   view(window);
+        ThorsAnvil::Graphics::View          view(window);
         TestSprite                          sprite(view, 0);
     };
 

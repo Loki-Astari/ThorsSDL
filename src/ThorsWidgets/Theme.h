@@ -2,9 +2,9 @@
 #define THORSANVIL_WIDGETS_THEME_H
 
 #include "ThorsWidgetsConfig.h"
-#include "ThorsSDL/Util.h"
-#include "ThorsSDL/DrawContext.h"
-#include "ThorsSDL/Pen.h"
+#include "ThorsUI/Util.h"
+#include "ThorsUI/DrawContext.h"
+#include "ThorsUI/Pen.h"
 
 namespace ThorsAnvil::Widgets
 {

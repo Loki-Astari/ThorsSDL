@@ -2,8 +2,8 @@
 #define THORSANVIL_UI_SPRITE_H
 
 #include "ThorsGraphicsConfig.h"
-#include "GraphicView.h"
-#include "ThorsSDL/Util.h"
+#include "View.h"
+#include "ThorsUI/Util.h"
 
 namespace ThorsAnvil::UI
 {
@@ -15,15 +15,15 @@ namespace ThorsAnvil::Graphics
 
 namespace UI = ThorsAnvil::UI;
 
-class GraphicView;
+class View;
 class Sprite
 {
-    GraphicView&        parent;
+    View&               parent;
     UI::TimePoint       lastUpdate;
     int                 updatePeriod;
 
     public:
-        Sprite(GraphicView& parent, int millisecondUpdateTime);
+        Sprite(View& parent, int millisecondUpdateTime);
         virtual ~Sprite();
 
         void updateState();

@@ -1,9 +1,9 @@
 #ifndef THORSANVIL_UI_EXAMPLE_PONG_HIGH_SCORE_VIEW
 #define THORSANVIL_UI_EXAMPLE_PONG_HIGH_SCORE_VIEW
 
-#include "ThorsGraphics/GraphicView.h"
+#include "ThorsGraphics/View.h"
 #include "ThorsGraphics/Sprite.h"
-#include "ThorsSDL/Pen.h"
+#include "ThorsUI/Pen.h"
 #include <vector>
 
 namespace ThorsAnvil::UI
@@ -17,7 +17,7 @@ namespace ThorsAnvil::Example::Pong
 namespace UI = ThorsAnvil::UI;
 namespace GR = ThorsAnvil::Graphics;
 
-class HighScoreView: public GR::GraphicView
+class HighScoreView: public GR::View
 {
     struct HighScore
     {
@@ -71,7 +71,7 @@ class HighScoreView: public GR::GraphicView
         std::function<void()>       startGame;
 
         public:
-            HighScoreTable(GR::GraphicView& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
+            HighScoreTable(GR::View& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
             virtual void draw(UI::DrawContext& context) override;
             virtual bool doUpdateState() override;
             virtual void reset() override;

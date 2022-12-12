@@ -1,9 +1,9 @@
 #include "GameView.h"
-#include "ThorsSDL/DrawContext.h"
+#include "ThorsUI/DrawContext.h"
 
 using namespace ThorsAnvil::Example::Pong;
 
-GameView::Paddle::Paddle(GR::GraphicView& view, int windowWidth, int windowHeight)
+GameView::Paddle::Paddle(GR::View& view, int windowWidth, int windowHeight)
     : Sprite(view, 15)
     , position{ (windowWidth / 2) - (width / 2), windowHeight - height - border, width, height}
     , windowWidth(windowWidth)
@@ -53,7 +53,7 @@ void GameView::Paddle::reset()
     position.x = (windowWidth/ 2) - (width / 2);
 }
 
-GameView::Score::Score(GR::GraphicView& view, int& scoreOfLastGame)
+GameView::Score::Score(GR::View& view, int& scoreOfLastGame)
     : Sprite(view, 16)
     , score(scoreOfLastGame)
     , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24)
@@ -83,7 +83,7 @@ void GameView::Score::addPoints(int value)
     score += value;
 }
 
-GameView::Wall::Wall(GR::GraphicView& view, int windowWidth, int /*windowHeight*/, Score& score)
+GameView::Wall::Wall(GR::View& view, int windowWidth, int /*windowHeight*/, Score& score)
     : Sprite(view, 10000)
     , brickWidth((windowWidth / bricksPerRow) - cementSpace)
     , offset((windowWidth - ((brickWidth + cementSpace) * bricksPerRow)) / 2)
@@ -172,7 +172,7 @@ bool GameView::Wall::doCollisionCheck(UI::Pt& ball, UI::Pt& velocity)
     return false;
 }
 
-GameView::Ball::Ball(GR::GraphicView& view, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall, std::function<void()>&& endGame)
+GameView::Ball::Ball(GR::View& view, int windowWidth, int windowHeight, Paddle& paddle, Wall& wall, std::function<void()>&& endGame)
     : Sprite(view, 15)
     , windowWidth(windowWidth)
     , windowHeight(windowHeight)
@@ -225,7 +225,7 @@ void GameView::Ball::reset()
 }
 
 GameView::GameView(UI::Window& window, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& endGame)
-    : GraphicView(window)
+    : GR::View(window)
     , paddle(*this, rect.w, rect.h)
     , score(*this, scoreOfLastGame)
     , wall(*this, rect.w, rect.h, score)

@@ -1,21 +1,21 @@
-#include "GraphicView.h"
+#include "View.h"
 #include "Sprite.h"
-#include "ThorsSDL/DrawContext.h"
+#include "ThorsUI/DrawContext.h"
 
 using namespace ThorsAnvil::Graphics;
 
-GraphicView::GraphicView(UI::Window& window)
-    : View(window)
+View::View(UI::Window& window)
+    : UI::View(window)
 {}
 
-void GraphicView::updateState()
+void View::updateState()
 {
     for (auto const& sprite: sprites) {
         sprite->updateState();
     }
 }
 
-UI::Sz GraphicView::GraphicView::reset()
+UI::Sz View::View::reset()
 {
     for (auto const& sprite: sprites) {
         sprite->reset();
@@ -23,19 +23,19 @@ UI::Sz GraphicView::GraphicView::reset()
     return {0, 0};
 }
 
-void GraphicView::draw(UI::DrawContext& context)
+void View::draw(UI::DrawContext& context)
 {
     for (auto const& sprite: sprites) {
         sprite->draw(context);
     }
 }
 
-void GraphicView::addSprite(Sprite& sprite)
+void View::addSprite(Sprite& sprite)
 {
     sprites.emplace_back(&sprite);
 }
 
-void GraphicView::remSprite(Sprite& sprite)
+void View::remSprite(Sprite& sprite)
 {
     auto find = std::find(std::begin(sprites), std::end(sprites), &sprite);
     if (find != std::end(sprites)) {

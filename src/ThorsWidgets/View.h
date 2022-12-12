@@ -1,9 +1,9 @@
-#ifndef THORSANVIL_WIDGETS_WINDOW_H
-#define THORSANVIL_WIDGETS_WINDOW_H
+#ifndef THORSANVIL_WIDGETS_VIEW_H
+#define THORSANVIL_WIDGETS_VIEW_H
 
 #include "ThorsWidgetsConfig.h"
 #include "WidgetView.h"
-#include "ThorsSDL/View.h"
+#include "ThorsUI/View.h"
 
 namespace ThorsAnvil::UI
 {
@@ -17,13 +17,13 @@ namespace UI = ThorsAnvil::UI;
 
 struct Theme;
 class Layout;
-class Window: public WidgetView, public UI::View
+class View: public WidgetView, public UI::View
 {
     Theme&          theme;
     UI::Sz          size;
 
     public:
-        Window(UI::Window& window, Layout& layout, Theme& theme);
+        View(UI::Window& window, Layout& layout, Theme& theme);
         void tile();
 
         virtual void draw(UI::DrawContext& context) override;

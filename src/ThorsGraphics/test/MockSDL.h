@@ -1,1 +1,1 @@
-../../ThorsSDL/test/MockSDL.h
+../../ThorsUI/test/MockSDL.h

@@ -2,7 +2,7 @@
 #define THORSANVIL_WIDGETS_WIDGET_H
 
 #include "ThorsWidgetsConfig.h"
-#include "ThorsSDL/Util.h"
+#include "ThorsUI/Util.h"
 
 namespace ThorsAnvil::UI
 {
