@@ -40,5 +40,20 @@ void View::handleEventWindowLeave(SDL_WindowEvent const& /*event*/)
 
 void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 {
-    WidgetView::handleEventMouseMoveInWidget(event);
+    handleEventMouseMoveInWidget(event);
+}
+
+void View::handleEventMouseDown(SDL_MouseButtonEvent const& /*event*/)
+{
+    mouseDownIn = handleEventMouseDownInWidget();
+}
+
+void View::handleEventMouseUp(SDL_MouseButtonEvent const& /*event*/)
+{
+    mouseDownIn = handleEventMouseUpInWidget(mouseDownIn);
+    if (mouseDownIn)
+    {
+        mouseDownIn->handleEventMouseUpOutsideWidget();
+        mouseDownIn = nullptr;
+    }
 }

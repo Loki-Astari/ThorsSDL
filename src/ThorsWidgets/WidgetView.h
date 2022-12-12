@@ -40,6 +40,9 @@ class WidgetView: public Widget
         virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event) override;
         virtual void    handleEventMouseMoveEnterWidget() override;
         virtual void    handleEventMouseMoveLeaveWidget() override;
+        virtual Widget* handleEventMouseDownInWidget() override;
+        virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
+        virtual void    handleEventMouseUpOutsideWidget() override;
 };
 
 }

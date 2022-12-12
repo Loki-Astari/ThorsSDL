@@ -21,7 +21,9 @@ void Theme::drawWidget(UI::DrawContext&, WidgetLabel const& label) const
 
 void Theme::drawWidget(UI::DrawContext& drawContext, WidgetButton const& button) const
 {
-    UI::Pt point = button.getDrawPosition();
-    UI::Sz size  = button.getDrawSize();
-    buttonBorderPen.drawRect(drawContext, {point.x, point.y, size.x, size.y});
+    UI::Pt          point   = button.getDrawPosition();
+    UI::Sz          size    = button.getDrawSize();
+    UI::Pen const&  pen     = button.state != Down ? buttonBorderPen : buttonPressedPen;
+
+    pen.drawRect(drawContext, {point.x, point.y, size.x, size.y});
 }

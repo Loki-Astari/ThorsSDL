@@ -21,6 +21,7 @@ class View: public WidgetView, public UI::View
 {
     Theme&          theme;
     UI::Sz          size;
+    Widget*         mouseDownIn;
 
     public:
         View(UI::Window& window, Layout& layout, Theme& theme);
@@ -32,6 +33,8 @@ class View: public WidgetView, public UI::View
         virtual void handleEventWindowEnter(SDL_WindowEvent const& event) override;
         virtual void handleEventWindowLeave(SDL_WindowEvent const& event) override;
         virtual void handleEventMouseMove(SDL_MouseMotionEvent const& event) override;
+        virtual void handleEventMouseDown(SDL_MouseButtonEvent const& event) override;
+        virtual void handleEventMouseUp(SDL_MouseButtonEvent const& event) override;
 };
 
 }

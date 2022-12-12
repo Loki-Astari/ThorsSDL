@@ -50,3 +50,16 @@ void Widget::handleEventMouseMoveEnterWidget()
 
 void Widget::handleEventMouseMoveLeaveWidget()
 {}
+
+Widget* Widget::handleEventMouseDownInWidget()
+{
+    return nullptr;
+}
+
+Widget* Widget::handleEventMouseUpInWidget(Widget* mouseDownIn)
+{
+    return mouseDownIn;
+}
+
+void Widget::handleEventMouseUpOutsideWidget()
+{}

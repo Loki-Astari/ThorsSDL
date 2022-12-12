@@ -64,7 +64,8 @@ class Window: public WindowEventHandler, public DrawContext
         virtual void handleEventWindowEnter(SDL_WindowEvent const& event) override;
         virtual void handleEventWindowLeave(SDL_WindowEvent const& event) override;
         virtual void handleEventMouseMove(SDL_MouseMotionEvent const& event) override;
-
+        virtual void handleEventMouseDown(SDL_MouseButtonEvent const& event) override;
+        virtual void handleEventMouseUp(SDL_MouseButtonEvent const& event) override;
 };
 
 class DebugWindow: public Window

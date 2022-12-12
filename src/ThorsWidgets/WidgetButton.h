@@ -11,11 +11,13 @@ namespace ThorsAnvil::Widgets
 
 namespace UI = ThorsAnvil::UI;
 
+enum ButtonState {Up, Hover, Down, DownOutside};
+
 struct Theme;
 class WidgetButton: public WidgetLabel
 {
     friend struct Theme;
-    bool    mouseInButton   = false;
+    ButtonState     state   = Up;
 
     public:
         using WidgetLabel::WidgetLabel;
@@ -26,6 +28,9 @@ class WidgetButton: public WidgetLabel
         virtual void    centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) const override;
         virtual void    handleEventMouseMoveEnterWidget() override;
         virtual void    handleEventMouseMoveLeaveWidget() override;
+        virtual Widget* handleEventMouseDownInWidget() override;
+        virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
+        virtual void    handleEventMouseUpOutsideWidget() override;
 
         virtual UI::TextPen const& getTextPen(Theme const& theme) override;
 };

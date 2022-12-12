@@ -19,8 +19,6 @@ int main()
     ThorsAnvil::Widgets::Theme          theme;
     ThorsAnvil::Widgets::View           widgetsView(window, layout, theme);
 
-    theme.normalTextPen = ThorsAnvil::Widgets::ThemeUtility::getPen("Brush Script", 36, ThorsAnvil::UI::C::darkgrey);
-
     ThorsAnvil::Widgets::WidgetExample  item1(widgetsView);
     ThorsAnvil::Widgets::WidgetExample  item2(widgetsView);
     ThorsAnvil::Widgets::WidgetExample  item3(widgetsView);

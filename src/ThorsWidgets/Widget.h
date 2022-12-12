@@ -52,6 +52,9 @@ class Widget
 
         virtual void    handleEventMouseMoveEnterWidget();
         virtual void    handleEventMouseMoveLeaveWidget();
+        virtual Widget* handleEventMouseDownInWidget();
+        virtual Widget* handleEventMouseUpInWidget(Widget* downIn);
+        virtual void    handleEventMouseUpOutsideWidget();
 };
 
 }

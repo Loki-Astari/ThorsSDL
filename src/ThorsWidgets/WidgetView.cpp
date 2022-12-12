@@ -74,3 +74,26 @@ void WidgetView::handleEventMouseMoveLeaveWidget()
     }
     mouseOver = nullptr;
 }
+
+Widget* WidgetView::handleEventMouseDownInWidget()
+{
+    if (mouseOver) {
+        return mouseOver->handleEventMouseDownInWidget();
+    }
+    return nullptr;
+}
+
+Widget* WidgetView::handleEventMouseUpInWidget(Widget* mouseDownIn)
+{
+    if (mouseOver) {
+        return mouseOver->handleEventMouseUpInWidget(mouseDownIn);
+    }
+    return mouseDownIn;
+}
+
+void WidgetView::handleEventMouseUpOutsideWidget()
+{
+    if (mouseOver) {
+        mouseOver->handleEventMouseUpOutsideWidget();
+    }
+}

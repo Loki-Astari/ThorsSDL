@@ -27,7 +27,7 @@ class ThemeUtility
 
 struct Theme
 {
-
+    // Brush Script
     UI::TextPen normalTextPen   = ThemeUtility::getPen("Arial", 16, UI::C::lightgrey);
     UI::TextPen hoverTextPen    = ThemeUtility::getPen("Arial", 16, UI::C::darkslateblue);
     UI::TextPen pressTextPen    = ThemeUtility::getPen("Arial", 16, UI::C::white);

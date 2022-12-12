@@ -36,14 +36,41 @@ void WidgetButton::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 
 void WidgetButton::handleEventMouseMoveEnterWidget()
 {
-    mouseInButton = true;
+    state = state == DownOutside ? Down : Hover;
 }
 void WidgetButton::handleEventMouseMoveLeaveWidget()
 {
-    mouseInButton = false;
+    state = state == Down ? DownOutside : Up;
 }
 
 UI::TextPen const& WidgetButton::getTextPen(Theme const& theme)
 {
-    return mouseInButton ? theme.hoverTextPen : theme.normalTextPen;
+    switch (state)
+    {
+        case Up:            return theme.normalTextPen;
+        case DownOutside:   return theme.normalTextPen;
+        case Hover:         return theme.hoverTextPen;
+        case Down:          return theme.pressTextPen;
+    }
+    return theme.normalTextPen;
+}
+
+Widget* WidgetButton::handleEventMouseDownInWidget()
+{
+    state = Down;
+    return this;
+}
+
+Widget* WidgetButton::handleEventMouseUpInWidget(Widget* mouseDownIn)
+{
+    if (mouseDownIn != this) {
+        return mouseDownIn;
+    }
+    state = Up;
+    return nullptr;
+}
+
+void WidgetButton::handleEventMouseUpOutsideWidget()
+{
+    state = Up;
 }
