@@ -21,7 +21,7 @@ class WidgetView;
 struct Theme;
 class Widget
 {
-    WidgetView&         parent;
+    WidgetView*         parentWidget;
     UI::Pt              topLeft;
     UI::Sz              size;
     UI::TimePoint       lastUpdate;
@@ -33,7 +33,8 @@ class Widget
         UI::Rect       getBoundingRect()    const   {return {topLeft.x, topLeft.y, size.x, size.y};}
 
     public:
-        Widget(WidgetView& parent, UI::Sz size, bool visible = true);
+        Widget(UI::Sz size, bool visible = true);
+        Widget(WidgetView& parentWidget, UI::Sz size, bool visible = true);
         virtual ~Widget();
 
         UI::Sz          preferredLayout(UI::DrawContext& context, Theme const& theme);

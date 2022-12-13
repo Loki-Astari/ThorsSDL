@@ -27,6 +27,7 @@ class WidgetView: public Widget
     Widget*                     mouseOver;
 
     public:
+        WidgetView(Layout& layout);
         WidgetView(WidgetView& parent, Layout& layout);
 
         void addWidget(Widget& sprite);

@@ -35,12 +35,13 @@ class Window: public WindowEventHandler, public DrawContext
         Window& operator=(Window&& move) noexcept;
 
     public:
-        void    updateView();
-        void    updateView(std::size_t nextView);
+        void    updateView(bool fitWindowToView = false);
+        void    updateView(int nextView, bool fitWindowToView = false);
         void    updateState();
         void    draw();
         bool    isVisable() const;
         Uint32  getId() const;
+        UI::Sz  getSize() const;
 
     private:
         friend class View;

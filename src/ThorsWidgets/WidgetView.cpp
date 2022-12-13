@@ -5,6 +5,12 @@
 
 using namespace ThorsAnvil::Widgets;
 
+WidgetView::WidgetView(Layout& layout)
+    : Widget({0, 0})
+    , layout(layout)
+    , mouseOver(nullptr)
+{}
+
 WidgetView::WidgetView(WidgetView& parent, Layout& layout)
     : Widget(parent, {0, 0})
     , layout(layout)

@@ -4,18 +4,27 @@
 using namespace ThorsAnvil::Widgets;
 
 
-Widget::Widget(WidgetView& parent, UI::Sz size, bool visible)
-    : parent(parent)
+Widget::Widget(UI::Sz size, bool visible)
+    : parentWidget(nullptr)
+    , size(size)
+    , lastUpdate{}
+    , visible{visible}
+{}
+
+Widget::Widget(WidgetView& parentWidgetParam, UI::Sz size, bool visible)
+    : parentWidget(&parentWidgetParam)
     , size(size)
     , lastUpdate{}
     , visible{visible}
 {
-    parent.addWidget(*this);
+    parentWidget->addWidget(*this);
 }
 
 Widget::~Widget()
 {
-    parent.remWidget(*this);
+    if (parentWidget) {
+        parentWidget->remWidget(*this);
+    }
 }
 
 UI::Sz Widget::preferredLayout(UI::DrawContext& drawContext, Theme const& theme)

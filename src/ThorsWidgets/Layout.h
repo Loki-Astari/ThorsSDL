@@ -2,6 +2,7 @@
 #define THORSANVIL_WIDGETS_LAYOUT_H
 
 #include "ThorsWidgetsConfig.h"
+#include "LayoutUtil.h"
 #include "Theme.h"
 #include "ThorsUI/Util.h"
 #include <vector>
@@ -36,14 +37,6 @@ class Layout
         //       its position so that it knows where it will be drawn.
         virtual UI::Sz getSize(Theme const& theme, std::vector<Widget*>& widgets)    = 0;
 };
-
-enum Orientation {Horz, Vert};
-enum HorzAlign {Left, Middle, Right};
-enum VertAlign {Top, Center, Bottom};
-
-inline std::ostream& operator<<(std::ostream& stream, Orientation o) {return stream << (o == Horz ? "Horz" : "Vert");}
-inline std::ostream& operator<<(std::ostream& stream, HorzAlign a) {return stream << (a == Left ? "Left" : (a == Middle ? "Middle" : "Right"));}
-inline std::ostream& operator<<(std::ostream& stream, VertAlign a) {return stream << (a == Top  ? "Top"  : (a == Center ? "Center" : "Bottom"));}
 
 template<Orientation>
 struct BoxLayoutTraits;

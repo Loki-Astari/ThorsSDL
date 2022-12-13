@@ -12,7 +12,8 @@ class Window;
 class DrawContext;
 class View: public WindowEventHandler
 {
-    Window& parent;
+    protected:
+        Window& parent;
     public:
         View(Window& parent);
         virtual ~View();

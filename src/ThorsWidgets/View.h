@@ -2,6 +2,7 @@
 #define THORSANVIL_WIDGETS_VIEW_H
 
 #include "ThorsWidgetsConfig.h"
+#include "LayoutUtil.h"
 #include "WidgetView.h"
 #include "ThorsUI/View.h"
 
@@ -25,7 +26,7 @@ class View: public WidgetView, public UI::View
 
     public:
         View(UI::Window& window, Layout& layout, Theme& theme);
-        void tile();
+        void tile(HorzAlign hAlign, VertAlign vAlign);
 
         virtual void draw(UI::DrawContext& context) override;
         virtual UI::Sz reset() override;

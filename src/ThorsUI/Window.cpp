@@ -90,18 +90,18 @@ void Window::unregisterWindow()
     }
 }
 
-void Window::updateView()
+void Window::updateView(bool fitWindowToView)
 {
-    updateView(currentView);
+    updateView(currentView, fitWindowToView);
 }
 
-void Window::updateView(std::size_t nextView)
+void Window::updateView(int nextView, bool fitWindowToView)
 {
     currentView = nextView;
     if (currentView < views.size())
     {
         Sz size = views[currentView]->reset();
-        if (size.x != 0 && size.y != 0) {
+        if (fitWindowToView && size.x != 0 && size.y != 0) {
             SDL_SetWindowSize(*window, size.x, size.y);
         }
     }
@@ -117,6 +117,13 @@ void Window::updateState()
 Uint32 Window::getId() const
 {
     return SDL_GetWindowID(*window);
+}
+
+Sz Window::getSize() const
+{
+    Sz  result;
+    SDL_GetWindowSize(*window, &result.x, &result.y);
+    return result;
 }
 
 void Window::draw()
