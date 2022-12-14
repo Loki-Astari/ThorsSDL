@@ -30,9 +30,12 @@ class WidgetView: public Widget
         WidgetView(Layout& layout);
         WidgetView(WidgetView& parent, Layout& layout);
 
+    private:
+        friend class Widget;
         void addWidget(Widget& sprite);
         void remWidget(Widget& sprite);
 
+    public:
         // Widget
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    override;
         virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size)              override;

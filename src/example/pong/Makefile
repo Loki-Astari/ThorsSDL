@@ -1,6 +1,6 @@
 THORSANVIL_ROOT             = $(realpath ../../../)
 
-LINK_LIBS					+= ThorsUI ThorsGraphics
+LINK_LIBS					+= ThorsUI ThorsGraphics ThorsWidgets
 CXXFLAGS					+= $(SDL_CFLAGS)
 LDLIBS						+= $(SDL_LIBS)
 TARGET                      = pong.app

@@ -1,23 +1,23 @@
 #ifndef THORSANVIL_UI_EXAMPLE_PONG_HIGH_SCORE_VIEW
 #define THORSANVIL_UI_EXAMPLE_PONG_HIGH_SCORE_VIEW
 
-#include "ThorsGraphics/View.h"
-#include "ThorsGraphics/Sprite.h"
-#include "ThorsUI/Pen.h"
-#include <vector>
+#include "ThorsWidgets/Layout.h"
+#include "ThorsWidgets/Theme.h"
+#include "ThorsWidgets/View.h"
+#include "ThorsWidgets/WidgetView.h"
+#include "ThorsWidgets/WidgetLabel.h"
+#include "ThorsWidgets/WidgetButton.h"
 
-namespace ThorsAnvil::UI
-{
-    class Window;
-}
+#include <fstream>
+#include <string>
 
 namespace ThorsAnvil::Example::Pong
 {
 
 namespace UI = ThorsAnvil::UI;
-namespace GR = ThorsAnvil::Graphics;
+namespace WI = ThorsAnvil::Widgets;
 
-class HighScoreView: public GR::View
+class HighScoreView
 {
     struct HighScore
     {
@@ -61,26 +61,49 @@ class HighScoreView: public GR::View
             return stream << data.name << ", " << data.date << ", " << data.score << "\n";
         }
     };
-    class HighScoreTable: public Graphics::Sprite
-    {
-        //Window&                     window;
-        UI::TextPen                 pen;
-        int&                        scoreOfLastGame;
-        UI::Rect                    rect;
-        std::vector<HighScore>      scores;
-        std::function<void()>       startGame;
 
+    class HighScoreTable
+    {
+        WI::GridLayout      layout;
+        WI::WidgetView      view;
+        std::vector<HighScore>          scores;
+        std::vector<WI::WidgetLabel*>   labels;
+        int&                scoreOfLastGame;
         public:
-            HighScoreTable(GR::View& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
-            virtual void draw(UI::DrawContext& context) override;
-            virtual bool doUpdateState() override;
-            virtual void reset() override;
+            HighScoreTable(WI::View& parent, int& scoreOfLastGame);
+            ~HighScoreTable();
+
+            void reset();
+        private:
+            void buildLabels();
+            void cleanLabels();
     };
 
-    HighScoreTable       highScoreTable;
+    class ButtonPane
+    {
+        WI::HorzBoxLayout   layout;
+        WI::WidgetView      view;
+        WI::WidgetButton    quit;
+        WI::WidgetButton    play;
+        public:
+            ButtonPane(WI::View& parent, std::function<void()>&& action);
+    };
 
+    class HighScoreRealView: public WI::View
+    {
+        std::function<void()>   action;
+        public:
+            HighScoreRealView(UI::Window& window, Widgets::Layout& layout, Widgets::Theme& theme, std::function<void()>&& action);
+            virtual UI::Sz reset() override;
+    };
+
+    WI::VertBoxLayout   layout;
+    WI::Theme           theme;
+    HighScoreRealView   view;
+    HighScoreTable      table;
+    ButtonPane          buttons;
     public:
-        HighScoreView(UI::Window& window, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame);
+        HighScoreView(UI::Window& window, int& scoreOfLastGame, std::function<void()>&& startGame);
 };
 
 }

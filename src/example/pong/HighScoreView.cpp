@@ -1,64 +1,42 @@
 #include "HighScoreView.h"
 
 #include "ThorsUI/Application.h"
-#include "ThorsUI/Window.h"
-#include "ThorsUI/Pen.h"
-#include "ThorsGraphics/Sprite.h"
-#include <vector>
-#include <algorithm>
-#include <iterator>
-#include <fstream>
 
 using namespace ThorsAnvil::Example::Pong;
 
-HighScoreView::HighScoreTable::HighScoreTable(GR::View& view, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
-    : Sprite(view, 10)
-    //, window(parent)
-    , pen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue)
+HighScoreView::HighScoreTable::HighScoreTable(WI::View& parent, int& scoreOfLastGame)
+    : layout(3, WI::Left, WI::Center)
+    , view(parent, layout)
     , scoreOfLastGame(scoreOfLastGame)
-    , rect(rect)
-    , startGame(std::move(startGame))
 {
     std::ifstream   highScore("HighScore.data");
-
     std::copy(std::istream_iterator<HighScore>(highScore), std::istream_iterator<HighScore>(), std::back_inserter(scores));
+
+    labels.reserve(scores.size() * 3);
+    buildLabels();
 }
 
-void HighScoreView::HighScoreTable::draw(UI::DrawContext& context)
+HighScoreView::HighScoreTable::~HighScoreTable()
 {
-    UI::Texture title   = pen.createTextureFromString(context, "High Score Table");
-    title.draw({rect.w / 2 - 100, 100, 0, 0});
-
-    int dist = 200;
-    for (auto const& score: scores)
-    {
-        UI::Texture name    = pen.createTextureFromString(context, score.name);
-        UI::Texture date    = pen.createTextureFromString(context, score.date);
-        UI::Texture valu    = pen.createTextureFromString(context, std::to_string(score.score));
-
-        name.draw({rect.w / 2 - 300, dist, 0, 0});
-        date.draw({rect.w / 2 - 100, dist, 0, 0});
-        valu.draw({rect.w / 2 + 200, dist, 0, 0});
-        dist += 50;
-    }
-
-    UI::Texture instruct = pen.createTextureFromString(context, "Press: L to Play, K to Quit.   Game:  Q: Moves paddle left, W: Moves paddle right");
-    instruct.draw({100, 600, 0, 0});
+    cleanLabels();
 }
 
-bool HighScoreView::HighScoreTable::doUpdateState()
+void HighScoreView::HighScoreTable::buildLabels()
 {
-    int numkeys = 0;
-    Uint8 const* keystates = SDL_GetKeyboardState(&numkeys);
-    if (keystates[SDL_SCANCODE_L])
+    for (auto score: scores)
     {
-        startGame();
+        labels.emplace_back(new WI::WidgetLabel(view, std::move(score.name)));
+        labels.emplace_back(new WI::WidgetLabel(view, std::move(score.date)));
+        labels.emplace_back(new WI::WidgetLabel(view, std::to_string(score.score)));
     }
-    if (keystates[SDL_SCANCODE_K])
-    {
-        UI::Application::getInstance().exitLoop();
+}
+
+void HighScoreView::HighScoreTable::cleanLabels()
+{
+    for (WI::WidgetLabel* label: labels) {
+        delete label;
     }
-    return true;
+    labels.resize(0);
 }
 
 void HighScoreView::HighScoreTable::reset()
@@ -83,10 +61,37 @@ void HighScoreView::HighScoreTable::reset()
         std::ofstream   highScore("HighScore.data");
 
         std::copy(std::begin(scores), std::end(scores), std::ostream_iterator<HighScore>(highScore));
+
+        cleanLabels();
+        buildLabels();
     }
 }
 
-HighScoreView::HighScoreView(UI::Window& window, int& scoreOfLastGame, UI::Rect const& rect, std::function<void()>&& startGame)
-    : GR::View(window)
-    , highScoreTable(*this, scoreOfLastGame, rect, std::move(startGame))
+HighScoreView::ButtonPane::ButtonPane(WI::View& parent, std::function<void()>&& action)
+    : layout(WI::Middle)
+    , view(parent, layout)
+    , quit(view, "Quit", [](){UI::Application::getInstance().exitLoop();})
+    , play(view, "Play", std::move(action))
 {}
+
+HighScoreView::HighScoreRealView::HighScoreRealView(UI::Window& window, Widgets::Layout& layout, Widgets::Theme& theme, std::function<void()>&& action)
+    : View(window, layout, theme)
+    , action(std::move(action))
+{}
+
+UI::Sz HighScoreView::HighScoreRealView::reset()
+{
+    action();
+    tile(WI::Middle, WI::Top);
+    return WI::View::reset();
+}
+
+HighScoreView::HighScoreView::HighScoreView(UI::Window& window, int& scoreOfLastGame, std::function<void()>&& startGame)
+    : layout{WI::Center}
+    , theme{}
+    , view(window, layout, theme, [&table = this->table](){table.reset();})
+    , table(view, scoreOfLastGame)
+    , buttons(view, std::move(startGame))
+{
+    theme.normalTextPen = UI::TextPen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue);
+}

@@ -22,7 +22,7 @@ class PongWindow: public UI::Window
         PongWindow(std::string const& title, UI::Rect const& rect, UI::WindowState const& winState = {}, UI::RenderState const& renState = {})
             : Window(title, rect, winState, renState)
             , scoreOfLastGame(0)
-            , highScoreView(*this, scoreOfLastGame, rect, [window = this](){window->updateView(gameViewId);})
+            , highScoreView(*this, scoreOfLastGame, [window = this](){window->updateView(gameViewId);})
             , gameView(*this, scoreOfLastGame, rect, [window = this](){window->updateView(highScoreViewId);})
         {
         }
