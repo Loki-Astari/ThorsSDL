@@ -27,7 +27,7 @@ class View: public UI::View
     public:
         View(UI::Window& window);
         virtual void updateState() override;
-        virtual UI::Sz reset() override;
+        virtual UI::Sz reset(bool fitWindowToView) override;
         virtual void draw(UI::DrawContext& context) override;
 
         void addSprite(Sprite& sprite);

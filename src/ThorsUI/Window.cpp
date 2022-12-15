@@ -100,7 +100,7 @@ void Window::updateView(int nextView, bool fitWindowToView)
     currentView = nextView;
     if (currentView < views.size())
     {
-        Sz size = views[currentView]->reset();
+        Sz size = views[currentView]->reset(fitWindowToView);
         if (fitWindowToView && size.x != 0 && size.y != 0) {
             SDL_SetWindowSize(*window, size.x, size.y);
         }

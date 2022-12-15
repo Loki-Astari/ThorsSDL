@@ -35,6 +35,7 @@ struct Theme
     UI::Pen     buttonBorderPen = UI::Pen(UI::C::white, UI::C::antiquewhite);
     UI::Pen     buttonPressedPen= UI::Pen(UI::C::white, UI::C::black);
 
+    int         windowPadding   = 2;
     int         viewPadding     = 2;            // Space between elements in a view
     UI::Rect    viewBorder      = {2, 2, 2, 2}; // Space around all elements to display border; Left, Top, Right, Bottom
     UI::Rect    labelBorder     = {2, 2, 2, 2};

@@ -4,16 +4,16 @@
 using namespace ThorsAnvil::Widgets;
 
 
-Widget::Widget(UI::Sz size, bool visible)
+Widget::Widget(UI::Sz minSize, bool visible)
     : parentWidget(nullptr)
-    , size(size)
+    , minSize(minSize)
     , lastUpdate{}
     , visible{visible}
 {}
 
-Widget::Widget(WidgetView& parentWidgetParam, UI::Sz size, bool visible)
+Widget::Widget(WidgetView& parentWidgetParam, UI::Sz minSize, bool visible)
     : parentWidget(&parentWidgetParam)
-    , size(size)
+    , minSize(minSize)
     , lastUpdate{}
     , visible{visible}
 {
@@ -30,6 +30,9 @@ Widget::~Widget()
 UI::Sz Widget::preferredLayout(UI::DrawContext& drawContext, Theme const& theme)
 {
     size = doPreferredLayout(drawContext, theme, size);
+    size.x = std::max(size.x, minSize.x);
+    size.y = std::max(size.y, minSize.y);
+
     return size;
 }
 

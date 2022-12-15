@@ -15,7 +15,7 @@ void View::updateState()
     }
 }
 
-UI::Sz View::View::reset()
+UI::Sz View::View::reset(bool)
 {
     for (auto const& sprite: sprites) {
         sprite->reset();

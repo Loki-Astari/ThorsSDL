@@ -97,7 +97,7 @@ TEST(ViewTest, RunReset)
         ThorsAnvil::Graphics::View          view(window);
         MockSprite                          sprite(view, 0);
 
-        view.reset();
+        view.reset(false);
 
         EXPECT_EQ(0, sprite.drawCount);
         EXPECT_EQ(0, sprite.updateCount);

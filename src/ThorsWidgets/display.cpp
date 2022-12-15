@@ -28,8 +28,7 @@ int main()
     ThorsAnvil::Widgets::WidgetLabel    label(widgetsView, "This is some text");
     ThorsAnvil::Widgets::WidgetButton   button(widgetsView, "This is some text", [](){std::cerr << "Button Pressed\n";});
 
-    widgetsView.tile(ThorsAnvil::Widgets::Middle, ThorsAnvil::Widgets::Center);
-
+    window.updateView(true);
     application.eventLoop(1000);
 
     std::cout << "WidgetTest\n";

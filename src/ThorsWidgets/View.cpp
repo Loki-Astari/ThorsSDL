@@ -3,37 +3,52 @@
 
 using namespace ThorsAnvil::Widgets;
 
-View::View(UI::Window& window, Layout& layout, Theme& theme)
+View::View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize, HorzAlign hAlign, VertAlign vAlign)
     : WidgetView(layout)
     , UI::View(window)
     , theme(theme)
-    , size{0, 0}
+    , minSize(minSize)
+    , hAlign(hAlign)
+    , vAlign(vAlign)
 {}
 
-void View::tile(HorzAlign hAlign, VertAlign vAlign)
+UI::Sz View::tile(bool fitWindowToView)
 {
     UI::DrawContext&    context = getDrawContext();
-    size = preferredLayout(context, theme);
-    size.x += 4;
-    size.y += 4;
+    UI::Sz size = preferredLayout(context, theme);
 
-    UI::Sz windowSize = parent.getSize();
+    size.x += theme.windowPadding * 2;
+    size.y += theme.windowPadding * 2;
+    size.x = std::max(size.x, minSize.x);
+    size.y = std::max(size.y, minSize.y);
+
+
+    UI::Sz windowSize;
+    if (fitWindowToView)
+    {
+        windowSize = size;
+    }
+    else
+    {
+        windowSize = parent.getSize();
+    }
     int xOffset;
     int yOffset;
     switch (hAlign)
     {
-        case Left:      xOffset = 2;break;
-        case Middle:    xOffset = (windowSize.x - size.x) / 2;break;
-        case Right:     xOffset = windowSize.x - size.x + 2;break;
+        case Left:      xOffset = theme.windowPadding;break;
+        case Middle:    xOffset = (windowSize.x - size.x) / 2 + theme.windowPadding;break;
+        case Right:     xOffset = windowSize.x - size.x + theme.windowPadding;break;
     }
     switch (vAlign)
     {
-        case Top:       yOffset = 2;break;
-        case Center:    yOffset = (windowSize.y - size.y) / 2;break;
-        case Bottom:    yOffset = windowSize.y - size.y + 2;break;
+        case Top:       yOffset = theme.windowPadding;break;
+        case Center:    yOffset = (windowSize.y - size.y) / 2 + theme.windowPadding;break;
+        case Bottom:    yOffset = windowSize.y - size.y + theme.windowPadding;break;
     }
-
     performLayout({xOffset ,yOffset}, theme);
+
+    return size;
 }
 
 void View::draw(UI::DrawContext& context)
@@ -41,8 +56,9 @@ void View::draw(UI::DrawContext& context)
     drawWidget(context, theme);
 }
 
-UI::Sz View::reset()
+UI::Sz View::reset(bool fitWindowToView)
 {
+    UI::Sz size = tile(fitWindowToView);
     return size;
 }
 

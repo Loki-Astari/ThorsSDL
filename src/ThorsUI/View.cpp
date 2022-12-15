@@ -17,7 +17,7 @@ View::~View()
 void View::updateState()
 {}
 
-Sz View::reset()
+Sz View::reset(bool)
 {
     return {0, 0};
 }
