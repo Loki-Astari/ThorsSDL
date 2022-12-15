@@ -35,7 +35,6 @@ class Window: public WindowEventHandler, public DrawContext
         Window& operator=(Window&& move) noexcept;
 
     public:
-        void    updateView(bool fitWindowToView = false);
         void    updateView(int nextView, bool fitWindowToView = false);
         void    updateState();
         void    draw();

@@ -79,11 +79,10 @@ HighScoreView::HighScoreRealView::HighScoreRealView(UI::Window& window, Widgets:
     , action(std::move(action))
 {}
 
-UI::Sz HighScoreView::HighScoreRealView::reset()
+UI::Sz HighScoreView::HighScoreRealView::reset(bool fitToWindow)
 {
     action();
-    tile(WI::Middle, WI::Top);
-    return WI::View::reset();
+    return WI::View::reset(fitToWindow);
 }
 
 HighScoreView::HighScoreView::HighScoreView(UI::Window& window, int& scoreOfLastGame, std::function<void()>&& startGame)

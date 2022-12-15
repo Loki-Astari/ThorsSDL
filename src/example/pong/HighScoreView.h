@@ -94,7 +94,7 @@ class HighScoreView
         std::function<void()>   action;
         public:
             HighScoreRealView(UI::Window& window, Widgets::Layout& layout, Widgets::Theme& theme, std::function<void()>&& action);
-            virtual UI::Sz reset() override;
+            virtual UI::Sz reset(bool fitToWindow) override;
     };
 
     WI::VertBoxLayout   layout;

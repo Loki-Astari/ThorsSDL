@@ -90,11 +90,6 @@ void Window::unregisterWindow()
     }
 }
 
-void Window::updateView(bool fitWindowToView)
-{
-    updateView(currentView, fitWindowToView);
-}
-
 void Window::updateView(int nextView, bool fitWindowToView)
 {
     currentView = nextView;

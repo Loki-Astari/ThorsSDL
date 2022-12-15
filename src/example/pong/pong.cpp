@@ -25,6 +25,7 @@ class PongWindow: public UI::Window
             , highScoreView(*this, scoreOfLastGame, [window = this](){window->updateView(gameViewId);})
             , gameView(*this, scoreOfLastGame, rect, [window = this](){window->updateView(highScoreViewId);})
         {
+            updateView(0);
         }
 };
 
