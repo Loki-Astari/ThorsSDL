@@ -5,7 +5,7 @@
 using namespace ThorsAnvil::Example::Pong;
 
 HighScoreView::HighScoreTable::HighScoreTable(WI::View& parent, int& scoreOfLastGame)
-    : layout(3, WI::Left, WI::Center)
+    : layout(3, WI::FixedHeight, WI::Left, WI::Top)
     , view(parent, layout)
     , scoreOfLastGame(scoreOfLastGame)
 {

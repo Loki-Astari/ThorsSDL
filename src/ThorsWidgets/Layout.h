@@ -94,10 +94,11 @@ class GroupLayout: public BoxLayout<Vert>
 class GridLayout: public Layout
 {
     int             xMax;
+    GridStyle       style;
     HorzAlign       hAlign;
     VertAlign       vAlign;
     public:
-        GridLayout(int width, HorzAlign hAlign, VertAlign vAlign);
+        GridLayout(int width, GridStyle style, HorzAlign hAlign, VertAlign vAlign);
         virtual UI::Sz getSize(Theme const& theme, std::vector<Widget*>& widgets) override;
 };
 
