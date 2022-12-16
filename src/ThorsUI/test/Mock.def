@@ -31,6 +31,7 @@ MOCK_SYSTEM_FUNC(SDL_CreateTextureFromSurface)
 MOCK_SYSTEM_FUNC(SDL_DestroyTexture)
 
 MOCK_SYSTEM_FUNC(TTF_RenderText_Solid);
+MOCK_SYSTEM_FUNC(TTF_RenderUTF8_Solid);
 MOCK_SYSTEM_FUNC(SDL_FreeSurface)
 
 MOCK_SYSTEM_FUNC(SDL_QueryTexture)

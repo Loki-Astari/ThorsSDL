@@ -23,8 +23,10 @@ UI::Sz Layout::preferredLayout(UI::DrawContext& drawContext, Theme const& theme,
             continue;
         }
         layoutSize.emplace_back(widget->preferredLayout(drawContext, theme));
+        // std::cerr << "Size: " << layoutSize.back() << "\n";
         ++index;
     }
+    // std::cerr << "=========\n";
     return getSize(theme, widgets);
 }
 
@@ -181,9 +183,12 @@ UI::Sz GridLayout::getSize(Theme const& theme, std::vector<Widget*>& /*widgets*/
 
             maxColWidth[x]  = std::max(maxColWidth[x], mazElementSize.x);
             maxRowHeight[y] = std::max(maxRowHeight[y], mazElementSize.y);
+
+            // std::cerr << "Max: " << mazElementSize << " X: " << x << " = " << maxColWidth[x] << "  Y: " << y << " = " << maxRowHeight[y] << "\n";
         }
     }
     maxRowHeight.emplace_back(0);
+    // std::cerr << "maxColWidth::size = " << maxColWidth.size() << " maxRowHeight::size = " << maxRowHeight.size() << "\n";
 
     // Step 2:  Calculate the size of the View.
     //          Border / Padding / size of cell taken into account.

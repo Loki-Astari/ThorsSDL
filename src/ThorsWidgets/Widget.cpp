@@ -6,6 +6,7 @@ using namespace ThorsAnvil::Widgets;
 
 Widget::Widget(UI::Sz minSize, bool visible)
     : parentWidget(nullptr)
+    , size{0, 0}
     , minSize(minSize)
     , lastUpdate{}
     , visible{visible}
@@ -13,6 +14,7 @@ Widget::Widget(UI::Sz minSize, bool visible)
 
 Widget::Widget(WidgetView& parentWidgetParam, UI::Sz minSize, bool visible)
     : parentWidget(&parentWidgetParam)
+    , size{0, 0}
     , minSize(minSize)
     , lastUpdate{}
     , visible{visible}

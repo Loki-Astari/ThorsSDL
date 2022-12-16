@@ -43,7 +43,7 @@ Renderer::~Renderer()
 }
 
 Surface::Surface(SDL::TTFont& font, std::string const& message, Color const& ink)
-    : PointerWrapper(TTF_RenderText_Solid(font, message.c_str(), SDL_Color{ink.r, ink.b, ink.g, ink.alpha}), "Failed to Create SDL-Surface")
+    : PointerWrapper(TTF_RenderUTF8_Solid(font, message.c_str(), SDL_Color{ink.r, ink.b, ink.g, ink.alpha}), "Failed to Create SDL-Surface")
 {}
 
 Surface::~Surface()
