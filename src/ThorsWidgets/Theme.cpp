@@ -27,6 +27,9 @@ void Theme::drawWidget(UI::DrawContext& drawContext, WidgetInputText const& inpu
     UI::Sz size  = inputText.getDrawSize();
 
     inputNormalBorderPen.drawRect(drawContext, {point.x, point.y, size.x, size.y});
+    if (inputText.state != Normal) {
+        inputFocusBorderPen.drawRect(drawContext, {point.x + 2, point.y + 2, size.x - 4, size.y - 4});
+    }
 
     inputText.centerText(*this, point, size);
     UI::Sz textSize = inputText.texture.size();

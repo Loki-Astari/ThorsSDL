@@ -31,6 +31,7 @@ int main()
     ThorsAnvil::Widgets::WidgetExample      item6(widgetsView);
     ThorsAnvil::Widgets::WidgetLabel        label2(widgetsView, "Input");
     ThorsAnvil::Widgets::WidgetInputText    input1(widgetsView, "");
+    ThorsAnvil::Widgets::WidgetInputText    input2(widgetsView, "");
 
     window.updateView(0, true);
     application.eventLoop(1000);

@@ -24,6 +24,7 @@ class View: public WidgetView, public UI::View
     Theme&          theme;
     UI::Sz          minSize;
     Widget*         mouseDownIn;
+    Widget*         textFocus;
     HorzAlign       hAlign;
     VertAlign       vAlign;
 

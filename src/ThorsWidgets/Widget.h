@@ -57,6 +57,8 @@ class Widget
         virtual Widget* handleEventMouseDownInWidget();
         virtual Widget* handleEventMouseUpInWidget(Widget* downIn);
         virtual void    handleEventMouseUpOutsideWidget();
+        virtual Widget* acceptTextFocus() {return nullptr;}
+        virtual void    looseFocus() {}
 };
 
 }

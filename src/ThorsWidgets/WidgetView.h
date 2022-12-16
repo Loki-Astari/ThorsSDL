@@ -47,6 +47,7 @@ class WidgetView: public Widget
         virtual Widget* handleEventMouseDownInWidget() override;
         virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
         virtual void    handleEventMouseUpOutsideWidget() override;
+        virtual Widget* acceptTextFocus() override;
 };
 
 }

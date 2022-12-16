@@ -8,6 +8,8 @@ View::View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize, Hor
     , UI::View(window)
     , theme(theme)
     , minSize(minSize)
+    , mouseDownIn(nullptr)
+    , textFocus(nullptr)
     , hAlign(hAlign)
     , vAlign(vAlign)
 {}
@@ -58,6 +60,7 @@ void View::draw(UI::DrawContext& context)
 
 UI::Sz View::reset(bool fitWindowToView)
 {
+    textFocus = acceptTextFocus();
     UI::Sz size = tile(fitWindowToView);
     return size;
 }
@@ -80,6 +83,13 @@ void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 void View::handleEventMouseDown(SDL_MouseButtonEvent const& /*event*/)
 {
     mouseDownIn = handleEventMouseDownInWidget();
+    if (mouseDownIn && mouseDownIn->acceptTextFocus())
+    {
+        if (textFocus) {
+            textFocus->looseFocus();
+        }
+        textFocus = mouseDownIn;
+    }
 }
 
 void View::handleEventMouseUp(SDL_MouseButtonEvent const& /*event*/)
