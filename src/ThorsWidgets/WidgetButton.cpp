@@ -54,12 +54,11 @@ UI::TextPen const& WidgetButton::getTextPen(Theme const& theme)
 {
     switch (state)
     {
-        case Up:            return theme.normalTextPen;
-        case DownOutside:   return theme.normalTextPen;
-        case Hover:         return theme.hoverTextPen;
-        case Down:          return theme.pressTextPen;
+        case Up:            return theme.butNormalTextPen;
+        case DownOutside:   return theme.butNormalTextPen;
+        case Hover:         return theme.butHoverTextPen;
+        case Down:          return theme.butPressTextPen;
     }
-    return theme.normalTextPen;
 }
 
 Widget* WidgetButton::handleEventMouseDownInWidget()

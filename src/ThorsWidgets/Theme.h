@@ -27,13 +27,16 @@ class ThemeUtility
 
 struct Theme
 {
-    // Brush Script
-    UI::TextPen normalTextPen   = ThemeUtility::getPen("Arial", 16, UI::C::lightgrey);
-    UI::TextPen hoverTextPen    = ThemeUtility::getPen("Arial", 16, UI::C::darkslateblue);
-    UI::TextPen pressTextPen    = ThemeUtility::getPen("Arial", 16, UI::C::white);
+    // Labels
+    UI::TextPen labelNormalTextPen  = ThemeUtility::getPen("Arial", 16, UI::C::lightgrey);
 
-    UI::Pen     buttonBorderPen = UI::Pen(UI::C::white, UI::C::antiquewhite);
-    UI::Pen     buttonPressedPen= UI::Pen(UI::C::white, UI::C::black);
+    // Buttons
+    UI::TextPen butNormalTextPen    = ThemeUtility::getPen("Arial", 16, UI::C::lightgrey);
+    UI::TextPen butHoverTextPen     = ThemeUtility::getPen("Arial", 16, UI::C::darkslateblue);
+    UI::TextPen butPressTextPen     = ThemeUtility::getPen("Arial", 16, UI::C::white);
+
+    UI::Pen     buttonBorderPen     = UI::Pen(UI::C::white, UI::C::antiquewhite);
+    UI::Pen     buttonPressedPen    = UI::Pen(UI::C::white, UI::C::black);
 
     int         windowPadding   = 2;
     int         viewPadding     = 2;            // Space between elements in a view

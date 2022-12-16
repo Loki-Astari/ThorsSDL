@@ -41,5 +41,5 @@ void WidgetLabel::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 
 UI::TextPen const& WidgetLabel::getTextPen(Theme const& theme)
 {
-    return theme.normalTextPen;
+    return theme.labelNormalTextPen;
 }
