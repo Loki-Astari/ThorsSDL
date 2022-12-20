@@ -114,7 +114,22 @@ void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
 226 1073742050 => bit(30) + 226     0x400000E2  SDLK_LALT   <ALT>
 227 1073742051 => bit(30) + 227     0x400000E3  SDLK_LGUI   <CMD>
 */
+#if 0
     std::cerr << "Key: " << key << "\n";
+    std::cerr << "Mod:";
+    if ((keyMod & KMOD_LSHIFT) != 0)    {std::cerr << "KMOD_LSHIFT\n";}
+    if ((keyMod & KMOD_RSHIFT) != 0)    {std::cerr << "KMOD_RSHIFT\n";}
+    if ((keyMod & KMOD_LCTRL) != 0)     {std::cerr << "KMOD_LCTRL\n";}
+    if ((keyMod & KMOD_RCTRL) != 0)     {std::cerr << "KMOD_RCTRL\n";}
+    if ((keyMod & KMOD_LALT) != 0)      {std::cerr << "KMOD_LALT\n";}
+    if ((keyMod & KMOD_RALT) != 0)      {std::cerr << "KMOD_RALT\n";}
+    if ((keyMod & KMOD_LGUI) != 0)      {std::cerr << "KMOD_LGUI\n";}
+    if ((keyMod & KMOD_RGUI) != 0)      {std::cerr << "KMOD_RGUI\n";}
+    if ((keyMod & KMOD_NUM) != 0)       {std::cerr << "KMOD_NUM\n";}
+    if ((keyMod & KMOD_CAPS) != 0)      {std::cerr << "KMOD_CAPS\n";}
+    if ((keyMod & KMOD_MODE) != 0)      {std::cerr << "KMOD_MODE\n";}
+    if ((keyMod & KMOD_SCROLL) != 0)    {std::cerr << "KMOD_SCROLL\n";}
+#endif
     switch (key)
     {
         case SDLK_DELETE:
@@ -122,6 +137,12 @@ void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
         case SDLK_ALTERASE:
         case SDLK_BACKSPACE:
         case SDLK_KP_BACKSPACE:
+            if (insertPoint != insertEnd)
+            {
+                text.erase(insertPoint, (insertEnd - insertPoint));
+                insertEnd = insertPoint;
+            }
+            else
             if (insertPoint > 0)
             {
                 text.erase(insertPoint - 1, 1);
@@ -140,6 +161,15 @@ void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
                 insertPoint = insertEnd;
             }
             break;
+        case SDLK_a:
+            if ((keyMod & KMOD_GUI) != 0)
+            {
+                insertPoint = 0;
+                insertEnd   = text.size();
+            }
+            break;
+        // TODO
+        // Add Cut/Copy/Paste here.
     }
 }
 
