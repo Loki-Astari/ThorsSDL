@@ -95,6 +95,7 @@ void Application::eventLoop(int fps, std::function<void(int)>&& eventDone)
     catch (std::exception const& e)
     {
         std::cerr << "Exception: " << e.what() << "\n";
+        std::cerr << "SDL Error: " << SDL_GetError() << "\n";
     }
 }
 
