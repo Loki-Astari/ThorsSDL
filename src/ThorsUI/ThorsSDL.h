@@ -199,6 +199,12 @@ struct TTFont: public PointerWrapper<TTF_Font>
 {
     TTFont(std::string const& fileName, int point);
     ~TTFont();
+
+    int ascent()                        const   {return TTF_FontAscent(pointer);}
+    int descent()                       const   {return TTF_FontDescent(pointer);}
+    int height()                        const   {return TTF_FontHeight(pointer);}       // Usually equal to point size
+    int lineSkip()                      const   {return TTF_FontLineSkip(pointer);}     // The recommended line size (how far to move down for next line)
+    int length(std::string const& view) const   {int w, h;TTF_SizeUTF8(pointer, view.c_str(), &w, &h);return w;}
 };
 
 struct Surface: public PointerWrapper<SDL_Surface>

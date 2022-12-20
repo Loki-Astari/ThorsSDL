@@ -84,6 +84,11 @@ class TextPen: public Pen
         Texture     createTextureFromString(DrawContext& drawContext, char const* message)                const;
         Texture     createTextureFromString(DrawContext& drawContext, std::string const& message)         const   {return createTextureFromString(drawContext, message.c_str());}
 
+        int ascent()                        const   {return font->ascent();}
+        int descent()                       const   {return font->descent();}
+        int height()                        const   {return font->height();}
+        int lineSkip()                      const   {return font->lineSkip();}
+        int length(std::string const& view) const   {return font->length(view);}
     private:
         std::shared_ptr<SDL::TTFont>   font;
 };
