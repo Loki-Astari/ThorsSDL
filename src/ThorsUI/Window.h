@@ -61,11 +61,19 @@ class Window: public WindowEventHandler, public DrawContext
         std::size_t                         currentView;
 
     public:
+        // Mouse Event
         virtual void handleEventWindowEnter(SDL_WindowEvent const& event) override;
         virtual void handleEventWindowLeave(SDL_WindowEvent const& event) override;
         virtual void handleEventMouseMove(SDL_MouseMotionEvent const& event) override;
         virtual void handleEventMouseDown(SDL_MouseButtonEvent const& event) override;
         virtual void handleEventMouseUp(SDL_MouseButtonEvent const& event) override;
+
+        // Keyboard Event
+        virtual void handleEventKeyDown(SDL_KeyboardEvent const& event) override;
+        virtual void handleEventKeyUp(SDL_KeyboardEvent const& event) override;
+        virtual void handleEventTextEditting(SDL_TextEditingEvent const& event) override;
+        virtual void handleEventTextInput(SDL_TextInputEvent const& event) override;
+        virtual void handleEventTextEditingExt(SDL_TextEditingExtEvent const& event) override;
 };
 
 class DebugWindow: public Window

@@ -154,8 +154,14 @@ void Window::remView(View& view)
     }
 }
 
-void Window::handleEventWindowEnter(SDL_WindowEvent const& event)   {if (currentView < views.size()) {views[currentView]->handleEventWindowEnter(event);}}
-void Window::handleEventWindowLeave(SDL_WindowEvent const& event)   {if (currentView < views.size()) {views[currentView]->handleEventWindowLeave(event);}}
-void Window::handleEventMouseMove(SDL_MouseMotionEvent const& event){if (currentView < views.size()) {views[currentView]->handleEventMouseMove(event);}}
-void Window::handleEventMouseDown(SDL_MouseButtonEvent const& event){if (currentView < views.size()) {views[currentView]->handleEventMouseDown(event);}}
-void Window::handleEventMouseUp(SDL_MouseButtonEvent const& event)  {if (currentView < views.size()) {views[currentView]->handleEventMouseUp(event);}}
+void Window::handleEventWindowEnter(SDL_WindowEvent const& event)           {if (currentView < views.size()) {views[currentView]->handleEventWindowEnter(event);}}
+void Window::handleEventWindowLeave(SDL_WindowEvent const& event)           {if (currentView < views.size()) {views[currentView]->handleEventWindowLeave(event);}}
+void Window::handleEventMouseMove(SDL_MouseMotionEvent const& event)        {if (currentView < views.size()) {views[currentView]->handleEventMouseMove(event);}}
+void Window::handleEventMouseDown(SDL_MouseButtonEvent const& event)        {if (currentView < views.size()) {views[currentView]->handleEventMouseDown(event);}}
+void Window::handleEventMouseUp(SDL_MouseButtonEvent const& event)          {if (currentView < views.size()) {views[currentView]->handleEventMouseUp(event);}}
+
+void Window::handleEventKeyDown(SDL_KeyboardEvent const& event)             {if (currentView  < views.size()) {views[currentView]->handleEventKeyDown(event);}}
+void Window::handleEventKeyUp(SDL_KeyboardEvent const& event)               {if (currentView  < views.size()) {views[currentView]->handleEventKeyUp(event);}}
+void Window::handleEventTextEditting(SDL_TextEditingEvent const& event)     {if (currentView  < views.size()) {views[currentView]->handleEventTextEditting(event);}}
+void Window::handleEventTextInput(SDL_TextInputEvent const& event)          {if (currentView  < views.size()) {views[currentView]->handleEventTextInput(event);}}
+void Window::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event){if (currentView  < views.size()) {views[currentView]->handleEventTextEditingExt(event);}}
