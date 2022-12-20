@@ -17,8 +17,11 @@ struct Theme;
 class WidgetInputText: public Widget
 {
     friend struct Theme;
-    UI::Texture     texture;
+    UI::Texture     textTexture;
+    UI::Texture     caret;
     std::string     text;
+    int             insertPoint;
+    int             insertEnd;
     UI::Sz          displayCharSize;
     InputTextState  state;
     bool            flash;
@@ -38,7 +41,9 @@ class WidgetInputText: public Widget
         virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
         virtual void    handleEventMouseUpOutsideWidget() override;
         virtual Widget* acceptTextFocus() override;
-        virtual void    looseFocus() override;
+        virtual void    looseTextFocus() override;
+        virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key) override;
+        virtual void    handleEventTextInsert(std::string_view view) override;
 };
 
 }

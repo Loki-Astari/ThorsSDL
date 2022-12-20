@@ -56,24 +56,7 @@ bool Widget::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
     return true;
 }
 
-void Widget::handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& /*event*/)
-{}
-
-void Widget::handleEventMouseMoveEnterWidget()
-{}
-
-void Widget::handleEventMouseMoveLeaveWidget()
-{}
-
-Widget* Widget::handleEventMouseDownInWidget()
-{
-    return nullptr;
-}
-
 Widget* Widget::handleEventMouseUpInWidget(Widget* mouseDownIn)
 {
     return mouseDownIn;
 }
-
-void Widget::handleEventMouseUpOutsideWidget()
-{}

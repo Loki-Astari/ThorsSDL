@@ -34,7 +34,9 @@ int main()
     ThorsAnvil::Widgets::WidgetInputText    input2(widgetsView, "");
 
     window.updateView(0, true);
+    SDL_StartTextInput();
     application.eventLoop(1000);
+    SDL_StopTextInput();
 
     std::cout << "WidgetTest\n";
 }

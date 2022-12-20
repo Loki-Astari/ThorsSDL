@@ -23,17 +23,38 @@ void Theme::drawWidget(UI::DrawContext&, WidgetLabel const& label) const
 
 void Theme::drawWidget(UI::DrawContext& drawContext, WidgetInputText const& inputText) const
 {
-    UI::Pt point = inputText.getDrawPosition();
-    UI::Sz size  = inputText.getDrawSize();
+    UI::Pt          point   = inputText.getDrawPosition();
+    UI::Sz          size    = inputText.getDrawSize();
+    UI::TextPen const&    pen     = inputNormalTextPen;
 
+    // Draw the boarder around the text input.
     inputNormalBorderPen.drawRect(drawContext, {point.x, point.y, size.x, size.y});
     if (inputText.state != Normal) {
         inputFocusBorderPen.drawRect(drawContext, {point.x + 2, point.y + 2, size.x - 4, size.y - 4});
     }
 
+    // Adjust the draw point to include just the text.
     inputText.centerText(*this, point, size);
-    UI::Sz textSize = inputText.texture.size();
-    inputText.texture.draw({point.x, point.y, textSize.x, textSize.y});
+
+    // Draw the selection
+    int insertPointPixel    = pen.length(inputText.text.substr(0, inputText.insertPoint));
+    if (inputText.state != Normal && inputText.insertPoint != inputText.insertEnd)
+    {
+        int insertEndPixel      = pen.length(inputText.text.substr(0, inputText.insertEnd));
+        inputSelectedTextPen.drawRect(drawContext, {point.x + insertPointPixel, point.y, insertEndPixel - insertPointPixel, inputText.displayCharSize.y});
+    }
+
+    // Draw the flashing carot if no selection.
+    if (inputText.insertPoint == inputText.insertEnd && inputText.flash)
+    {
+        UI::Sz caretSize = inputText.caret.size();
+        inputText.caret.draw({point.x + insertPointPixel - caretSize.x / 2, point.y, caretSize.x, caretSize.y});
+    }
+
+    // Finally draw the text.
+    UI::Sz textSize = inputText.textTexture.size();
+    inputText.textTexture.draw({point.x, point.y, textSize.x, textSize.y});
+
 }
 
 void Theme::drawWidget(UI::DrawContext& drawContext, WidgetButton const& button) const

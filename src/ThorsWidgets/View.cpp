@@ -1,5 +1,6 @@
 #include "View.h"
 #include "ThorsUI/Window.h"
+#include <string_view>
 
 using namespace ThorsAnvil::Widgets;
 
@@ -86,7 +87,7 @@ void View::handleEventMouseDown(SDL_MouseButtonEvent const& /*event*/)
     if (mouseDownIn && mouseDownIn->acceptTextFocus())
     {
         if (textFocus) {
-            textFocus->looseFocus();
+            textFocus->looseTextFocus();
         }
         textFocus = mouseDownIn;
     }
@@ -100,4 +101,39 @@ void View::handleEventMouseUp(SDL_MouseButtonEvent const& /*event*/)
         mouseDownIn->handleEventMouseUpOutsideWidget();
         mouseDownIn = nullptr;
     }
+}
+
+void View::handleEventKeyUp(SDL_KeyboardEvent const& event)
+{
+    if (textFocus) {
+        textFocus->handleEventTextInsert(event.keysym.mod, event.keysym.sym);
+    }
+}
+
+void View::handleEventTextEditting(SDL_TextEditingEvent const& event)
+{
+    if (textFocus) {
+        textFocus->handleEventTextInsert(std::string_view(event.text + event.start, event.length));
+    }
+    // std::cerr << "handleEventTextEditting: start: " << event.start << " len: " << event.length << "   "
+    //           << ">" << std::string_view(event.text + event.start, event.length) << "<"
+    //           << "\n";
+}
+
+void View::handleEventTextInput(SDL_TextInputEvent const& event)
+{
+    if (textFocus) {
+        textFocus->handleEventTextInsert(std::string_view(event.text));
+    }
+    // std::cerr << "handleEventTextInput: len: " << std::strlen(event.text) << " >" << event.text << "<\n";
+}
+
+void View::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event)
+{
+    if (textFocus) {
+        textFocus->handleEventTextInsert(std::string_view(event.text + event.start, event.length));
+    }
+    // std::cerr << "handleEventTextEditingExt: start: " << event.start << " len: " << event.length << "   "
+    //           << ">" << std::string_view(event.text + event.start, event.length) << "<"
+    //           << "\n";
 }

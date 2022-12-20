@@ -20,13 +20,13 @@ class WidgetButton;
 class ThemeUtility
 {
     public:
-        static UI::TextPen getPen(std::string const& font, int point, UI::Color color)
+        static UI::TextPen getPen(std::string const& font, int point, UI::Color ink , UI::Color background = {0, 0, 0, 255})
         {
             static const std::string fontPath[] = {   "/Library/Fonts"
                                                     , "/System/Library/Fonts/Supplemental/"
                                                     , "/System Folder/Fonts"
                                                   };
-            return UI::TextPen(fontPath[1] + font + ".ttf", point, color);
+            return UI::TextPen(fontPath[1] + font + ".ttf", point, ink, background);
         }
 };
 
@@ -37,6 +37,7 @@ struct Theme
 
     // InputText
     UI::TextPen inputNormalTextPen  = ThemeUtility::getPen("Arial Unicode", 16, UI::C::darkgrey);
+    UI::Pen     inputSelectedTextPen= ThemeUtility::getPen("Arial Unicode", 16, UI::C::yellow, UI::C::yellow);
     UI::Pen     inputNormalBorderPen= UI::Pen(UI::C::white);
     UI::Pen     inputFocusBorderPen = UI::Pen(UI::C::white);
 
