@@ -92,5 +92,8 @@ HighScoreView::HighScoreView::HighScoreView(UI::Window& window, int& scoreOfLast
     , table(view, scoreOfLastGame)
     , buttons(view, std::move(startGame))
 {
-    theme.normalTextPen = UI::TextPen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue);
+    theme.labelNormalTextPen = UI::TextPen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::powderblue);
+    theme.butNormalTextPen   = UI::TextPen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::yellow);
+    theme.butHoverTextPen    = UI::TextPen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::red);
+    theme.butPressTextPen    = UI::TextPen("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 24, UI::C::white);
 }

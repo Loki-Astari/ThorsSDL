@@ -59,6 +59,7 @@ class Window: public WindowEventHandler, public DrawContext
         WindowRegister                      windowRegister;
         std::vector<View*>                  views;
         std::size_t                         currentView;
+        bool                                updated;
 
     public:
         // Mouse Event

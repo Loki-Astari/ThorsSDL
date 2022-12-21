@@ -44,10 +44,12 @@ void WidgetButton::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 void WidgetButton::handleEventMouseMoveEnterWidget()
 {
     state = state == DownOutside ? Down : Hover;
+    markDirty();
 }
 void WidgetButton::handleEventMouseMoveLeaveWidget()
 {
     state = state == Down ? DownOutside : Up;
+    markDirty();
 }
 
 UI::TextPen const& WidgetButton::getTextPen(Theme const& theme)
@@ -64,6 +66,7 @@ UI::TextPen const& WidgetButton::getTextPen(Theme const& theme)
 Widget* WidgetButton::handleEventMouseDownInWidget()
 {
     state = Down;
+    markDirty();
     return this;
 }
 
@@ -72,6 +75,7 @@ Widget* WidgetButton::handleEventMouseUpInWidget(Widget* mouseDownIn)
     if (mouseDownIn != this) {
         return mouseDownIn;
     }
+    markDirty();
     state = Up;
     action();
     return nullptr;
@@ -79,5 +83,6 @@ Widget* WidgetButton::handleEventMouseUpInWidget(Widget* mouseDownIn)
 
 void WidgetButton::handleEventMouseUpOutsideWidget()
 {
+    markDirty();
     state = Up;
 }

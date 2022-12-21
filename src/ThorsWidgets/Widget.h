@@ -44,6 +44,7 @@ class Widget
         virtual void    doPerformLayout(UI::Pt /*newTopLeft*/, Theme const& /*theme*/)  {}
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    = 0;
 
+        virtual void    markDirty();
 
         virtual WidgetType  type() const        {return Unknown;}
                 bool    isVisible() const   {return visible;}

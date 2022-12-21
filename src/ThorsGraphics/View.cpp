@@ -8,11 +8,15 @@ View::View(UI::Window& window)
     : UI::View(window)
 {}
 
-void View::updateState()
+bool View::updateState()
 {
-    for (auto const& sprite: sprites) {
-        sprite->updateState();
+    bool dirty = false;
+    for (auto const& sprite: sprites)
+    {
+        bool dirtySprite = sprite->updateState();
+        dirty = dirty || dirtySprite;
     }
+    return dirty;
 }
 
 UI::Sz View::View::reset(bool)

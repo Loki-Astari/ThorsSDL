@@ -13,6 +13,8 @@ View::View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize, Hor
     , textFocus(nullptr)
     , hAlign(hAlign)
     , vAlign(vAlign)
+    // Force re-draw first time
+    , updated(true)
 {}
 
 UI::Sz View::tile(bool fitWindowToView)
@@ -52,6 +54,19 @@ UI::Sz View::tile(bool fitWindowToView)
     performLayout({xOffset ,yOffset}, theme);
 
     return size;
+}
+
+bool View::updateState()
+{
+    // If we return true then a redraw will be done.
+    // So set `updated` to false.
+    // Now, only need to re-draw if we mark as dirty (see below).
+    return std::exchange(updated, false);
+}
+
+void View::markDirty()
+{
+    updated = true;
 }
 
 void View::draw(UI::DrawContext& context)

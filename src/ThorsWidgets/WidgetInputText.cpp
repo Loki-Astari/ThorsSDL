@@ -81,23 +81,27 @@ Widget* WidgetInputText::handleEventMouseDownInWidget()
 
 Widget* WidgetInputText::handleEventMouseUpInWidget(Widget* /*mouseDownIn*/)
 {
+    markDirty();
     state = state != Normal ? Focus : Normal;
     return nullptr;
 }
 
 void WidgetInputText::handleEventMouseUpOutsideWidget()
 {
+    markDirty();
     state = Focus;
 }
 
 Widget* WidgetInputText::acceptTextFocus()
 {
+    markDirty();
     state = Drag;
     return this;
 }
 
 void WidgetInputText::looseTextFocus()
 {
+    markDirty();
     state = Normal;
 }
 
@@ -148,18 +152,21 @@ void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
                 text.erase(insertPoint - 1, 1);
                 --insertPoint;
             }
+            markDirty();
             break;
         case SDLK_LEFT:
             insertPoint = std::max(0, insertPoint - 1);
             if ((keyMod & KMOD_SHIFT) == 0) {
                 insertEnd = insertPoint;
             }
+            markDirty();
             break;
         case SDLK_RIGHT:
             insertEnd = std::min(text.size(), static_cast<std::size_t>(insertEnd + 1));
             if ((keyMod & KMOD_SHIFT) == 0) {
                 insertPoint = insertEnd;
             }
+            markDirty();
             break;
         case SDLK_a:
             if ((keyMod & KMOD_GUI) != 0)
@@ -167,6 +174,7 @@ void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
                 insertPoint = 0;
                 insertEnd   = text.size();
             }
+            markDirty();
             break;
         // TODO
         // Add Cut/Copy/Paste here.
@@ -175,6 +183,7 @@ void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
 
 void WidgetInputText::handleEventTextInsert(std::string_view view)
 {
+    markDirty();
     if (insertPoint != insertEnd)
     {
         text.erase(insertPoint, (insertEnd - insertPoint));

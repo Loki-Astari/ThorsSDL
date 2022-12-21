@@ -27,11 +27,14 @@ class View: public WidgetView, public UI::View
     Widget*         textFocus;
     HorzAlign       hAlign;
     VertAlign       vAlign;
+    bool            updated;
 
     public:
         View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize = {0, 0}, HorzAlign hAlign = Middle, VertAlign vAlign = Center);
         UI::Sz tile(bool fitWindowToView);
 
+        virtual bool updateState() override;
+        virtual void markDirty() override;
         virtual void draw(UI::DrawContext& context) override;
         virtual UI::Sz reset(bool fitWindowToView) override;
 

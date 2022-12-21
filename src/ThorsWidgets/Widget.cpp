@@ -44,6 +44,15 @@ void Widget::performLayout(UI::Pt newTopLeft, Theme const& theme)
     doPerformLayout(newTopLeft, theme);
 }
 
+void Widget::markDirty()
+{
+    if (parentWidget == nullptr) {
+        throw std::runtime_error("Root Widget should override");
+    }
+
+    parentWidget->markDirty();
+}
+
 bool Widget::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
 {
     UI::Rect rect = getBoundingRect();

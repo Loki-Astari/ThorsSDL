@@ -17,7 +17,7 @@ class View: public WindowEventHandler
     public:
         View(Window& parent);
         virtual ~View();
-        virtual void updateState();
+        virtual bool updateState();
         virtual Sz reset(bool fitWindowToView);
         virtual void draw(DrawContext& context);
 

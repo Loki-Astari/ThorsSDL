@@ -14,8 +14,14 @@ View::~View()
     parent.remView(*this);
 }
 
-void View::updateState()
-{}
+bool View::updateState()
+{
+    // By default we will force a re-draw.
+    //
+    // You can make more efficient by overriding and
+    // only return true if your view needs to be re-drawn
+    return true;
+}
 
 Sz View::reset(bool)
 {

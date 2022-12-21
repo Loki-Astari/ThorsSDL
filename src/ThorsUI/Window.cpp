@@ -42,6 +42,8 @@ Window::Window(std::string const& title, Rect const& rect, WindowState const& wi
     , windowRegister(*this)
     , views{}
     , currentView(0)
+    // Force a draw the first time
+    , updated(true)
 {
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
@@ -56,10 +58,13 @@ Window::Window(Window&& move) noexcept
     , windowRegister(*this)
     , views{}
     , currentView(0)
+    // Force a draw the first time
+    , updated(true)
 {
     std::swap(window,       move.window);
     std::swap(views,        move.views);
     std::swap(currentView,  move.currentView);
+    std::swap(updated,      move.updated);
     Application::getInstance().registerWindow(*this);
 }
 
@@ -104,8 +109,10 @@ void Window::updateView(int nextView, bool fitWindowToView)
 
 void Window::updateState()
 {
-    if (currentView < views.size()) {
-        views[currentView]->updateState();
+    if (currentView < views.size())
+    {
+        bool viewUpdate = views[currentView]->updateState();
+        updated = updated || viewUpdate;
     }
 }
 
@@ -123,16 +130,21 @@ Sz Window::getSize() const
 
 void Window::draw()
 {
-    Color const& background = getBackgroundColor();
+    // Only re-draw a window if it needs a redraw
+    if (updated)
+    {
+        Color const& background = getBackgroundColor();
 
-    SDL_SetRenderDrawColor(getRenderer(), background.r, background.g, background.b, background.alpha);
-    SDL_RenderClear(getRenderer());
+        SDL_SetRenderDrawColor(getRenderer(), background.r, background.g, background.b, background.alpha);
+        SDL_RenderClear(getRenderer());
 
-    if (currentView < views.size()) {
-        views[currentView]->draw(*this);
+        if (currentView < views.size()) {
+            views[currentView]->draw(*this);
+        }
+
+        SDL_RenderPresent(getRenderer());
+        updated = false;
     }
-
-    SDL_RenderPresent(getRenderer());
 }
 
 bool Window::isVisable() const

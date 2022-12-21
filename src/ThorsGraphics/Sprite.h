@@ -26,7 +26,7 @@ class Sprite
         Sprite(View& parent, int millisecondUpdateTime);
         virtual ~Sprite();
 
-        void updateState();
+        bool updateState();
 
         virtual void draw(UI::DrawContext& drawContext)     = 0;
         virtual bool doUpdateState()                        = 0;
