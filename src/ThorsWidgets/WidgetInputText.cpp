@@ -176,6 +176,11 @@ void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
             }
             markDirty();
             break;
+        case SDLK_TAB:
+        case SDLK_KP_TAB:
+            //setNextTextFocus();
+            markDirty();
+            break;
         // TODO
         // Add Cut/Copy/Paste here.
     }
