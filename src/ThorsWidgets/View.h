@@ -5,6 +5,7 @@
 #include "LayoutUtil.h"
 #include "WidgetView.h"
 #include "Theme.h"
+#include "WidgetKeyboardFocusI.h"
 #include "ThorsUI/View.h"
 
 namespace ThorsAnvil::UI
@@ -21,13 +22,13 @@ struct Theme;
 class Layout;
 class View: public WidgetView, public UI::View
 {
-    Theme&          theme;
-    UI::Sz          minSize;
-    Widget*         mouseDownIn;
-    Widget*         textFocus;
-    HorzAlign       hAlign;
-    VertAlign       vAlign;
-    bool            updated;
+    Theme&              theme;
+    UI::Sz              minSize;
+    Widget*             mouseDownIn;
+    HorzAlign           hAlign;
+    VertAlign           vAlign;
+    KeyboardFocusSet    textInputSet;
+    bool                updated;
 
     public:
         View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize = {0, 0}, HorzAlign hAlign = Middle, VertAlign vAlign = Center);
@@ -52,6 +53,8 @@ class View: public WidgetView, public UI::View
         virtual void handleEventTextEditting(SDL_TextEditingEvent const& /*event*/) override;
         virtual void handleEventTextInput(SDL_TextInputEvent const& /*event*/) override;
         virtual void handleEventTextEditingExt(SDL_TextEditingExtEvent const& /*event*/) override;
+
+        virtual KeyboardFocusSet& getInterfaceSet() override;
 };
 
 }

@@ -10,7 +10,6 @@ View::View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize, Hor
     , theme(theme)
     , minSize(minSize)
     , mouseDownIn(nullptr)
-    , textFocus(nullptr)
     , hAlign(hAlign)
     , vAlign(vAlign)
     // Force re-draw first time
@@ -76,8 +75,8 @@ void View::draw(UI::DrawContext& context)
 
 UI::Sz View::reset(bool fitWindowToView)
 {
-    textFocus = acceptTextFocus();
     UI::Sz size = tile(fitWindowToView);
+    textInputSet.reset();
     return size;
 }
 
@@ -99,12 +98,15 @@ void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 void View::handleEventMouseDown(SDL_MouseButtonEvent const& /*event*/)
 {
     mouseDownIn = handleEventMouseDownInWidget();
-    if (mouseDownIn && mouseDownIn->acceptTextFocus())
+    if (mouseDownIn)
     {
+        textInputSet.handleEventMouseDown(*mouseDownIn);
+        /*
         if (textFocus) {
             textFocus->looseTextFocus();
         }
         textFocus = mouseDownIn;
+        */
     }
 }
 
@@ -120,16 +122,22 @@ void View::handleEventMouseUp(SDL_MouseButtonEvent const& /*event*/)
 
 void View::handleEventKeyUp(SDL_KeyboardEvent const& event)
 {
+    textInputSet.handleEventKeyUp(event);
+    /*
     if (textFocus) {
         textFocus->handleEventTextInsert(event.keysym.mod, event.keysym.sym);
     }
+    */
 }
 
 void View::handleEventTextEditting(SDL_TextEditingEvent const& event)
 {
+    textInputSet.handleEventTextEditting(event);
+    /*
     if (textFocus) {
         textFocus->handleEventTextInsert(std::string_view(event.text + event.start, event.length));
     }
+    */
     // std::cerr << "handleEventTextEditting: start: " << event.start << " len: " << event.length << "   "
     //           << ">" << std::string_view(event.text + event.start, event.length) << "<"
     //           << "\n";
@@ -137,18 +145,29 @@ void View::handleEventTextEditting(SDL_TextEditingEvent const& event)
 
 void View::handleEventTextInput(SDL_TextInputEvent const& event)
 {
+    textInputSet.handleEventTextInput(event);
+    /*
     if (textFocus) {
         textFocus->handleEventTextInsert(std::string_view(event.text));
     }
+    */
     // std::cerr << "handleEventTextInput: len: " << std::strlen(event.text) << " >" << event.text << "<\n";
 }
 
 void View::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event)
 {
+    textInputSet.handleEventTextEditingExt(event);
+    /*
     if (textFocus) {
         textFocus->handleEventTextInsert(std::string_view(event.text + event.start, event.length));
     }
+    */
     // std::cerr << "handleEventTextEditingExt: start: " << event.start << " len: " << event.length << "   "
     //           << ">" << std::string_view(event.text + event.start, event.length) << "<"
     //           << "\n";
+}
+
+KeyboardFocusSet& View::getInterfaceSet()
+{
+    return textInputSet;
 }

@@ -19,6 +19,7 @@ namespace UI = ThorsAnvil::UI;
 
 class Widget;
 class Layout;
+class TextInputSet;
 class WidgetView: public Widget
 {
     FRIEND_TEST(::WidgetViewTest, CheckWidgetStored);
@@ -47,7 +48,6 @@ class WidgetView: public Widget
         virtual Widget* handleEventMouseDownInWidget() override;
         virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
         virtual void    handleEventMouseUpOutsideWidget() override;
-        virtual Widget* acceptTextFocus() override;
 };
 
 }

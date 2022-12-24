@@ -103,15 +103,3 @@ void WidgetView::handleEventMouseUpOutsideWidget()
         mouseOver->handleEventMouseUpOutsideWidget();
     }
 }
-
-Widget* WidgetView::acceptTextFocus()
-{
-    for (auto const& widget: widgets)
-    {
-        Widget* accept = widget->acceptTextFocus();
-        if (accept) {
-            return accept;
-        }
-    }
-    return nullptr;
-}

@@ -19,6 +19,7 @@ enum WidgetType {Unknown, Label};
 class Layout;
 class WidgetView;
 struct Theme;
+class KeyboardFocusSet;
 class Widget
 {
     WidgetView*         parentWidget;
@@ -58,10 +59,11 @@ class Widget
         virtual Widget* handleEventMouseDownInWidget()              {return nullptr;}
         virtual Widget* handleEventMouseUpInWidget(Widget* downIn);
         virtual void    handleEventMouseUpOutsideWidget()           {}
-        virtual Widget* acceptTextFocus()                           {return nullptr;}
-        virtual void    looseTextFocus()                            {}
         virtual void    handleEventTextInsert(Uint16 /*keyMod*/, SDL_Keycode /*key*/)   {}
         virtual void    handleEventTextInsert(std::string_view /*view*/)                {}
+
+
+        virtual KeyboardFocusSet& getInterfaceSet();
 };
 
 }

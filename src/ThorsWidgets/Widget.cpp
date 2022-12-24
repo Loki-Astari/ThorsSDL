@@ -69,3 +69,12 @@ Widget* Widget::handleEventMouseUpInWidget(Widget* mouseDownIn)
 {
     return mouseDownIn;
 }
+
+KeyboardFocusSet& Widget::getInterfaceSet()
+{
+    if (parentWidget == nullptr) {
+        throw std::runtime_error("Root Widget should override");
+    }
+
+    return parentWidget->getInterfaceSet();
+}

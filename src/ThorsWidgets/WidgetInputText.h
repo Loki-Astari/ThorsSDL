@@ -3,6 +3,7 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
+#include "WidgetKeyboardFocusI.h"
 #include "ThorsUI/Texture.h"
 #include "ThorsUI/Util.h"
 
@@ -14,7 +15,7 @@ namespace UI = ThorsAnvil::UI;
 enum InputTextState {Normal, Focus, Drag};
 
 struct Theme;
-class WidgetInputText: public Widget
+class WidgetInputText: public WidgetKeyboardFocusInterface
 {
     friend struct Theme;
     UI::Texture     textTexture;
@@ -40,10 +41,11 @@ class WidgetInputText: public Widget
         virtual Widget* handleEventMouseDownInWidget() override;
         virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
         virtual void    handleEventMouseUpOutsideWidget() override;
-        virtual Widget* acceptTextFocus() override;
-        virtual void    looseTextFocus() override;
         virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key) override;
         virtual void    handleEventTextInsert(std::string_view view) override;
+
+        virtual void    acceptKeyboardFocus() override;
+        virtual void    looseKeyboardFocus() override;
 };
 
 }

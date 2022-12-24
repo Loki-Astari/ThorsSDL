@@ -1,4 +1,5 @@
 #include "WidgetInputText.h"
+#include "WidgetView.h"
 #include "Theme.h"
 #include "ThorsUI/Pen.h"
 #include <chrono>
@@ -8,7 +9,7 @@ using namespace ThorsAnvil::Widgets;
 WidgetInputText::WidgetInputText(WidgetView& parent,
                                  std::string const& textParam,
                                  UI::Sz minSize, bool visible)
-    : Widget(parent, minSize, visible)
+    : WidgetKeyboardFocusInterface(parent, minSize, visible)
     , text(textParam)
     , insertPoint(text.size())
     , insertEnd(insertPoint)
@@ -92,14 +93,13 @@ void WidgetInputText::handleEventMouseUpOutsideWidget()
     state = Focus;
 }
 
-Widget* WidgetInputText::acceptTextFocus()
+void WidgetInputText::acceptKeyboardFocus()
 {
     markDirty();
     state = Drag;
-    return this;
 }
 
-void WidgetInputText::looseTextFocus()
+void WidgetInputText::looseKeyboardFocus()
 {
     markDirty();
     state = Normal;
@@ -178,7 +178,7 @@ void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
             break;
         case SDLK_TAB:
         case SDLK_KP_TAB:
-            //setNextTextFocus();
+            keyboardFocusWidgets.moveKeyboardFocusToNextAvailableWidget((keyMod & KMOD_SHIFT) == 0);
             markDirty();
             break;
         // TODO
