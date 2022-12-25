@@ -62,8 +62,16 @@ void HighScoreView::HighScoreTable::reset()
 
             std::copy(std::begin(scores), std::end(scores), std::ostream_iterator<HighScore>(highScore));
 
-            cleanLabels();
-            buildLabels();
+            auto label = std::begin(labels);
+            for (auto& score: scores)
+            {
+                (*label)->setValue(score.name);
+                ++label;
+                (*label)->setValue(score.date);
+                ++label;
+                (*label)->setValue(std::to_string(score.score));
+                ++label;
+            }
         });
     }
 }

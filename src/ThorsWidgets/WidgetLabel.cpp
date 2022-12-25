@@ -47,4 +47,5 @@ UI::TextPen const& WidgetLabel::getTextPen(Theme const& theme)
 void WidgetLabel::setValue(std::string const& labelValue)
 {
     text = labelValue;
+    markDirty();
 }

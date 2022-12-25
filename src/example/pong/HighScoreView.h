@@ -72,12 +72,12 @@ class HighScoreView
 
     class HighScoreTable
     {
-        WI::GridLayout      layout;
-        WI::WidgetView      view;
+        WI::GridLayout                  layout;
+        WI::WidgetView                  view;
         std::vector<HighScore>          scores;
         std::vector<WI::WidgetLabel*>   labels;
-        NameDialog          nameDialog;
-        int&                scoreOfLastGame;
+        NameDialog                      nameDialog;
+        int&                            scoreOfLastGame;
         public:
             HighScoreTable(WI::View& parent, int& scoreOfLastGame);
             ~HighScoreTable();
