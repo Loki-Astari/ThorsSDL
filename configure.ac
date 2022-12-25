@@ -6,7 +6,7 @@ AC_CONFIG_AUX_DIR([.build/autotools/build])
 AX_THOR_FUNC_BUILD
 
 
-AC_CONFIG_SRCDIR([src/ThorsSDL/ThorsSDL.cpp])
+AC_CONFIG_SRCDIR([src/ThorsUI/ThorsSDL.cpp])
 
 # Find the C++ Copiler
 # The minimumm requirements.
@@ -35,6 +35,6 @@ AX_THOR_CHECK_FOR_SDL
 # Note: you can push the config file to sub directories in the AC_CONFIG_HEADERS macro (see example)
 # Note: Local Make variables should be placed in Makefile.config.in
 AM_INIT_AUTOMAKE([foreign])
-AC_CONFIG_HEADERS([config.h src/ThorsSDL/ThorsSDLConfig.h:config.h.in src/ThorsGraphics/ThorsGraphicsConfig.h:config.h.in src/ThorsWidgets/ThorsWidgetsConfig.h:config.h.in])
+AC_CONFIG_HEADERS([config.h src/ThorsUI/ThorsSDLConfig.h:config.h.in src/ThorsGraphics/ThorsGraphicsConfig.h:config.h.in src/ThorsWidgets/ThorsWidgetsConfig.h:config.h.in])
 AC_CONFIG_FILES([Makefile.extra Makefile.config:build/autotools/build/Makefile.config.in:Makefile.config.in])
 AC_OUTPUT

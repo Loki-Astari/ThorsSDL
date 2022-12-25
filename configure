@@ -635,7 +635,7 @@ PACKAGE_STRING='ThorsSDL 0.1'
 PACKAGE_BUGREPORT='YourName@Email.com'
 PACKAGE_URL=''
 
-ac_unique_file="src/ThorsSDL/ThorsSDL.cpp"
+ac_unique_file="src/ThorsUI/ThorsSDL.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stddef.h>
@@ -18506,7 +18506,7 @@ END
   fi
 fi
 
-ac_config_headers="$ac_config_headers config.h src/ThorsSDL/ThorsSDLConfig.h:config.h.in src/ThorsGraphics/ThorsGraphicsConfig.h:config.h.in src/ThorsWidgets/ThorsWidgetsConfig.h:config.h.in"
+ac_config_headers="$ac_config_headers config.h src/ThorsUI/ThorsSDLConfig.h:config.h.in src/ThorsGraphics/ThorsGraphicsConfig.h:config.h.in src/ThorsWidgets/ThorsWidgetsConfig.h:config.h.in"
 
 ac_config_files="$ac_config_files Makefile.extra Makefile.config:build/autotools/build/Makefile.config.in:Makefile.config.in"
 
@@ -19620,7 +19620,7 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
-    "src/ThorsSDL/ThorsSDLConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsSDL/ThorsSDLConfig.h:config.h.in" ;;
+    "src/ThorsUI/ThorsSDLConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsUI/ThorsSDLConfig.h:config.h.in" ;;
     "src/ThorsGraphics/ThorsGraphicsConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsGraphics/ThorsGraphicsConfig.h:config.h.in" ;;
     "src/ThorsWidgets/ThorsWidgetsConfig.h") CONFIG_HEADERS="$CONFIG_HEADERS src/ThorsWidgets/ThorsWidgetsConfig.h:config.h.in" ;;
     "Makefile.extra") CONFIG_FILES="$CONFIG_FILES Makefile.extra" ;;

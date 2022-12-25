@@ -107,33 +107,6 @@ void WidgetInputText::looseKeyboardFocus()
 
 void WidgetInputText::handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)
 {
-/*
-        <NoMod> : <Shift> : <Ctrl>                      : <Opt>                         : <Command>
-    a   4:97:0    4:97:1    225:1073742049:0 - 4:97:64    224:1073742048:0 - 4:97-256     226:1073742050:0 - 4:97:1024
-
-    1   30:49:0 : 30:49:1   225:1073742049:0 - 30:49:64   224:1073742048:0 - 30:49:256    226:1073742050:0 - 30:49:?
-
-225 1073742049 => bit(30) + 225     0x400000E1  SDLK_LSHIFT <SHIFT>
-224 1073742048 => bit(30) + 224     0x400000E0  SDLK_LCTRL  <CTRL>
-226 1073742050 => bit(30) + 226     0x400000E2  SDLK_LALT   <ALT>
-227 1073742051 => bit(30) + 227     0x400000E3  SDLK_LGUI   <CMD>
-*/
-#if 0
-    std::cerr << "Key: " << key << "\n";
-    std::cerr << "Mod:";
-    if ((keyMod & KMOD_LSHIFT) != 0)    {std::cerr << "KMOD_LSHIFT\n";}
-    if ((keyMod & KMOD_RSHIFT) != 0)    {std::cerr << "KMOD_RSHIFT\n";}
-    if ((keyMod & KMOD_LCTRL) != 0)     {std::cerr << "KMOD_LCTRL\n";}
-    if ((keyMod & KMOD_RCTRL) != 0)     {std::cerr << "KMOD_RCTRL\n";}
-    if ((keyMod & KMOD_LALT) != 0)      {std::cerr << "KMOD_LALT\n";}
-    if ((keyMod & KMOD_RALT) != 0)      {std::cerr << "KMOD_RALT\n";}
-    if ((keyMod & KMOD_LGUI) != 0)      {std::cerr << "KMOD_LGUI\n";}
-    if ((keyMod & KMOD_RGUI) != 0)      {std::cerr << "KMOD_RGUI\n";}
-    if ((keyMod & KMOD_NUM) != 0)       {std::cerr << "KMOD_NUM\n";}
-    if ((keyMod & KMOD_CAPS) != 0)      {std::cerr << "KMOD_CAPS\n";}
-    if ((keyMod & KMOD_MODE) != 0)      {std::cerr << "KMOD_MODE\n";}
-    if ((keyMod & KMOD_SCROLL) != 0)    {std::cerr << "KMOD_SCROLL\n";}
-#endif
     switch (key)
     {
         case SDLK_DELETE:
