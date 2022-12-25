@@ -1,5 +1,5 @@
 THORSANVIL_ROOT             = $(realpath ../)
 
-TARGET                      = ThorsSDL ThorsGraphics ThorsWidgets example
+TARGET                      = ThorsUI ThorsGraphics ThorsWidgets example
 
 include $(THORSANVIL_ROOT)/build/tools/Project.Makefile
