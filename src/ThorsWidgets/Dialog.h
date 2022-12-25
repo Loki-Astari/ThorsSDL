@@ -2,6 +2,8 @@
 #define THORSANVIL_WIDGETS_DIALOG_H
 
 #include "ThorsWidgetsConfig.h"
+#include "WidgetInputText.h"
+#include "ThorsUI/Window.h"
 
 #include <tuple>
 
@@ -47,9 +49,11 @@ struct InputLine
 template<typename... Args>
 class Dialog
 {
+    using CallBack = std::function<void(Args const&...)>;
     using Input = std::tuple<InputLine<Args>...>;
 
     UI::Window          dialog;
+    CallBack            callback;
     GridLayout          layout;
     Theme               theme;
     View                view;
@@ -59,25 +63,28 @@ class Dialog
 
     public:
         template<typename... Input>
-        Dialog(std::function<void(Args const&...)>&& action, Input&&... textLabels)
+        Dialog(Input&&... textLabels)
             : dialog("New High Score", {ThorsAnvil::UI::windowCentered, ThorsAnvil::UI::windowCentered, 0, 0}, {.hidden = true, .grabFocus = true})
+            , callback()
             , layout(2, ThorsAnvil::Widgets::FixedHeight, ThorsAnvil::Widgets::Left, ThorsAnvil::Widgets::Top)
             , theme{}
             , view(dialog, layout, theme)
             , input(fw<Args>(view)...)
             , blank(view, " ")
-            , button(view, "OK", [&dialog = this->dialog, action = std::move(action), self = this](){self->activate(action);dialog.show(false);})
+            , button(view, "OK", [&](){activate();})
         {
             addLabels(std::make_tuple(textLabels...), std::make_index_sequence<sizeof...(textLabels)>{});
             dialog.updateView(0, true);
         }
-        void show()
+        void show(CallBack&& newAction)
         {
+            callback = std::move(newAction);
             dialog.show();
         }
-        void activate(std::function<void(Args const&...)> const& action)
+        void activate()
         {
-            doActivate(action, std::make_index_sequence<sizeof...(Args)>{});
+            doActivate(std::make_index_sequence<sizeof...(Args)>{});
+            dialog.show(false);
         }
     private:
         template<typename Tp, std::size_t... I>
@@ -86,9 +93,9 @@ class Dialog
             (std::get<I>(input).setName(std::get<I>(tuple)),...);
         }
         template<std::size_t... I>
-        void doActivate(std::function<void(Args const&...)> const& action, std::index_sequence<I...>&&) const
+        void doActivate(std::index_sequence<I...>&&) const
         {
-            action(std::get<I>(input).value()...);
+            callback(std::get<I>(input).value()...);
         }
 };
 

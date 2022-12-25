@@ -14,15 +14,15 @@
 class DialogNameAge: public ThorsAnvil::Widgets::Dialog<std::string, std::string>
 {
     public:
-        DialogNameAge(std::function<void(std::string const&, std::string const&)>&& action)
-            : Dialog(std::move(action), "Name: ", "Age: ")
+        DialogNameAge()
+            : Dialog("Name: ", "Age: ")
         {}
 };
 
 int main()
 {
     ThorsAnvil::UI::Application             application(ThorsAnvil::UI::Video, ThorsAnvil::UI::Fonts);
-    DialogNameAge                           dialog([](std::string const& p, std::string const& x){std::cerr << p << " " << x << "\n";});
+    DialogNameAge                           dialog;
     ThorsAnvil::UI::Window                  window("Test Widgets", {100, 100, 200, 200});
     //ThorsAnvil::UI::DebugWindow             window("Test Widgets", {100, 100, 200, 200});
 
@@ -37,7 +37,7 @@ int main()
     ThorsAnvil::Widgets::WidgetExample      item4(widgetsView);
     ThorsAnvil::Widgets::WidgetExample      item5(widgetsView);
     ThorsAnvil::Widgets::WidgetLabel        label1(widgetsView, "This is some text");
-    ThorsAnvil::Widgets::WidgetButton       button1(widgetsView, "Press", [&dialog](){dialog.show();});
+    ThorsAnvil::Widgets::WidgetButton       button1(widgetsView, "Press", [&dialog](){dialog.show([](std::string const& p, std::string const& x){std::cerr << p << " " << x << "\n";});});
     ThorsAnvil::Widgets::WidgetExample      item6(widgetsView);
     ThorsAnvil::Widgets::WidgetLabel        label2(widgetsView, "Input");
     ThorsAnvil::Widgets::WidgetInputText    input1(widgetsView, "");

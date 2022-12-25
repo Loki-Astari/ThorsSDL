@@ -44,26 +44,27 @@ void HighScoreView::HighScoreTable::reset()
     auto find = std::find_if(std::begin(scores), std::end(scores), [scoreOfLastGame = this->scoreOfLastGame](HighScore const& item){return item.score < scoreOfLastGame;});
     if (find != std::end(scores))
     {
-        std::cout << "Please Enter Your Name: ";
-        std::string name;
-        std::getline(std::cin, name);
-        name.erase(std::remove(std::begin(name),end(name), ','), std::end(name));
+        nameDialog.show([&,find](std::string const& nameInput)
+        {
+            std::string name(nameInput);
+            name.erase(std::remove(std::begin(name),end(name), ','), std::end(name));
 
-        const auto now = std::chrono::system_clock::now();
-        //std::string date = std::format("{:%d/%m/%Y}", now);
-        char date[16] = {0};
-        std::time_t time = std::chrono::system_clock::to_time_t(now);
-        std::strftime(date, sizeof(date), "%Y/%m/%d", std::localtime(&time));
+            const auto now = std::chrono::system_clock::now();
+            //std::string date = std::format("{:%d/%m/%Y}", now);
+            char date[16] = {0};
+            std::time_t time = std::chrono::system_clock::to_time_t(now);
+            std::strftime(date, sizeof(date), "%Y/%m/%d", std::localtime(&time));
 
-        scores.insert(find, {name, date, scoreOfLastGame});
-        scores.resize(std::min(scores.size(), static_cast<std::size_t>(5)));
+            scores.insert(find, {name, date, scoreOfLastGame});
+            scores.resize(std::min(scores.size(), static_cast<std::size_t>(5)));
 
-        std::ofstream   highScore("HighScore.data");
+            std::ofstream   highScore("HighScore.data");
 
-        std::copy(std::begin(scores), std::end(scores), std::ostream_iterator<HighScore>(highScore));
+            std::copy(std::begin(scores), std::end(scores), std::ostream_iterator<HighScore>(highScore));
 
-        cleanLabels();
-        buildLabels();
+            cleanLabels();
+            buildLabels();
+        });
     }
 }
 

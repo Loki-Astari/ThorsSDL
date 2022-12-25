@@ -7,6 +7,7 @@
 #include "ThorsWidgets/WidgetView.h"
 #include "ThorsWidgets/WidgetLabel.h"
 #include "ThorsWidgets/WidgetButton.h"
+#include "ThorsWidgets/Dialog.h"
 
 #include <fstream>
 #include <string>
@@ -19,6 +20,13 @@ namespace WI = ThorsAnvil::Widgets;
 
 class HighScoreView
 {
+    class NameDialog: public Widgets::Dialog<std::string>
+    {
+        public:
+            NameDialog()
+                : Dialog("Name: ")
+            {}
+    };
     struct HighScore
     {
         std::string     name;
@@ -68,6 +76,7 @@ class HighScoreView
         WI::WidgetView      view;
         std::vector<HighScore>          scores;
         std::vector<WI::WidgetLabel*>   labels;
+        NameDialog          nameDialog;
         int&                scoreOfLastGame;
         public:
             HighScoreTable(WI::View& parent, int& scoreOfLastGame);
