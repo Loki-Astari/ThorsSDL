@@ -28,6 +28,8 @@ class WidgetLabel: public Widget
         virtual void    centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) const;
 
         virtual UI::TextPen const&    getTextPen(Theme const& theme);
+
+        void setValue(std::string const& labelValue);
 };
 
 }

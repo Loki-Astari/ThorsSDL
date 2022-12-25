@@ -198,3 +198,8 @@ void WidgetInputText::handleEventTextInsert(std::string_view view)
     insertPoint += std::size(view);
     insertEnd = insertPoint;
 }
+
+std::string const& WidgetInputText::value() const
+{
+    return text;
+}

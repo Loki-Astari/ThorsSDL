@@ -46,6 +46,8 @@ class WidgetInputText: public WidgetKeyboardFocusInterface
 
         virtual void    acceptKeyboardFocus() override;
         virtual void    looseKeyboardFocus() override;
+
+        std::string const& value() const;
 };
 
 }

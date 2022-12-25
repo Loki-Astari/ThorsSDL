@@ -43,3 +43,8 @@ UI::TextPen const& WidgetLabel::getTextPen(Theme const& theme)
 {
     return theme.labelNormalTextPen;
 }
+
+void WidgetLabel::setValue(std::string const& labelValue)
+{
+    text = labelValue;
+}
