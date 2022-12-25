@@ -41,6 +41,7 @@ class Window: public WindowEventHandler, public DrawContext
         bool    isVisable() const;
         Uint32  getId() const;
         UI::Sz  getSize() const;
+        void    show(bool display = true);
 
     private:
         friend class View;

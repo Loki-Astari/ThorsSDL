@@ -23,10 +23,8 @@ UI::Sz Layout::preferredLayout(UI::DrawContext& drawContext, Theme const& theme,
             continue;
         }
         layoutSize.emplace_back(widget->preferredLayout(drawContext, theme));
-        // std::cerr << "Size: " << layoutSize.back() << "\n";
         ++index;
     }
-    // std::cerr << "=========\n";
     return getSize(theme, widgets);
 }
 
@@ -90,12 +88,10 @@ UI::Sz BoxLayout<orientation>::getSize(Theme const& theme, std::vector<Widget*>&
     // Add space for a border.
     result.x += theme.viewBorder.x + theme.viewBorder.w;
     result.y += theme.viewBorder.y + theme.viewBorder.h;
-    // std::cerr << "Result: " << result << "\n";
 
     // The location of the first widget is relative to the top left.
     // Taking into account the border.
     UI::Sz  offset{theme.viewBorder.x, theme.viewBorder.y};
-    // std::cerr << "TL: " << offset << "\n";
 
     // Loop over the widget size information and calculate the offset of each
     // visible element based on the alignment.
@@ -108,8 +104,6 @@ UI::Sz BoxLayout<orientation>::getSize(Theme const& theme, std::vector<Widget*>&
 
         // Store the information
         offsetPoint.emplace_back(offset);
-        // std::cerr << "Size:     " << size << "\n";
-        // std::cerr << "Location: " << offset << "\n";
 
         // Add offset to the major accesses for the next widget location.
         offset[majorAxis]    += size[majorAxis] + theme.viewPadding;
@@ -128,7 +122,6 @@ int SimpleBoxLayout<orientation>::alignWidget(Theme const& theme, UI::Sz fitInto
 {
     switch (align)
     {
-        // std::cerr << "Align: " << align << "\n";
         // Aligns either:
         //      Left / Middle / Right
         // or   Top / Center / Bottom
@@ -163,32 +156,23 @@ UI::Sz GridLayout::getSize(Theme const& theme, std::vector<Widget*>& /*widgets*/
     // Step 1:  Calculate the dimensions of each Grid box.
     //          This will take the largest X size of widgets and the largest Y size.
     //          In the grid each cell will be the same size.
-    int yMax = 0;
+    int yMax = layoutSize.size() / xMax + (layoutSize.size() % xMax == 0 ? 0 : 1);
+
     std::vector<int>        maxColWidth(xMax + 1, 0);
-    std::vector<int>        maxRowHeight;
-    for (int y = 0; yMax == 0; ++y)
+    std::vector<int>        maxRowHeight(yMax + 1, 0);
+    for (int y = 0; y < yMax; ++y)
     {
-        maxRowHeight.emplace_back(0);
         for (int x = 0; x < xMax; ++x)
         {
             std::size_t index = y * xMax + x;
-            if (index >= layoutSize.size())
-            {
-                yMax = y + 1;
-                break;
-            }
 
             mazElementSize.x    = std::max(mazElementSize.x, layoutSize[index].x);
             mazElementSize.y    = std::max(mazElementSize.y, layoutSize[index].y);
 
-            maxColWidth[x]  = std::max(maxColWidth[x], mazElementSize.x);
-            maxRowHeight[y] = std::max(maxRowHeight[y], mazElementSize.y);
-
-            // std::cerr << "Max: " << mazElementSize << " X: " << x << " = " << maxColWidth[x] << "  Y: " << y << " = " << maxRowHeight[y] << "\n";
+            maxColWidth[x]  = std::max(maxColWidth[x], layoutSize[index].x);
+            maxRowHeight[y] = std::max(maxRowHeight[y], layoutSize[index].y);
         }
     }
-    maxRowHeight.emplace_back(0);
-    // std::cerr << "maxColWidth::size = " << maxColWidth.size() << " maxRowHeight::size = " << maxRowHeight.size() << "\n";
 
     // Step 2:  Calculate the size of the View.
     //          Border / Padding / size of cell taken into account.
@@ -231,6 +215,9 @@ UI::Sz GridLayout::getSize(Theme const& theme, std::vector<Widget*>& /*widgets*/
         width           = cumlativeWidth;
         cumlativeWidth += (thisWidth + theme.viewPadding);
     }
+    maxColWidth.back() -= maxColWidth.size() == 1 ? 0 : theme.viewPadding;
+    maxColWidth.back() += theme.viewBorder.w;
+
     int cumlativeHeight = theme.viewBorder.y;
     for (auto& height: maxRowHeight)
     {
@@ -247,20 +234,16 @@ UI::Sz GridLayout::getSize(Theme const& theme, std::vector<Widget*>& /*widgets*/
         height          = cumlativeHeight;
         cumlativeHeight+= (thisHeight + theme.viewPadding);
     }
+    maxRowHeight.back() -= maxRowHeight.size() == 1 ? 0 : theme.viewPadding;
+    maxRowHeight.back() += theme.viewBorder.h;
 
     // Step 3B:  Calculate the offset from the top left of each widget
     //          Take into account alignment.
-    yMax = 0;
-    for (int y = 0; yMax == 0; ++y)
+    for (int y = 0; y < yMax; ++y)
     {
         for (int x = 0; x < xMax; ++x)
         {
             std::size_t index = y * xMax + x;
-            if (index >= layoutSize.size())
-            {
-                yMax = y + 1;
-                break;
-            }
 
             int xPos;
             int yPos;
@@ -281,22 +264,8 @@ UI::Sz GridLayout::getSize(Theme const& theme, std::vector<Widget*>& /*widgets*/
         }
     }
 
-    if ((result.x != maxColWidth.back() - theme.viewPadding + theme.viewBorder.w) || (result.y != maxRowHeight.back() - theme.viewPadding + theme.viewBorder.h))
+    if ((result.x != maxColWidth.back()) || (result.y != maxRowHeight.back()))
     {
-#if 0
-        std::cerr << "Result: " << result << "\n";
-        std::cerr << "Expected: " <<  maxColWidth.back() << " + " << theme.viewBorder.w << " = " << (maxColWidth.back() + theme.viewBorder.w) << "\n";
-        std::cerr << "Expected: " <<  maxRowHeight.back() << " + " << theme.viewBorder.h << " = " << (maxRowHeight.back() + theme.viewBorder.h) << "\n";
-
-        std::cerr << "Width:  ";
-        for (auto const& width: maxColWidth) {
-            std::cerr << width << ", ";
-        }
-        std::cerr << "\nHeight: ";
-        for (auto const& height: maxRowHeight) {
-            std::cerr << height << ", ";
-        }
-#endif
         throw std::runtime_error("Validation Check of view size did not work");
     }
 

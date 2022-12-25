@@ -11,10 +11,10 @@ WidgetLabel::WidgetLabel(WidgetView& parent,
     , text(text)
 {}
 
-UI::Sz WidgetLabel::doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz /*size*/)
+UI::Sz WidgetLabel::doPreferredLayout(UI::DrawContext& /*drawContext*/, Theme const& theme, UI::Sz /*size*/)
 {
-    texture = getTextPen(theme).createTextureFromString(drawContext, text);
-    return addOffset(theme, texture.size());
+    UI::Sz size{getTextPen(theme).length(text), getTextPen(theme).lineSkip()};
+    return addOffset(theme, size);
 }
 
 UI::Sz WidgetLabel::addOffset(Theme const& theme, UI::Sz size) const

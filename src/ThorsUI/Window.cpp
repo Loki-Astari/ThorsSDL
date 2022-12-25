@@ -128,6 +128,16 @@ Sz Window::getSize() const
     return result;
 }
 
+void Window::show(bool display)
+{
+    if (display) {
+        SDL_ShowWindow(*window);
+    }
+    else {
+        SDL_HideWindow(*window);
+    }
+}
+
 void Window::draw()
 {
     // Only re-draw a window if it needs a redraw
