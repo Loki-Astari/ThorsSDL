@@ -9,7 +9,7 @@ HighScoreView::HighScoreTable::HighScoreTable(WI::View& parent, int& scoreOfLast
     , view(parent, layout)
     , scoreOfLastGame(scoreOfLastGame)
 {
-    std::ifstream   highScore("HighScore.data");
+    std::fstream   highScore = openHighScoreFile();
     std::copy(std::istream_iterator<HighScore>(highScore), std::istream_iterator<HighScore>(), std::back_inserter(scores));
 
     labels.reserve(scores.size() * 3);
@@ -19,6 +19,38 @@ HighScoreView::HighScoreTable::HighScoreTable(WI::View& parent, int& scoreOfLast
 HighScoreView::HighScoreTable::~HighScoreTable()
 {
     cleanLabels();
+}
+
+std::fstream HighScoreView::HighScoreTable::openHighScoreFile()
+{
+    std::fstream    fileRoot("/etc/pong/HighScore.data");
+    if (fileRoot)
+    {
+        std::cerr << "Root\n";
+        return fileRoot;
+    }
+
+    std::fstream    fileM1Homebrew("/opt/homebrew/etc/pong/HighScore.data");
+    if (fileM1Homebrew)
+    {
+        std::cerr << "HOMEBREW\n";
+        return fileM1Homebrew;
+    }
+
+    std::fstream    fileUserLocal("/usr/local/etc/pong/HighScore.data");
+    if (fileUserLocal)
+    {
+        std::cerr << "USER Local\n";
+        return fileUserLocal;
+    }
+
+    std::fstream    fileLocal("HighScore.data");
+    if (fileLocal)
+    {
+        std::cerr << "Current\n";
+        return fileLocal;
+    }
+    throw std::runtime_error("Bad installation. Can't find High Score File.");
 }
 
 void HighScoreView::HighScoreTable::buildLabels()
@@ -58,9 +90,11 @@ void HighScoreView::HighScoreTable::reset()
             scores.insert(find, {name, date, scoreOfLastGame});
             scores.resize(std::min(scores.size(), static_cast<std::size_t>(5)));
 
-            std::ofstream   highScore("HighScore.data");
-
-            std::copy(std::begin(scores), std::end(scores), std::ostream_iterator<HighScore>(highScore));
+            {
+                // Force destruction and thus write.
+                std::fstream   highScore = openHighScoreFile();
+                std::copy(std::begin(scores), std::end(scores), std::ostream_iterator<HighScore>(highScore));
+            }
 
             auto label = std::begin(labels);
             for (auto& score: scores)

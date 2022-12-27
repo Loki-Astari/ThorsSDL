@@ -86,6 +86,7 @@ class HighScoreView
         private:
             void buildLabels();
             void cleanLabels();
+            std::fstream openHighScoreFile();
     };
 
     class ButtonPane
