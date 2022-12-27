@@ -2972,9 +2972,15 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
     DefaultLinkDir="/usr/local"
     host=$(uname -p)
-    if test ${host} == "arm"
+    if test "${host}" == "arm"
 then :
-  DefaultLinkDir="/opt/homebrew"
+
+        DefaultLinkDir="/opt/homebrew"
+        if test "${prefix}" == "NONE"
+then :
+  prefix=${DefaultLinkDir}
+fi
+
 fi
     DefaultLinkDir=${DefaultLinkDir}
 
