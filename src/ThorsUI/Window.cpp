@@ -138,6 +138,11 @@ void Window::show(bool display)
     }
 }
 
+void Window::enableTextInput(bool enable)
+{
+    Application::getInstance().enableTextInput(enable);
+}
+
 void Window::draw()
 {
     // Only re-draw a window if it needs a redraw

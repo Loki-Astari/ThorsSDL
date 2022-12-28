@@ -24,30 +24,22 @@ HighScoreView::HighScoreTable::~HighScoreTable()
 std::fstream HighScoreView::HighScoreTable::openHighScoreFile()
 {
     std::fstream    fileRoot("/etc/pong/HighScore.data");
-    if (fileRoot)
-    {
-        std::cerr << "Root\n";
+    if (fileRoot) {
         return fileRoot;
     }
 
     std::fstream    fileM1Homebrew("/opt/homebrew/etc/pong/HighScore.data");
-    if (fileM1Homebrew)
-    {
-        std::cerr << "HOMEBREW\n";
+    if (fileM1Homebrew) {
         return fileM1Homebrew;
     }
 
     std::fstream    fileUserLocal("/usr/local/etc/pong/HighScore.data");
-    if (fileUserLocal)
-    {
-        std::cerr << "USER Local\n";
+    if (fileUserLocal) {
         return fileUserLocal;
     }
 
     std::fstream    fileLocal("HighScore.data");
-    if (fileLocal)
-    {
-        std::cerr << "Current\n";
+    if (fileLocal) {
         return fileLocal;
     }
     throw std::runtime_error("Bad installation. Can't find High Score File.");

@@ -79,12 +79,14 @@ class Dialog
         void show(CallBack&& newAction)
         {
             callback = std::move(newAction);
+            dialog.enableTextInput(true);
             dialog.show();
         }
         void activate()
         {
             doActivate(std::make_index_sequence<sizeof...(Args)>{});
             dialog.show(false);
+            dialog.enableTextInput(false);
         }
     private:
         template<typename Tp, std::size_t... I>

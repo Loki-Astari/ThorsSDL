@@ -8,6 +8,20 @@ using namespace ThorsAnvil::UI;
 
 Application* Application::initialized = nullptr;
 
+bool KeyboardState::isPressed(SDL_Scancode keyCode) const
+{
+    static int   numkeys;
+    static const Uint8*     state = SDL_GetKeyboardState(&numkeys);
+
+    return state[keyCode] == 1;
+}
+
+KeyboardState const& Hardware::getKeyboardState() const
+{
+    static KeyboardState    keyboardState;
+    return keyboardState;
+}
+
 Application::Application(InitValue init, InitLibs libs)
     : finished(false)
 {
@@ -52,6 +66,25 @@ void Application::initSubSystem(InitValue init)
 void Application::quitSubSystem(InitValue init)
 {
     SDL_QuitSubSystem(static_cast<Uint32>(init));
+}
+
+void Application::enableTextInput(bool enable)
+{
+    static int usingCount = 0;
+    if (enable)
+    {
+        if (usingCount == 0) {
+            SDL_StartTextInput();
+        }
+        ++usingCount;
+    }
+    else
+    {
+        --usingCount;
+        if (usingCount == 0) {
+            SDL_StopTextInput();
+        }
+    }
 }
 
 void Application::initSubSystem(InitLibs init)

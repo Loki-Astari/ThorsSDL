@@ -1,5 +1,6 @@
 #include "GameView.h"
 #include "ThorsUI/DrawContext.h"
+#include "ThorsUI/Application.h"
 
 using namespace ThorsAnvil::Example::Pong;
 
@@ -33,14 +34,14 @@ void GameView::Paddle::draw(UI::DrawContext& context)
 bool GameView::Paddle::doUpdateState()
 {
     bool updated = false;
-    int numkeys = 0;
-    Uint8 const* keystates = SDL_GetKeyboardState(&numkeys);
-    if (keystates[SDL_SCANCODE_Q])
+    static UI::KeyboardState const& keyboard = UI::Application::getInstance().getHardwareInfo().getKeyboardState();
+
+    if (keyboard.isPressed(SDL_SCANCODE_Q))
     {
         moveLeft();
         updated = true;
     }
-    if (keystates[SDL_SCANCODE_W])
+    if (keyboard.isPressed(SDL_SCANCODE_W))
     {
         moveRight();
         updated = true;

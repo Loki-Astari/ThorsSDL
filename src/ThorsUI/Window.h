@@ -42,6 +42,7 @@ class Window: public WindowEventHandler, public DrawContext
         Uint32  getId() const;
         UI::Sz  getSize() const;
         void    show(bool display = true);
+        void    enableTextInput(bool enable = true);
 
     private:
         friend class View;

@@ -13,12 +13,26 @@ namespace ThorsAnvil::UI
 
 class Window;
 class WindowEventHandler;
+
+class KeyboardState
+{
+    public:
+        bool isPressed(SDL_Scancode keyCode) const;
+    private:
+};
+class Hardware
+{
+    public:
+        KeyboardState const&    getKeyboardState() const;
+};
+
 class Application
 {
     private:
         static Application* initialized;
         std::unique_ptr<SDL::Lib_Main>    sdl2;
         std::unique_ptr<SDL::Lib_TTF>     sdl2ttf;
+        Hardware                          hardware;
 
     private:
         bool                        finished;
@@ -43,6 +57,9 @@ class Application
 
         void initSubSystem(InitLibs libs);
         void quitSubSystem(InitLibs libs);
+
+        void enableTextInput(bool enable);
+        Hardware const& getHardwareInfo() const     {return hardware;}
 
         void eventLoop(int fps, std::function<void(int)>&& eventDone = [](int){});
         void exitLoop();
