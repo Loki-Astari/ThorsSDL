@@ -11,8 +11,9 @@ WidgetLabel::WidgetLabel(WidgetView& parent,
     , text(text)
 {}
 
-UI::Sz WidgetLabel::doPreferredLayout(UI::DrawContext& /*drawContext*/, Theme const& theme, UI::Sz /*size*/)
+UI::Sz WidgetLabel::doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz /*size*/)
 {
+    texture = getTextPen(theme).createTextureFromString(drawContext, text);
     UI::Sz size{getTextPen(theme).length(text), getTextPen(theme).lineSkip()};
     return addOffset(theme, size);
 }
@@ -35,7 +36,6 @@ void WidgetLabel::centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) 
 
 void WidgetLabel::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 {
-    texture = getTextPen(theme).createTextureFromString(drawContext, text);
     theme.drawWidget(drawContext, *this);
 }
 
@@ -47,5 +47,6 @@ UI::TextPen const& WidgetLabel::getTextPen(Theme const& theme)
 void WidgetLabel::setValue(std::string const& labelValue)
 {
     text = labelValue;
+    texture = getTextPen(theme).createTextureFromString(drawContext, text);
     markDirty();
 }

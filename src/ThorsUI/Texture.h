@@ -26,13 +26,14 @@ class Texture
     std::shared_ptr<SDL_Texture>    texture;
 
     private:
-        friend class TextPen;
         FRIEND_TEST(::TextureTest, TextureCreate);
         FRIEND_TEST(::TextureTest, TextureCreateWithSDL_CreateTextureFromSurfaceFailing);
         FRIEND_TEST(::TextureTest, TextureDrawCalcSrcCalcDst);
         FRIEND_TEST(::TextureTest, TextureDrawSpecSrcCalcDst);
         FRIEND_TEST(::TextureTest, TextureDrawCalcSrcSpecDst);
         FRIEND_TEST(::TextureTest, TextureDrawSpecSrcSpecDst);
+
+        friend class TextPen;
         Texture(DrawContext& drawContext, SDL_Surface& surface);
     public:
         Texture();
@@ -43,6 +44,7 @@ class Texture
         Texture& operator=(Texture&& move)  = default;
 
         Sz size() const;
+        bool valid() const;
         void draw(Rect dst = zero, Rect src = zero) const;
 };
 

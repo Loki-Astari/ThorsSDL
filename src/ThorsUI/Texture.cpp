@@ -26,9 +26,14 @@ Sz Texture::size() const
     return size;
 }
 
+bool Texture::valid() const
+{
+    return drawContext && texture;
+}
+
 void Texture::draw(Rect dst, Rect src) const
 {
-    if (drawContext && texture)
+    if (valid())
     {
         Rect*    rectSrc = &src;
         if (src.w == 0 || src.h == 0) {
