@@ -1,5 +1,6 @@
 #include "Widget.h"
 #include "WidgetView.h"
+#include "KeyboardFocusSet.h"
 
 using namespace ThorsAnvil::Widgets;
 
@@ -29,6 +30,16 @@ Widget::~Widget()
     }
 }
 
+void Widget::markDirty()
+{
+    if (parentWidget == nullptr) {
+        throw std::runtime_error("Root Widget should override");
+    }
+
+    parentWidget->markDirty();
+}
+
+// Handling Layout
 UI::Sz Widget::preferredLayout(UI::DrawContext& drawContext, Theme const& theme)
 {
     size = doPreferredLayout(drawContext, theme, size);
@@ -44,18 +55,18 @@ void Widget::performLayout(UI::Pt newTopLeft, Theme const& theme)
     doPerformLayout(newTopLeft, theme);
 }
 
-void Widget::markDirty()
+UI::Sz Widget::doPreferredLayout(UI::DrawContext& /*drawContext*/, Theme const& /*theme*/, UI::Sz size)
 {
-    if (parentWidget == nullptr) {
-        throw std::runtime_error("Root Widget should override");
-    }
-
-    parentWidget->markDirty();
+    return size;
 }
 
+void Widget::doPerformLayout(UI::Pt /*newTopLeft*/, Theme const& /*theme*/)
+{}
+
+// Handle Events
 bool Widget::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
 {
-    UI::Rect rect = getBoundingRect();
+    UI::Rect rect = getRect();
 
     if (!rect.contains({event.x, event.y}))
     {
@@ -77,4 +88,16 @@ KeyboardFocusSet& Widget::getInterfaceSet()
     }
 
     return parentWidget->getInterfaceSet();
+}
+
+WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWidget, UI::Sz minSize, bool visible)
+    : Widget(parentWidget, minSize, visible)
+    , keyboardFocusWidgets(parentWidget.getInterfaceSet())
+{
+    keyboardFocusWidgets.addInterface(*this);
+}
+
+WidgetKeyboardFocusInterface::~WidgetKeyboardFocusInterface()
+{
+    keyboardFocusWidgets.remInterface(*this);
 }

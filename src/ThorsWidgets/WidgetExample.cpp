@@ -15,8 +15,8 @@ WidgetExample::~WidgetExample()
 void WidgetExample::drawWidget(UI::DrawContext& drawContext, Theme const& /*theme*/)
 {
     UI::Pen         red{UI::C::red};
-    UI::Pt const&   topLeft = getDrawPosition();
-    UI::Sz const&   size = getDrawSize();
+    UI::Pt const&   topLeft = getPos();
+    UI::Sz const&   size = getSize();
 
     red.drawRect(drawContext, {topLeft.x, topLeft.y, size.x, size.y});
 }

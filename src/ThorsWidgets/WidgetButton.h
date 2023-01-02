@@ -26,17 +26,27 @@ class WidgetButton: public WidgetLabel
                      ButtonAction&& action = [](){},
                      UI::Sz minSize = {0, 0}, bool visible = true);
 
+    private:
+        // Drawing the button: Delegates the theme.
         virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme) override;
 
-        virtual UI::Sz  addOffset(Theme const& theme, UI::Sz size) const override;
-        virtual void    centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) const override;
+    private:
+        // Handle mouse clicks on the button.
         virtual void    handleEventMouseMoveEnterWidget() override;
         virtual void    handleEventMouseMoveLeaveWidget() override;
         virtual Widget* handleEventMouseDownInWidget() override;
         virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
         virtual void    handleEventMouseUpOutsideWidget() override;
 
+    private:
+        // Utility: The pen used to draw the text on the button.
+        //          This differs depending on state.
         virtual UI::TextPen const& getTextPen(Theme const& theme) override;
+
+        // Utility to handle offset around pen.
+        // These values extracted from Theme
+        virtual UI::Sz  addOffset(Theme const& theme, UI::Sz size) const override;
+        virtual void    centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) const override;
 };
 
 }

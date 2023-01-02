@@ -16,14 +16,12 @@ UI::Sz Layout::preferredLayout(UI::DrawContext& drawContext, Theme const& theme,
 {
     layoutSize.clear();
 
-    int index = 0;
     for (auto widget: widgets)
     {
         if (removeNonVisibleWidgets && !widget->isVisible()) {
             continue;
         }
         layoutSize.emplace_back(widget->preferredLayout(drawContext, theme));
-        ++index;
     }
     return getSize(theme, widgets);
 }
@@ -44,14 +42,12 @@ void Layout::performLayout(UI::Pt topLeft, Theme const& theme, std::vector<Widge
 
 void Layout::drawWidget(UI::DrawContext& drawContext, Theme const& theme, std::vector<Widget*>& widgets)
 {
-    int index = 0;
     for (auto widget: widgets)
     {
         if (removeNonVisibleWidgets && !widget->isVisible()) {
             continue;
         }
         widget->drawWidget(drawContext, theme);
-        ++index;
     }
 }
 

@@ -1,6 +1,13 @@
 #ifndef THORSANVIL_WIDGETS_TEXT_INPUT_INTERFACE_H
 #define THORSANVIL_WIDGETS_TEXT_INPUT_INTERFACE_H
 
+/*
+ * KeyboardFocusSet:
+ *  Used by View to track all Widgets that can accept keyboard input.
+ *  Then tracks the current widget that accepts keyboard input.
+ *  forward all keyboard / text events to the widget that can handle text input
+ */
+
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
 #include <list>
@@ -9,19 +16,6 @@ namespace ThorsAnvil::Widgets
 {
 
 class Widget;
-class KeyboardFocusSet;
-class WidgetKeyboardFocusInterface: public Widget
-{
-    protected:
-        KeyboardFocusSet&   keyboardFocusWidgets;
-    public:
-        WidgetKeyboardFocusInterface(WidgetView& parentWidget, UI::Sz minSize, bool visible = true);
-
-        virtual ~WidgetKeyboardFocusInterface();
-
-        virtual void    acceptKeyboardFocus() = 0;
-        virtual void    looseKeyboardFocus()  = 0;
-};
 
 class KeyboardFocusSet
 {
@@ -34,12 +28,18 @@ class KeyboardFocusSet
 
     public:
         KeyboardFocusSet();
+        void reset();
+        void moveKeyboardFocusToNextAvailableWidget(bool forward);
 
+    private:
+        // Adding new Widgets that can handle text.
+        friend class WidgetKeyboardFocusInterface;
         void addInterface(WidgetKeyboardFocusInterface& interface);
         void remInterface(WidgetKeyboardFocusInterface& interface);
-        void moveKeyboardFocusToNextAvailableWidget(bool forward);
-        void reset();
 
+    private:
+        // Handle mouse and keyboard events.
+        friend class View;
         void handleEventMouseDown(Widget& mouseDownIn);
         void handleEventKeyUp(SDL_KeyboardEvent const& event);
         void handleEventTextEditting(SDL_TextEditingEvent const& event);
@@ -47,6 +47,7 @@ class KeyboardFocusSet
         void handleEventTextEditingExt(SDL_TextEditingExtEvent const& event);
 
     private:
+        // Internal Utility functions.
         Iterator findNextWidget(bool forward);
         template<typename I, typename F>
         bool searchNextKeyboardFocus(I begin, I end, F&& extract);

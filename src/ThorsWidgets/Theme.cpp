@@ -13,8 +13,8 @@ void Theme::drawWidget(UI::DrawContext&, WidgetView const&) const
 
 void Theme::drawWidget(UI::DrawContext&, WidgetLabel const& label) const
 {
-    UI::Pt point = label.getDrawPosition();
-    UI::Sz size  = label.getDrawSize();
+    UI::Pt point = label.getPos();
+    UI::Sz size  = label.getSize();
     label.centerText(*this, point, size);
 
     UI::Sz textSize = label.texture.size();
@@ -23,8 +23,8 @@ void Theme::drawWidget(UI::DrawContext&, WidgetLabel const& label) const
 
 void Theme::drawWidget(UI::DrawContext& drawContext, WidgetInputText const& inputText) const
 {
-    UI::Pt          point   = inputText.getDrawPosition();
-    UI::Sz          size    = inputText.getDrawSize();
+    UI::Pt          point   = inputText.getPos();
+    UI::Sz          size    = inputText.getSize();
     UI::TextPen const&    pen     = inputNormalTextPen;
 
     // Draw the boarder around the text input.
@@ -59,9 +59,10 @@ void Theme::drawWidget(UI::DrawContext& drawContext, WidgetInputText const& inpu
 
 void Theme::drawWidget(UI::DrawContext& drawContext, WidgetButton const& button) const
 {
-    UI::Pt          point   = button.getDrawPosition();
-    UI::Sz          size    = button.getDrawSize();
+    UI::Pt          point   = button.getPos();
+    UI::Sz          size    = button.getSize();
     UI::Pen const&  pen     = button.state != Down ? buttonBorderPen : buttonPressedPen;
 
     pen.drawRect(drawContext, {point.x, point.y, size.x, size.y});
+    drawWidget(drawContext, static_cast<WidgetLabel const&>(button));
 }

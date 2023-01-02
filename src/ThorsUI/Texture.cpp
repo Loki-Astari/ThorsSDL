@@ -45,3 +45,8 @@ void Texture::draw(Rect dst, Rect src) const
         SDL_RenderCopy(drawContext->getRenderer(), texture.get(), rectSrc, &dst);
     }
 }
+
+void Texture::reset()
+{
+    texture.reset();
+}

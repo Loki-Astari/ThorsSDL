@@ -1,21 +1,8 @@
-#include "WidgetKeyboardFocusI.h"
+#include "KeyboardFocusSet.h"
 #include "Widget.h"
-#include "WidgetView.h"
 
 using namespace ThorsAnvil::Widgets;
 
-
-WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWidget, UI::Sz minSize, bool visible)
-    : Widget(parentWidget, minSize, visible)
-    , keyboardFocusWidgets(parentWidget.getInterfaceSet())
-{
-    keyboardFocusWidgets.addInterface(*this);
-}
-
-WidgetKeyboardFocusInterface::~WidgetKeyboardFocusInterface()
-{
-    keyboardFocusWidgets.remInterface(*this);
-}
 
 KeyboardFocusSet::KeyboardFocusSet()
     : current(std::end(textInputWidgets))

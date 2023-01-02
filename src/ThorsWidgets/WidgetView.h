@@ -36,12 +36,21 @@ class WidgetView: public Widget
         void addWidget(Widget& sprite);
         void remWidget(Widget& sprite);
 
-    public:
-        // Widget
-        virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme)    override;
-        virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size)              override;
-        virtual void    doPerformLayout(UI::Pt topLeft, Theme const& theme)             override;
+    private:
+        // Drawing the View.
+        // Delegates to theme and Layout.
+        //      Theme does any drawing specific to the View.
+        //      then layout simply calls each child widget to draw itself.
+        friend class View;
+        virtual void    drawWidget(UI::DrawContext& drawContext, Theme const& theme) override;
 
+    private:
+        // The Layout class handles all the layout stuff to do with Widgets.
+        virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size) override;
+        virtual void    doPerformLayout(UI::Pt topLeft, Theme const& theme) override;
+
+    private:
+        // Handle mouse clicks on the button.
         virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event) override;
         virtual void    handleEventMouseMoveEnterWidget() override;
         virtual void    handleEventMouseMoveLeaveWidget() override;

@@ -1,6 +1,20 @@
 #ifndef THORSANVIL_WIDGETS_DIALOG_H
 #define THORSANVIL_WIDGETS_DIALOG_H
 
+/*
+ * Class Dialog
+ *      Displays a dialog.
+ *      When "OK" button pressed calls callback function with all user requested data.
+ *
+ * Usage:
+ *      Dialog<std::string, int>        dialog("Name: ", "Age: ");
+ *      dialog.show([](std::string const& name, int const& age) {std::cout << name << " " << age << "\n";});
+ *
+ * Internal Types:
+ *      InputLine       Builds a label and input widget for each type.
+ *      InputWidget<T>::InputWidgetType     Widget type displayed by Dialog for type T user input.
+ */
+
 #include "ThorsWidgetsConfig.h"
 #include "WidgetInputText.h"
 #include "ThorsUI/Window.h"
@@ -12,45 +26,58 @@ namespace ThorsAnvil::Widgets
 
 namespace UI = ThorsAnvil::UI;
 
-template<typename T>
-struct InputWidget;
-
-template<>
-struct InputWidget<std::string>
+namespace Util
 {
-    using InputWidgetType = WidgetInputText;
-};
+    /*
+     * InputWidget: Internally used by DialogLine only.
+     * Note: Only defined for std::string (expect more in the future)
+     */
+    template<typename T>
+    struct InputWidget;
 
-template<typename T, typename A>
-A& fw(A& arg)  {return arg;}
-
-template<typename T>
-struct InputLine
-{
-    using InputWidgetType = typename InputWidget<T>::InputWidgetType;
-
-    WidgetLabel        label;
-    InputWidgetType    input;
-    InputLine(ThorsAnvil::Widgets::View& view)
-        : label(view, " ")
-        , input(view, " ")
-    {}
-    void setName(std::string const& labelValue)
+    template<>
+    struct InputWidget<std::string>
     {
-        label.setValue(labelValue);
-    }
-    T const& value() const
-    {
-        return input.value();
-    }
-};
+        using InputWidgetType = WidgetInputText;
+    };
 
+    /*
+     * A group of two widgets:
+     * A label and an input widget to get user input for type T
+     */
+    template<typename T>
+    struct DialogLine
+    {
+        using InputWidgetType = typename InputWidget<T>::InputWidgetType;
+
+        WidgetLabel        label;
+        InputWidgetType    input;
+        DialogLine(ThorsAnvil::Widgets::View& view)
+            : label(view, " ")
+            , input(view, " ")
+        {}
+        void setName(std::string const& labelValue)
+        {
+            label.setValue(labelValue);
+        }
+        T const& value() const
+        {
+            return input.value();
+        }
+    };
+
+    /*
+     * Utility class to forward single argument to multiple template arguments.
+     */
+    template<typename T, typename A>
+    A& fw(A& arg)  {return arg;}
+}
 
 template<typename... Args>
 class Dialog
 {
     using CallBack = std::function<void(Args const&...)>;
-    using Input = std::tuple<InputLine<Args>...>;
+    using Input = std::tuple<Util::DialogLine<Args>...>;
 
     UI::Window          dialog;
     CallBack            callback;
@@ -62,14 +89,14 @@ class Dialog
     WidgetButton        button;
 
     public:
-        template<typename... Input>
-        Dialog(Input&&... textLabels)
+        template<typename... Request>
+        Dialog(Request&&... textLabels)
             : dialog("New High Score", {ThorsAnvil::UI::windowCentered, ThorsAnvil::UI::windowCentered, 0, 0}, {.hidden = true, .grabFocus = true})
             , callback()
             , layout(2, ThorsAnvil::Widgets::FixedHeight, ThorsAnvil::Widgets::Left, ThorsAnvil::Widgets::Top)
             , theme{}
             , view(dialog, layout, theme)
-            , input(fw<Args>(view)...)
+            , input(Util::fw<Args>(view)...)
             , blank(view, " ")
             , button(view, "OK", [&](){activate();})
         {

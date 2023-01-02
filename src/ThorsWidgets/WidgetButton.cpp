@@ -11,14 +11,6 @@ WidgetButton::WidgetButton(WidgetView& parent, std::string const& text,
     , action(std::move(action))
 {}
 
-#if 0
-UI::Sz WidgetButton::doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size)
-{
-    UI::Sz  size = WidgetLabel::doPreferredLayout(drawContext, theme, size);
-    return size;
-}
-#endif
-
 UI::Sz WidgetButton::addOffset(Theme const& theme, UI::Sz size) const
 {
     size.x += theme.buttonBorder.x + theme.buttonBorder.w + theme.buttonPadding.x + theme.buttonPadding.w + 2 * theme.buttonLineWidth;
@@ -38,7 +30,6 @@ void WidgetButton::centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size)
 void WidgetButton::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 {
     theme.drawWidget(drawContext, *this);
-    WidgetLabel::drawWidget(drawContext, theme);
 }
 
 void WidgetButton::handleEventMouseMoveEnterWidget()

@@ -36,6 +36,9 @@ void WidgetLabel::centerText(Theme const& theme, UI::Pt& topLeft, UI::Sz& size) 
 
 void WidgetLabel::drawWidget(UI::DrawContext& drawContext, Theme const& theme)
 {
+    if (!texture.valid()) {
+        texture = getTextPen(theme).createTextureFromString(drawContext, text);
+    }
     theme.drawWidget(drawContext, *this);
 }
 
@@ -47,6 +50,6 @@ UI::TextPen const& WidgetLabel::getTextPen(Theme const& theme)
 void WidgetLabel::setValue(std::string const& labelValue)
 {
     text = labelValue;
-    texture = getTextPen(theme).createTextureFromString(drawContext, text);
+    texture.reset();
     markDirty();
 }

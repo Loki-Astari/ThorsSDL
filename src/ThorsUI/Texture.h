@@ -46,6 +46,7 @@ class Texture
         Sz size() const;
         bool valid() const;
         void draw(Rect dst = zero, Rect src = zero) const;
+        void reset();
 };
 
 }
