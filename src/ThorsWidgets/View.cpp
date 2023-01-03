@@ -114,8 +114,10 @@ void View::handleEventMouseUp(SDL_MouseButtonEvent const& /*event*/)
     }
 }
 
-void View::handleEventKeyDown(SDL_KeyboardEvent const& /*event*/)
-{}
+void View::handleEventKeyDown(SDL_KeyboardEvent const& event)
+{
+    textInputSet.handleEventKeyDown(event);
+}
 
 void View::handleEventKeyUp(SDL_KeyboardEvent const& event)
 {

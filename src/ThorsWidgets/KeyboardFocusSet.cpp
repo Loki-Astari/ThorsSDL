@@ -21,6 +21,9 @@ void KeyboardFocusSet::handleEventMouseDown(Widget& mouseDownIn)
     }
 }
 
+void KeyboardFocusSet::handleEventKeyDown(SDL_KeyboardEvent const& /*event*/)
+{}
+
 void KeyboardFocusSet::handleEventKeyUp(SDL_KeyboardEvent const& event)
 {
     if (current != std::end(textInputWidgets)) {

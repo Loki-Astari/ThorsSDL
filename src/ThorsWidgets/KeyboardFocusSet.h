@@ -36,9 +36,12 @@ class KeyboardFocusSet
         void remInterface(WidgetKeyboardFocusInterface& interface);
 
     private:
+        // TODO Move to MouseFocusSet
+        void handleEventMouseDown(Widget& mouseDownIn);
+    private:
         // Handle mouse and keyboard events.
         friend class View;
-        void handleEventMouseDown(Widget& mouseDownIn);
+        void handleEventKeyDown(SDL_KeyboardEvent const& event);
         void handleEventKeyUp(SDL_KeyboardEvent const& event);
         void handleEventTextEditting(SDL_TextEditingEvent const& event);
         void handleEventTextInput(SDL_TextInputEvent const& event);
