@@ -41,6 +41,7 @@ class KeyboardFocusSet
     private:
         // Handle mouse and keyboard events.
         friend class View;
+        friend class MouseFocusSet;
         void handleEventKeyDown(SDL_KeyboardEvent const& event);
         void handleEventKeyUp(SDL_KeyboardEvent const& event);
         void handleEventTextEditting(SDL_TextEditingEvent const& event);

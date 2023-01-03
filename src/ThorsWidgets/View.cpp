@@ -9,7 +9,7 @@ View::View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize, Hor
     , UI::View(window)
     , theme(theme)
     , minSize(minSize)
-    , mouseDownIn(nullptr)
+    //, mouseDownIn(nullptr)
     , hAlign(hAlign)
     , vAlign(vAlign)
     // Force re-draw first time
@@ -80,38 +80,29 @@ UI::Sz View::reset(bool fitWindowToView)
     return size;
 }
 
-void View::handleEventWindowEnter(SDL_WindowEvent const& /*event*/)
+void View::handleEventWindowEnter(SDL_WindowEvent const& event)
 {
-    handleEventMouseMoveEnterWidget();
+    mouseInputSet.handleEventMouseMoveEnterWidget(event, *this);
 }
 
-void View::handleEventWindowLeave(SDL_WindowEvent const& /*event*/)
+void View::handleEventWindowLeave(SDL_WindowEvent const& event)
 {
-    handleEventMouseMoveLeaveWidget();
+    mouseInputSet.handleEventMouseMoveLeaveWidget(event, *this);
 }
 
 void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 {
-    handleEventMouseMoveInWidget(event);
+    mouseInputSet.handleEventMouseMoveInWidget(event, *this);
 }
 
-void View::handleEventMouseDown(SDL_MouseButtonEvent const& /*event*/)
+void View::handleEventMouseDown(SDL_MouseButtonEvent const& event)
 {
-    mouseDownIn = handleEventMouseDownInWidget();
-    if (mouseDownIn)
-    {
-        textInputSet.handleEventMouseDown(*mouseDownIn);
-    }
+    mouseInputSet.handleEventMouseDownInWidget(event, *this, textInputSet);
 }
 
-void View::handleEventMouseUp(SDL_MouseButtonEvent const& /*event*/)
+void View::handleEventMouseUp(SDL_MouseButtonEvent const& event)
 {
-    mouseDownIn = handleEventMouseUpInWidget(mouseDownIn);
-    if (mouseDownIn)
-    {
-        mouseDownIn->handleEventMouseUpOutsideWidget();
-        mouseDownIn = nullptr;
-    }
+    mouseInputSet.handleEventMouseUpInWidget(event, *this);
 }
 
 void View::handleEventKeyDown(SDL_KeyboardEvent const& event)

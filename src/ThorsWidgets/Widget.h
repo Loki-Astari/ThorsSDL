@@ -68,7 +68,7 @@ class Widget
         // Handle Events.
         // All events are passed by the Window to the View.
         // The view then passes Key/Mouse events to the appropriate widget.
-        friend class View;
+        friend class MouseFocusSet;
                 bool    handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event);
         virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& /*event*/)   {}
         virtual void    handleEventMouseMoveEnterWidget()                                           {}

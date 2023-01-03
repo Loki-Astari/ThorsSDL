@@ -20,6 +20,7 @@ namespace UI = ThorsAnvil::UI;
 class Widget;
 class Layout;
 class TextInputSet;
+class MouseFocusSet;
 class WidgetView: public Widget
 {
     FRIEND_TEST(::WidgetViewTest, CheckWidgetStored);
@@ -51,6 +52,7 @@ class WidgetView: public Widget
 
     private:
         // Handle mouse clicks on the button.
+        friend class MouseFocusSet;
         virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event) override;
         virtual void    handleEventMouseMoveEnterWidget() override;
         virtual void    handleEventMouseMoveLeaveWidget() override;

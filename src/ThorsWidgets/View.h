@@ -39,14 +39,54 @@ namespace UI = ThorsAnvil::UI;
 struct Theme;
 class Layout;
 
+class MouseFocusSet
+{
+    Widget*     mouseDownIn;
+    public:
+        MouseFocusSet()
+            : mouseDownIn(nullptr)
+        {}
+        void handleEventMouseMoveEnterWidget(SDL_WindowEvent const& /*event*/, WidgetView& view)
+        {
+            view.handleEventMouseMoveEnterWidget();
+        }
+        void handleEventMouseMoveLeaveWidget(SDL_WindowEvent const& /*event*/, WidgetView& view)
+        {
+            view.handleEventMouseMoveLeaveWidget();
+        }
+        void handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event, WidgetView& view)
+        {
+            view.handleEventMouseMoveInWidget(event);
+        }
+        void handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/, WidgetView& view, KeyboardFocusSet& textInputSet)
+        {
+            mouseDownIn = view.handleEventMouseDownInWidget();
+            if (mouseDownIn)
+            {
+                textInputSet.handleEventMouseDown(*mouseDownIn);
+            }
+        }
+        void handleEventMouseUpInWidget(SDL_MouseButtonEvent const& /*event*/, WidgetView& view)
+        {
+            mouseDownIn = view.handleEventMouseUpInWidget(mouseDownIn);
+            if (mouseDownIn)
+            {
+                mouseDownIn->handleEventMouseUpOutsideWidget();
+                mouseDownIn = nullptr;
+            }
+        }
+
+};
+
 class View: public WidgetView, public UI::View
 {
     Theme&              theme;
     UI::Sz              minSize;
-    Widget*             mouseDownIn;
+    //Widget*             mouseDownIn;
     HorzAlign           hAlign;
     VertAlign           vAlign;
     KeyboardFocusSet    textInputSet;
+    MouseFocusSet       mouseInputSet;
     bool                updated;
 
     public:
