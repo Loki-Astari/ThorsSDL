@@ -19,7 +19,7 @@ namespace UI = ThorsAnvil::UI;
 enum InputTextState {Normal, Focus, Drag};
 
 struct Theme;
-class WidgetInputText: public WidgetKeyboardFocusInterface
+class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface
 {
     friend struct Theme;
     UI::Texture     textTexture;

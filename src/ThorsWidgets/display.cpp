@@ -47,6 +47,7 @@ int main()
     ThorsAnvil::Widgets::WidgetLabel        label3(widgetsView, "Label");
     ThorsAnvil::Widgets::WidgetInputText    input2(widgetsView, "");
 
+    window.enableTextInput(true);
     window.updateView(0, true);
     application.eventLoop(1000);
 

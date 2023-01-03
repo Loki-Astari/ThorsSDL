@@ -90,9 +90,8 @@ KeyboardFocusSet& Widget::getInterfaceSet()
     return parentWidget->getInterfaceSet();
 }
 
-WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWidget, UI::Sz minSize, bool visible)
-    : Widget(parentWidget, minSize, visible)
-    , keyboardFocusWidgets(parentWidget.getInterfaceSet())
+WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWidget)
+    : keyboardFocusWidgets(parentWidget.getInterfaceSet())
 {
     keyboardFocusWidgets.addInterface(*this);
 }

@@ -76,8 +76,6 @@ class Widget
         virtual Widget* handleEventMouseDownInWidget()                                              {return nullptr;}
         virtual Widget* handleEventMouseUpInWidget(Widget* downIn);
         virtual void    handleEventMouseUpOutsideWidget()                                           {}
-        virtual void    handleEventTextInsert(Uint16 /*keyMod*/, SDL_Keycode /*key*/)               {}
-        virtual void    handleEventTextInsert(std::string_view /*view*/)                            {}
 
     private:
         // Utility for handling keyboard focus.
@@ -90,17 +88,22 @@ class Widget
 /*
  * A Widget that accepts Keyboard Focus
  */
-class WidgetKeyboardFocusInterface: public Widget
+class WidgetKeyboardFocusInterface
 {
     protected:
         KeyboardFocusSet&   keyboardFocusWidgets;
     public:
-        WidgetKeyboardFocusInterface(WidgetView& parentWidget, UI::Sz minSize, bool visible = true);
+        WidgetKeyboardFocusInterface(WidgetView& parentWidget);
 
         virtual ~WidgetKeyboardFocusInterface();
 
         virtual void    acceptKeyboardFocus() = 0;
         virtual void    looseKeyboardFocus()  = 0;
+                // TODO Fix.
+                bool    isVisible() const   {return true;}
+
+        virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)   = 0;
+        virtual void    handleEventTextInsert(std::string_view view)            = 0;
 };
 
 }

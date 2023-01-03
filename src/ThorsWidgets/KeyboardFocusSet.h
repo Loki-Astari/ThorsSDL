@@ -31,9 +31,7 @@ class KeyboardFocusSet
         void reset();
         void moveKeyboardFocusToNextAvailableWidget(bool forward);
 
-    private:
         // Adding new Widgets that can handle text.
-        friend class WidgetKeyboardFocusInterface;
         void addInterface(WidgetKeyboardFocusInterface& interface);
         void remInterface(WidgetKeyboardFocusInterface& interface);
 

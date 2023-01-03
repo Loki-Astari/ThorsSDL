@@ -9,7 +9,8 @@ using namespace ThorsAnvil::Widgets;
 WidgetInputText::WidgetInputText(WidgetView& parent,
                                  std::string const& textParam,
                                  UI::Sz minSize, bool visible)
-    : WidgetKeyboardFocusInterface(parent, minSize, visible)
+    : Widget(parent, minSize, visible)
+    , WidgetKeyboardFocusInterface(parent)
     , text(textParam)
     , insertPoint(text.size())
     , insertEnd(insertPoint)
@@ -68,6 +69,7 @@ void WidgetInputText::drawWidget(UI::DrawContext& drawContext, Theme const& them
     textTexture = getTextPen(theme).createTextureFromString(drawContext, text.empty() ? " " : text);
 
     theme.drawWidget(drawContext, *this);
+    markDirty();
 }
 
 UI::TextPen const& WidgetInputText::getTextPen(Theme const& theme)
