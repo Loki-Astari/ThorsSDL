@@ -7,6 +7,7 @@ using namespace ThorsAnvil::Widgets;
 FocusTrackerMouse::FocusTrackerMouse()
     : mouseOver(none())
     , mouseDownIn(none())
+    , widgetPressed(none())
 {}
 
 void FocusTrackerMouse::addInterface(WidgetMouseFocusInterface& interface)
@@ -81,6 +82,7 @@ void FocusTrackerMouse::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const&
 void FocusTrackerMouse::handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/)
 {
     mouseDownIn = none();
+    widgetPressed = none();
     if (isValid(mouseOver))
     {
         mouseDownIn = mouseOver;
@@ -94,8 +96,10 @@ void FocusTrackerMouse::handleEventMouseUpInWidget(SDL_MouseButtonEvent const& /
         return;
     }
 
-    if (mouseDownIn == mouseOver) {
+    if (mouseDownIn == mouseOver)
+    {
         (*mouseDownIn)->handleEventMouseUpInWidget();
+        widgetPressed = mouseDownIn;
     }
     else {
         (*mouseDownIn)->handleEventMouseUpOutsideWidget();

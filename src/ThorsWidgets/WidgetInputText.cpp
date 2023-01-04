@@ -80,22 +80,22 @@ UI::TextPen const& WidgetInputText::getTextPen(Theme const& theme)
 void WidgetInputText::handleEventMouseUpInWidget()
 {
     markDirty();
-    state = state != Normal ? Focus : Normal;
+    state = Normal;
 }
 
 void WidgetInputText::handleEventMouseUpOutsideWidget()
 {
     markDirty();
+    state = Normal;
+}
+
+void WidgetInputText::handleEventTextGainFocus()
+{
+    markDirty();
     state = Focus;
 }
 
-void WidgetInputText::acceptKeyboardFocus()
-{
-    markDirty();
-    state = Drag;
-}
-
-void WidgetInputText::looseKeyboardFocus()
+void WidgetInputText::handleEventTextLoseFocus()
 {
     markDirty();
     state = Normal;

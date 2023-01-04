@@ -20,6 +20,7 @@ class FocusTrackerMouse
     Storage     mouseInputWidgets;
     Iterator    mouseOver;
     Iterator    mouseDownIn;
+    Iterator    widgetPressed;
 
 
     Iterator    none()                  const {return std::cend(mouseInputWidgets);}
@@ -30,7 +31,7 @@ class FocusTrackerMouse
         // Adding new Widgets that can handle text.
         void addInterface(WidgetMouseFocusInterface& interface);
         void remInterface(WidgetMouseFocusInterface& interface);
-        WidgetMouseFocusInterface*  getMouseDownIn()    const {return mouseDownIn == none() ? nullptr : *mouseDownIn;}
+        WidgetMouseFocusInterface*  getWidgetPressed()    const {return widgetPressed == none() ? nullptr : *widgetPressed;}
 
     private:
         friend class View;

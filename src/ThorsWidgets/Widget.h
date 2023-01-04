@@ -88,10 +88,10 @@ class WidgetKeyboardFocusInterface
         WidgetKeyboardFocusInterface(WidgetView& parentWidget, std::function<bool()>&& iVis);
         virtual ~WidgetKeyboardFocusInterface();
 
-        virtual void    acceptKeyboardFocus() = 0;
-        virtual void    looseKeyboardFocus()  = 0;
                 bool    isVisible() const   {return iVis();}
 
+        virtual void    handleEventTextGainFocus() = 0;
+        virtual void    handleEventTextLoseFocus()  = 0;
         virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)   = 0;
         virtual void    handleEventTextInsert(std::string_view view)            = 0;
 };

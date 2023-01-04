@@ -68,8 +68,8 @@ class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface, publi
         virtual void    handleEventTextInsert(std::string_view view) override;
 
         // Override for Interface WidgetKeyboardFocusInterface
-        virtual void    acceptKeyboardFocus() override;
-        virtual void    looseKeyboardFocus() override;
+        virtual void    handleEventTextGainFocus() override;
+        virtual void    handleEventTextLoseFocus() override;
 };
 
 }

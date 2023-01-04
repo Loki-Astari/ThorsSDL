@@ -14,10 +14,10 @@ void FocusTrackerKeyboard::handleEventMouseDown(Widget& mouseDownIn)
     if (keyboardFocus)
     {
         if (current != std::end(textInputWidgets)) {
-            (*current)->looseKeyboardFocus();
+            (*current)->handleEventTextLoseFocus();
         }
         current = std::find(std::begin(textInputWidgets), std::end(textInputWidgets), keyboardFocus);
-        keyboardFocus->acceptKeyboardFocus();
+        keyboardFocus->handleEventTextGainFocus();
     }
 }
 
@@ -71,7 +71,7 @@ void FocusTrackerKeyboard::remInterface(WidgetKeyboardFocusInterface& interface)
             current = std::end(textInputWidgets);
         }
         if (current != std::end(textInputWidgets)) {
-            (*current)->acceptKeyboardFocus();
+            (*current)->handleEventTextGainFocus();
         }
     }
     textInputWidgets.erase(find);
@@ -80,7 +80,7 @@ void FocusTrackerKeyboard::remInterface(WidgetKeyboardFocusInterface& interface)
 void FocusTrackerKeyboard::reset()
 {
     if (current != std::end(textInputWidgets)) {
-        (*current)->acceptKeyboardFocus();
+        (*current)->handleEventTextGainFocus();
     }
 }
 
@@ -90,11 +90,11 @@ void FocusTrackerKeyboard::moveKeyboardFocusToNextAvailableWidget(bool forward)
     if (next != current)
     {
         if (current != std::end(textInputWidgets)) {
-            (*current)->looseKeyboardFocus();
+            (*current)->handleEventTextLoseFocus();
         }
         current = next;
         if (current != std::end(textInputWidgets)) {
-            (*current)->acceptKeyboardFocus();
+            (*current)->handleEventTextGainFocus();
         }
     }
 }

@@ -96,15 +96,15 @@ void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 void View::handleEventMouseDown(SDL_MouseButtonEvent const& event)
 {
     mouseInputSet.handleEventMouseDownInWidget(event);
-    auto mouseDownIn = mouseInputSet.getMouseDownIn();
-    if (mouseDownIn) {
-        textInputSet.handleEventMouseDown(dynamic_cast<Widget&>(*mouseDownIn));
-    }
 }
 
 void View::handleEventMouseUp(SDL_MouseButtonEvent const& event)
 {
     mouseInputSet.handleEventMouseUpInWidget(event);
+    auto widgetPressed = mouseInputSet.getWidgetPressed();
+    if (widgetPressed) {
+        textInputSet.handleEventMouseDown(dynamic_cast<Widget&>(*widgetPressed));
+    }
 }
 
 void View::handleEventKeyDown(SDL_KeyboardEvent const& event)
