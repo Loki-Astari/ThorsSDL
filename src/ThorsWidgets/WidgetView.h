@@ -49,16 +49,6 @@ class WidgetView: public Widget
         // The Layout class handles all the layout stuff to do with Widgets.
         virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size) override;
         virtual void    doPerformLayout(UI::Pt topLeft, Theme const& theme) override;
-
-    private:
-        // Handle mouse clicks on the button.
-        friend class MouseFocusSet;
-        virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event) override;
-        virtual void    handleEventMouseMoveEnterWidget() override;
-        virtual void    handleEventMouseMoveLeaveWidget() override;
-        virtual Widget* handleEventMouseDownInWidget() override;
-        virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
-        virtual void    handleEventMouseUpOutsideWidget() override;
 };
 
 }

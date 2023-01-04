@@ -24,6 +24,8 @@ class Layout;
 class WidgetView;
 struct Theme;
 class KeyboardFocusSet;
+class MouseFocusSet;
+
 class Widget
 {
     WidgetView*         parentWidget;
@@ -38,10 +40,10 @@ class Widget
         Widget(WidgetView& parentWidget, UI::Sz minSize, bool visible = true);
         virtual ~Widget();
 
-    protected:
                 UI::Pt const&       getPos()    const   {return topLeft;}
                 UI::Sz const&       getSize()   const   {return size;}
                 UI::Rect            getRect()   const   {return {topLeft.x, topLeft.y, size.x, size.y};}
+                bool                isVisible() const   {return visible;}
         virtual void                markDirty();
 
     private:
@@ -62,26 +64,14 @@ class Widget
         virtual void    doPerformLayout(UI::Pt newTopLeft, Theme const& theme);
         // Utility functions to help in layout.
         virtual WidgetType          type()      const   {return Unknown;}
-                bool                isVisible() const   {return visible;}
-
-    private:
-        // Handle Events.
-        // All events are passed by the Window to the View.
-        // The view then passes Key/Mouse events to the appropriate widget.
-        friend class MouseFocusSet;
-                bool    handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event);
-        virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& /*event*/)   {}
-        virtual void    handleEventMouseMoveEnterWidget()                                           {}
-        virtual void    handleEventMouseMoveLeaveWidget()                                           {}
-        virtual Widget* handleEventMouseDownInWidget()                                              {return nullptr;}
-        virtual Widget* handleEventMouseUpInWidget(Widget* downIn);
-        virtual void    handleEventMouseUpOutsideWidget()                                           {}
 
     private:
         // Utility for handling keyboard focus.
         friend class KeyboardFocusSet;
         friend class WidgetKeyboardFocusInterface;
-        virtual KeyboardFocusSet&   getInterfaceSet();
+        friend class WidgetMouseFocusInterface;
+        virtual KeyboardFocusSet&   getKeyboardInterfaceSet();
+        virtual MouseFocusSet&      getMouseInterfaceSet();
 
 };
 
@@ -91,19 +81,40 @@ class Widget
 class WidgetKeyboardFocusInterface
 {
     protected:
-        KeyboardFocusSet&   keyboardFocusWidgets;
+        KeyboardFocusSet&           keyboardFocusWidgets;
+        std::function<bool()>       iVis;
     public:
-        WidgetKeyboardFocusInterface(WidgetView& parentWidget);
-
+        WidgetKeyboardFocusInterface(WidgetView& parentWidget, std::function<bool()>&& iVis);
         virtual ~WidgetKeyboardFocusInterface();
 
         virtual void    acceptKeyboardFocus() = 0;
         virtual void    looseKeyboardFocus()  = 0;
-                // TODO Fix.
-                bool    isVisible() const   {return true;}
+                bool    isVisible() const   {return iVis();}
 
         virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)   = 0;
         virtual void    handleEventTextInsert(std::string_view view)            = 0;
+};
+
+class WidgetMouseFocusInterface
+{
+    protected:
+        MouseFocusSet&              mouseFocusWidgets;
+        std::function<UI::Rect()>   gRect;
+        std::function<bool()>       iVis;
+    public:
+        WidgetMouseFocusInterface(WidgetView& parentWidget, std::function<UI::Rect()>&& geRect, std::function<bool()>&& iVis);
+        virtual ~WidgetMouseFocusInterface();
+
+                bool        isVisible() const   {return iVis();}
+                UI::Rect    getRect() const     {return gRect();}
+
+        virtual void    handleEventMouseMoveInWidget()                          = 0;
+
+        virtual void    handleEventMouseMoveEnterWidget()                       = 0;
+        virtual void    handleEventMouseMoveLeaveWidget()                       = 0;
+        virtual void    handleEventMouseDownInWidget()                          = 0;
+        virtual void    handleEventMouseUpInWidget()                            = 0;
+        virtual void    handleEventMouseUpOutsideWidget()                       = 0;
 };
 
 }

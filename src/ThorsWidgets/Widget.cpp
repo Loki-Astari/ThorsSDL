@@ -1,5 +1,6 @@
 #include "Widget.h"
 #include "WidgetView.h"
+#include "View.h"
 #include "KeyboardFocusSet.h"
 
 using namespace ThorsAnvil::Widgets;
@@ -63,35 +64,27 @@ UI::Sz Widget::doPreferredLayout(UI::DrawContext& /*drawContext*/, Theme const& 
 void Widget::doPerformLayout(UI::Pt /*newTopLeft*/, Theme const& /*theme*/)
 {}
 
-// Handle Events
-bool Widget::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
-{
-    UI::Rect rect = getRect();
-
-    if (!rect.contains({event.x, event.y}))
-    {
-        return false;
-    }
-    handleEventMouseMoveInWidgetAction(event);
-    return true;
-}
-
-Widget* Widget::handleEventMouseUpInWidget(Widget* mouseDownIn)
-{
-    return mouseDownIn;
-}
-
-KeyboardFocusSet& Widget::getInterfaceSet()
+KeyboardFocusSet& Widget::getKeyboardInterfaceSet()
 {
     if (parentWidget == nullptr) {
         throw std::runtime_error("Root Widget should override");
     }
 
-    return parentWidget->getInterfaceSet();
+    return parentWidget->getKeyboardInterfaceSet();
 }
 
-WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWidget)
-    : keyboardFocusWidgets(parentWidget.getInterfaceSet())
+MouseFocusSet& Widget::getMouseInterfaceSet()
+{
+    if (parentWidget == nullptr) {
+        throw std::runtime_error("Root Widget should override");
+    }
+
+    return parentWidget->getMouseInterfaceSet();
+}
+
+WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWidget, std::function<bool()>&& iVis)
+    : keyboardFocusWidgets(parentWidget.getKeyboardInterfaceSet())
+    , iVis(std::move(iVis))
 {
     keyboardFocusWidgets.addInterface(*this);
 }
@@ -99,4 +92,16 @@ WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWid
 WidgetKeyboardFocusInterface::~WidgetKeyboardFocusInterface()
 {
     keyboardFocusWidgets.remInterface(*this);
+}
+
+WidgetMouseFocusInterface::WidgetMouseFocusInterface(WidgetView& parentWidget, std::function<UI::Rect()>&& gRect, std::function<bool()>&& iVis)
+    : mouseFocusWidgets(parentWidget.getMouseInterfaceSet())
+    , gRect(std::move(gRect))
+    , iVis(std::move(iVis))
+{
+    mouseFocusWidgets.addInterface(*this);
+}
+WidgetMouseFocusInterface::~WidgetMouseFocusInterface()
+{
+    mouseFocusWidgets.remInterface(*this);
 }

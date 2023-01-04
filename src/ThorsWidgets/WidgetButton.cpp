@@ -8,6 +8,7 @@ WidgetButton::WidgetButton(WidgetView& parent, std::string const& text,
                            ButtonAction&& action,
                            UI::Sz minSize, bool visible)
     : WidgetLabel(parent, text, minSize, visible)
+    , WidgetMouseFocusInterface(parent, [&](){return dynamic_cast<Widget&>(*this).getRect();}, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
     , action(std::move(action))
 {}
 
@@ -54,22 +55,17 @@ UI::TextPen const& WidgetButton::getTextPen(Theme const& theme)
     }
 }
 
-Widget* WidgetButton::handleEventMouseDownInWidget()
+void WidgetButton::handleEventMouseDownInWidget()
 {
     state = Down;
     markDirty();
-    return this;
 }
 
-Widget* WidgetButton::handleEventMouseUpInWidget(Widget* mouseDownIn)
+void WidgetButton::handleEventMouseUpInWidget()
 {
-    if (mouseDownIn != this) {
-        return mouseDownIn;
-    }
     markDirty();
     state = Up;
     action();
-    return nullptr;
 }
 
 void WidgetButton::handleEventMouseUpOutsideWidget()

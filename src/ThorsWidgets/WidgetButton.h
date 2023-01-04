@@ -15,7 +15,7 @@ enum ButtonState {Up, Hover, Down, DownOutside};
 using ButtonAction = std::function<void()>;
 
 struct Theme;
-class WidgetButton: public WidgetLabel
+class WidgetButton: public WidgetLabel, public WidgetMouseFocusInterface
 {
     friend struct Theme;
     ButtonState     state   = Up;
@@ -32,10 +32,11 @@ class WidgetButton: public WidgetLabel
 
     private:
         // Handle mouse clicks on the button.
+        virtual void    handleEventMouseMoveInWidget() override {}
         virtual void    handleEventMouseMoveEnterWidget() override;
         virtual void    handleEventMouseMoveLeaveWidget() override;
-        virtual Widget* handleEventMouseDownInWidget() override;
-        virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
+        virtual void    handleEventMouseDownInWidget() override;
+        virtual void    handleEventMouseUpInWidget() override;
         virtual void    handleEventMouseUpOutsideWidget() override;
 
     private:

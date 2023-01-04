@@ -10,7 +10,8 @@ WidgetInputText::WidgetInputText(WidgetView& parent,
                                  std::string const& textParam,
                                  UI::Sz minSize, bool visible)
     : Widget(parent, minSize, visible)
-    , WidgetKeyboardFocusInterface(parent)
+    , WidgetKeyboardFocusInterface(parent, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
+    , WidgetMouseFocusInterface(parent, [&](){return dynamic_cast<Widget&>(*this).getRect();}, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
     , text(textParam)
     , insertPoint(text.size())
     , insertEnd(insertPoint)
@@ -77,20 +78,16 @@ UI::TextPen const& WidgetInputText::getTextPen(Theme const& theme)
     return theme.inputNormalTextPen;
 }
 
-Widget* WidgetInputText::handleEventMouseDownInWidget()
+void WidgetInputText::handleEventMouseUpInWidget()
 {
-    return this;
-}
-
-Widget* WidgetInputText::handleEventMouseUpInWidget(Widget* /*mouseDownIn*/)
-{
+    std::cerr << "WidgetInputText::handleEventMouseUpInWidget\n";
     markDirty();
     state = state != Normal ? Focus : Normal;
-    return nullptr;
 }
 
 void WidgetInputText::handleEventMouseUpOutsideWidget()
 {
+    std::cerr << "WidgetInputText::handleEventMouseUpOutsideWidget\n";
     markDirty();
     state = Focus;
 }

@@ -82,27 +82,27 @@ UI::Sz View::reset(bool fitWindowToView)
 
 void View::handleEventWindowEnter(SDL_WindowEvent const& event)
 {
-    mouseInputSet.handleEventMouseMoveEnterWidget(event, *this);
+    mouseInputSet.handleEventMouseMoveEnterWidget(event);
 }
 
 void View::handleEventWindowLeave(SDL_WindowEvent const& event)
 {
-    mouseInputSet.handleEventMouseMoveLeaveWidget(event, *this);
+    mouseInputSet.handleEventMouseMoveLeaveWidget(event);
 }
 
 void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 {
-    mouseInputSet.handleEventMouseMoveInWidget(event, *this);
+    mouseInputSet.handleEventMouseMoveInWidget({event.x, event.y});
 }
 
 void View::handleEventMouseDown(SDL_MouseButtonEvent const& event)
 {
-    mouseInputSet.handleEventMouseDownInWidget(event, *this, textInputSet);
+    mouseInputSet.handleEventMouseDownInWidget(event, textInputSet);
 }
 
 void View::handleEventMouseUp(SDL_MouseButtonEvent const& event)
 {
-    mouseInputSet.handleEventMouseUpInWidget(event, *this);
+    mouseInputSet.handleEventMouseUpInWidget(event);
 }
 
 void View::handleEventKeyDown(SDL_KeyboardEvent const& event)
@@ -130,7 +130,12 @@ void View::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event)
     textInputSet.handleEventTextEditingExt(event);
 }
 
-KeyboardFocusSet& View::getInterfaceSet()
+KeyboardFocusSet& View::getKeyboardInterfaceSet()
 {
     return textInputSet;
+}
+
+MouseFocusSet& View::getMouseInterfaceSet()
+{
+    return mouseInputSet;
 }

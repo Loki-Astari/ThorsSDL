@@ -19,7 +19,7 @@ namespace UI = ThorsAnvil::UI;
 enum InputTextState {Normal, Focus, Drag};
 
 struct Theme;
-class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface
+class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface, public WidgetMouseFocusInterface
 {
     friend struct Theme;
     UI::Texture     textTexture;
@@ -51,8 +51,11 @@ class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface
 
     private:
         // Handle mouse clicks text input events:w
-        virtual Widget* handleEventMouseDownInWidget() override;
-        virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
+        virtual void    handleEventMouseMoveInWidget() override     {}
+        virtual void    handleEventMouseMoveEnterWidget() override  {}
+        virtual void    handleEventMouseMoveLeaveWidget() override  {}
+        virtual void    handleEventMouseDownInWidget() override     {}
+        virtual void    handleEventMouseUpInWidget() override;
         virtual void    handleEventMouseUpOutsideWidget() override;
         virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key) override;
         virtual void    handleEventTextInsert(std::string_view view) override;
