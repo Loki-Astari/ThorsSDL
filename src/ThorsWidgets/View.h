@@ -15,7 +15,7 @@
  *                              All subsequent mouse events will be passed to this widget for processing.
  *                              Note 1: by default this is nullptr
  *                              Note 2: Mouse down followed by Mouse up not in the same element will set it to nullptr.
- *      KeyboardFocusSet:       This object handles keyboard events.
+ *      EventFocusKeyboard:     This object handles keyboard events.
  *                              It will track all controls that can accept keyboard focus and track the change in keyboard
  *                              focus.
  */
@@ -24,7 +24,8 @@
 #include "LayoutUtil.h"
 #include "WidgetView.h"
 #include "Theme.h"
-#include "KeyboardFocusSet.h"
+#include "EventFocusKeyboard.h"
+#include "EventFocusMouse.h"
 #include "ThorsUI/View.h"
 
 namespace ThorsAnvil::UI
@@ -39,121 +40,6 @@ namespace UI = ThorsAnvil::UI;
 struct Theme;
 class Layout;
 
-class MouseFocusSet
-{
-    using Storage   = std::list<WidgetMouseFocusInterface*>;
-    using Iterator  = Storage::iterator;
-
-    Storage     mouseInputWidgets;
-    Iterator    mouseOver;
-    Iterator    mouseDownIn;
-
-
-    Iterator    none() {return std::end(mouseInputWidgets);}
-    bool        isValid(Iterator iter) {return iter != std::end(mouseInputWidgets);}
-
-    public:
-        MouseFocusSet()
-            : mouseOver(none())
-            , mouseDownIn(none())
-        {}
-        // Adding new Widgets that can handle text.
-        void addInterface(WidgetMouseFocusInterface& interface)
-        {
-            mouseInputWidgets.emplace_back(&interface);
-        }
-        void remInterface(WidgetMouseFocusInterface& interface)
-        {
-            auto find = std::find(std::begin(mouseInputWidgets), std::end(mouseInputWidgets), &interface);
-            if (find != none())
-            {
-                if (find == mouseDownIn)
-                {
-                    (*mouseDownIn)->handleEventMouseUpOutsideWidget();
-                    mouseDownIn = none();
-                }
-                if (find != mouseOver)
-                {
-                    (*mouseOver)->handleEventMouseMoveLeaveWidget();
-                    mouseOver = none();
-                }
-                mouseInputWidgets.erase(find);
-            }
-        }
-        void handleEventMouseMoveEnterWidget(SDL_WindowEvent const& /*event*/)
-        {
-            if (isValid(mouseOver)) {
-                (*mouseOver)->handleEventMouseMoveEnterWidget();
-            }
-        }
-        void handleEventMouseMoveLeaveWidget(SDL_WindowEvent const& /*event*/)
-        {
-            if (isValid(mouseOver)) {
-                (*mouseOver)->handleEventMouseMoveLeaveWidget();
-            }
-            mouseOver = none();
-        }
-        void handleEventMouseMoveInWidget(UI::Pt const& mousePosition)
-        {
-            if (isValid(mouseOver))
-            {
-                UI::Rect const& rect = (*mouseOver)->getRect();
-
-                if (rect.contains(mousePosition))
-                {
-                    (*mouseOver)->handleEventMouseMoveInWidget();
-                    return;
-                }
-                else
-                {
-                    (*mouseOver)->handleEventMouseMoveLeaveWidget();
-                }
-            }
-            mouseOver = none();
-            for (auto loop = std::begin(mouseInputWidgets); loop != std::end(mouseInputWidgets); ++loop)
-            {
-                UI::Rect const& rect = (*loop)->getRect();
-                if ((*loop)->isVisible() && rect.contains(mousePosition))
-                {
-                    mouseOver = loop;
-                    (*mouseOver)->handleEventMouseMoveEnterWidget();
-                    break;
-                }
-            }
-        }
-        void handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/, KeyboardFocusSet& /*textInputSet*/)
-        {
-            std::cerr << "handleEventMouseDownInWidget\n";
-            mouseDownIn = none();
-            if (isValid(mouseOver))
-            {
-                mouseDownIn = mouseOver;
-                std::cerr << "Sending handleEventMouseDownInWidget\n";
-                (*mouseDownIn)->handleEventMouseDownInWidget();
-                //textInputSet.handleEventMouseDown(*mouseDownIn);
-            }
-        }
-        void handleEventMouseUpInWidget(SDL_MouseButtonEvent const& /*event*/)
-        {
-            std::cerr << "handleEventMouseUpInWidget\n";
-            if (!isValid(mouseDownIn)) {
-                return;
-            }
-
-            if (mouseDownIn == mouseOver)
-            {
-                std::cerr << "Sending handleEventMouseUpInWidget\n";
-                (*mouseDownIn)->handleEventMouseUpInWidget();
-            }
-            else
-            {
-                std::cerr << "Sending handleEventMouseUpOutsideWidget\n";
-                (*mouseDownIn)->handleEventMouseUpOutsideWidget();
-            }
-            mouseDownIn = none();
-        }
-};
-
 class View: public WidgetView, public UI::View
 {
     Theme&              theme;
@@ -161,8 +47,8 @@ class View: public WidgetView, public UI::View
     //Widget*             mouseDownIn;
     HorzAlign           hAlign;
     VertAlign           vAlign;
-    KeyboardFocusSet    textInputSet;
-    MouseFocusSet       mouseInputSet;
+    EventFocusKeyboard  textInputSet;
+    EventFocusMouse     mouseInputSet;
     bool                updated;
 
     public:
@@ -188,8 +74,8 @@ class View: public WidgetView, public UI::View
         virtual void handleEventTextInput(SDL_TextInputEvent const& event) override;
         virtual void handleEventTextEditingExt(SDL_TextEditingExtEvent const& event) override;
 
-        virtual KeyboardFocusSet&   getKeyboardInterfaceSet() override;
-        virtual MouseFocusSet&      getMouseInterfaceSet() override;
+        virtual EventFocusKeyboard&   getKeyboardInterfaceSet() override;
+        virtual EventFocusMouse&      getMouseInterfaceSet() override;
 };
 
 }

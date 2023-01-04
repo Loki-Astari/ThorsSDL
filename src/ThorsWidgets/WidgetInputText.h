@@ -7,7 +7,8 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
-#include "KeyboardFocusSet.h"
+#include "EventFocusKeyboard.h"
+#include "EventFocusMouse.h"
 #include "ThorsUI/Texture.h"
 #include "ThorsUI/Util.h"
 

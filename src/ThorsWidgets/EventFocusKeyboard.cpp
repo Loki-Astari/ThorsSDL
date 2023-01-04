@@ -1,14 +1,14 @@
-#include "KeyboardFocusSet.h"
+#include "EventFocusKeyboard.h"
 #include "Widget.h"
 
 using namespace ThorsAnvil::Widgets;
 
 
-KeyboardFocusSet::KeyboardFocusSet()
+EventFocusKeyboard::EventFocusKeyboard()
     : current(std::end(textInputWidgets))
 {}
 
-void KeyboardFocusSet::handleEventMouseDown(Widget& mouseDownIn)
+void EventFocusKeyboard::handleEventMouseDown(Widget& mouseDownIn)
 {
     WidgetKeyboardFocusInterface*  keyboardFocus = dynamic_cast<WidgetKeyboardFocusInterface*>(&mouseDownIn);
     if (keyboardFocus)
@@ -21,38 +21,38 @@ void KeyboardFocusSet::handleEventMouseDown(Widget& mouseDownIn)
     }
 }
 
-void KeyboardFocusSet::handleEventKeyDown(SDL_KeyboardEvent const& /*event*/)
+void EventFocusKeyboard::handleEventKeyDown(SDL_KeyboardEvent const& /*event*/)
 {}
 
-void KeyboardFocusSet::handleEventKeyUp(SDL_KeyboardEvent const& event)
+void EventFocusKeyboard::handleEventKeyUp(SDL_KeyboardEvent const& event)
 {
     if (current != std::end(textInputWidgets)) {
         (*current)->handleEventTextInsert(event.keysym.mod, event.keysym.sym);
     }
 }
 
-void KeyboardFocusSet::handleEventTextEditting(SDL_TextEditingEvent const& event)
+void EventFocusKeyboard::handleEventTextEditting(SDL_TextEditingEvent const& event)
 {
     if (current != std::end(textInputWidgets)) {
         (*current)->handleEventTextInsert(std::string_view(event.text + event.start, event.length));
     }
 }
 
-void KeyboardFocusSet::handleEventTextInput(SDL_TextInputEvent const& event)
+void EventFocusKeyboard::handleEventTextInput(SDL_TextInputEvent const& event)
 {
     if (current != std::end(textInputWidgets)) {
         (*current)->handleEventTextInsert(std::string_view(event.text));
     }
 }
 
-void KeyboardFocusSet::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event)
+void EventFocusKeyboard::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event)
 {
     if (current != std::end(textInputWidgets)) {
         (*current)->handleEventTextInsert(std::string_view(event.text + event.start, event.length));
     }
 }
 
-void KeyboardFocusSet::addInterface(WidgetKeyboardFocusInterface& interface)
+void EventFocusKeyboard::addInterface(WidgetKeyboardFocusInterface& interface)
 {
     textInputWidgets.emplace_back(&interface);
 
@@ -61,7 +61,7 @@ void KeyboardFocusSet::addInterface(WidgetKeyboardFocusInterface& interface)
     }
 }
 
-void KeyboardFocusSet::remInterface(WidgetKeyboardFocusInterface& interface)
+void EventFocusKeyboard::remInterface(WidgetKeyboardFocusInterface& interface)
 {
     auto find = std::find(std::begin(textInputWidgets), std::end(textInputWidgets), &interface);
     if (find == current)
@@ -77,14 +77,14 @@ void KeyboardFocusSet::remInterface(WidgetKeyboardFocusInterface& interface)
     textInputWidgets.erase(find);
 }
 
-void KeyboardFocusSet::reset()
+void EventFocusKeyboard::reset()
 {
     if (current != std::end(textInputWidgets)) {
         (*current)->acceptKeyboardFocus();
     }
 }
 
-void KeyboardFocusSet::moveKeyboardFocusToNextAvailableWidget(bool forward)
+void EventFocusKeyboard::moveKeyboardFocusToNextAvailableWidget(bool forward)
 {
     Iterator next = findNextWidget(forward);
     if (next != current)
@@ -99,7 +99,7 @@ void KeyboardFocusSet::moveKeyboardFocusToNextAvailableWidget(bool forward)
     }
 }
 
-KeyboardFocusSet::Iterator KeyboardFocusSet::findNextWidget(bool forward)
+EventFocusKeyboard::Iterator EventFocusKeyboard::findNextWidget(bool forward)
 {
     if (textInputWidgets.empty()) {
         return std::end(textInputWidgets);

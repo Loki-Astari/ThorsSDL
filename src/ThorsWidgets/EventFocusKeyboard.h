@@ -1,8 +1,8 @@
-#ifndef THORSANVIL_WIDGETS_TEXT_INPUT_INTERFACE_H
-#define THORSANVIL_WIDGETS_TEXT_INPUT_INTERFACE_H
+#ifndef THORSANVIL_WIDGETS_EVENT_FOCUS_KEYBOARD_H
+#define THORSANVIL_WIDGETS_EVENT_FOCUS_KEYBOARD_H
 
 /*
- * KeyboardFocusSet:
+ * EventFocusKeyboard:
  *  Used by View to track all Widgets that can accept keyboard input.
  *  Then tracks the current widget that accepts keyboard input.
  *  forward all keyboard / text events to the widget that can handle text input
@@ -17,7 +17,7 @@ namespace ThorsAnvil::Widgets
 
 class Widget;
 
-class KeyboardFocusSet
+class EventFocusKeyboard
 {
     using Storage   = std::list<WidgetKeyboardFocusInterface*>;
     using Iterator  = Storage::iterator;
@@ -27,7 +27,7 @@ class KeyboardFocusSet
 
 
     public:
-        KeyboardFocusSet();
+        EventFocusKeyboard();
         void reset();
         void moveKeyboardFocusToNextAvailableWidget(bool forward);
 

@@ -23,8 +23,8 @@ enum WidgetType {Unknown, Label};
 class Layout;
 class WidgetView;
 struct Theme;
-class KeyboardFocusSet;
-class MouseFocusSet;
+class EventFocusKeyboard;
+class EventFocusMouse;
 
 class Widget
 {
@@ -67,11 +67,11 @@ class Widget
 
     private:
         // Utility for handling keyboard focus.
-        friend class KeyboardFocusSet;
+        friend class EventFocusKeyboard;
         friend class WidgetKeyboardFocusInterface;
         friend class WidgetMouseFocusInterface;
-        virtual KeyboardFocusSet&   getKeyboardInterfaceSet();
-        virtual MouseFocusSet&      getMouseInterfaceSet();
+        virtual EventFocusKeyboard&   getKeyboardInterfaceSet();
+        virtual EventFocusMouse&      getMouseInterfaceSet();
 
 };
 
@@ -81,7 +81,7 @@ class Widget
 class WidgetKeyboardFocusInterface
 {
     protected:
-        KeyboardFocusSet&           keyboardFocusWidgets;
+        EventFocusKeyboard&         keyboardFocusWidgets;
         std::function<bool()>       iVis;
     public:
         WidgetKeyboardFocusInterface(WidgetView& parentWidget, std::function<bool()>&& iVis);
@@ -98,7 +98,7 @@ class WidgetKeyboardFocusInterface
 class WidgetMouseFocusInterface
 {
     protected:
-        MouseFocusSet&              mouseFocusWidgets;
+        EventFocusMouse&            mouseFocusWidgets;
         std::function<UI::Rect()>   gRect;
         std::function<bool()>       iVis;
     public:

@@ -1,7 +1,7 @@
 #include "Widget.h"
 #include "WidgetView.h"
 #include "View.h"
-#include "KeyboardFocusSet.h"
+#include "EventFocusKeyboard.h"
 
 using namespace ThorsAnvil::Widgets;
 
@@ -64,7 +64,7 @@ UI::Sz Widget::doPreferredLayout(UI::DrawContext& /*drawContext*/, Theme const& 
 void Widget::doPerformLayout(UI::Pt /*newTopLeft*/, Theme const& /*theme*/)
 {}
 
-KeyboardFocusSet& Widget::getKeyboardInterfaceSet()
+EventFocusKeyboard& Widget::getKeyboardInterfaceSet()
 {
     if (parentWidget == nullptr) {
         throw std::runtime_error("Root Widget should override");
@@ -73,7 +73,7 @@ KeyboardFocusSet& Widget::getKeyboardInterfaceSet()
     return parentWidget->getKeyboardInterfaceSet();
 }
 
-MouseFocusSet& Widget::getMouseInterfaceSet()
+EventFocusMouse& Widget::getMouseInterfaceSet()
 {
     if (parentWidget == nullptr) {
         throw std::runtime_error("Root Widget should override");
