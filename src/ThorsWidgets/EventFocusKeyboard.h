@@ -17,6 +17,7 @@ namespace ThorsAnvil::Widgets
 
 namespace UI = ThorsAnvil::UI;
 class Widget;
+class EventFocusMouse;
 class WidgetKeyboardFocusInterface;
 
 class EventFocusKeyboard
@@ -39,6 +40,7 @@ class EventFocusKeyboard
 
     private:
         // TODO Move to MouseFocusSet
+        friend class EventFocusMouse;
         void handleEventMouseDown(Widget& mouseDownIn);
 
     private:

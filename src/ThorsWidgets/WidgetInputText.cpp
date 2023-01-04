@@ -79,14 +79,12 @@ UI::TextPen const& WidgetInputText::getTextPen(Theme const& theme)
 
 void WidgetInputText::handleEventMouseUpInWidget()
 {
-    std::cerr << "WidgetInputText::handleEventMouseUpInWidget\n";
     markDirty();
     state = state != Normal ? Focus : Normal;
 }
 
 void WidgetInputText::handleEventMouseUpOutsideWidget()
 {
-    std::cerr << "WidgetInputText::handleEventMouseUpOutsideWidget\n";
     markDirty();
     state = Focus;
 }

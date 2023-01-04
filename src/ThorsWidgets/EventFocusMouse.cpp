@@ -1,4 +1,5 @@
 #include "EventFocusMouse.h"
+#include "EventFocusKeyboard.h"
 #include "Widget.h"
 
 using namespace ThorsAnvil::Widgets;
@@ -76,34 +77,27 @@ void EventFocusMouse::handleEventMouseMoveInWidget(UI::Pt const& mousePosition)
     }
 }
 
-void EventFocusMouse::handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/, EventFocusKeyboard& /*textInputSet*/)
+void EventFocusMouse::handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/, EventFocusKeyboard& textInputSet)
 {
-    std::cerr << "handleEventMouseDownInWidget\n";
     mouseDownIn = none();
     if (isValid(mouseOver))
     {
         mouseDownIn = mouseOver;
-        std::cerr << "Sending handleEventMouseDownInWidget\n";
         (*mouseDownIn)->handleEventMouseDownInWidget();
-        //textInputSet.handleEventMouseDown(*mouseDownIn);
+        textInputSet.handleEventMouseDown(dynamic_cast<Widget&>(**mouseDownIn));
     }
 }
 
 void EventFocusMouse::handleEventMouseUpInWidget(SDL_MouseButtonEvent const& /*event*/)
 {
-    std::cerr << "handleEventMouseUpInWidget\n";
     if (!isValid(mouseDownIn)) {
         return;
     }
 
-    if (mouseDownIn == mouseOver)
-    {
-        std::cerr << "Sending handleEventMouseUpInWidget\n";
+    if (mouseDownIn == mouseOver) {
         (*mouseDownIn)->handleEventMouseUpInWidget();
     }
-    else
-    {
-        std::cerr << "Sending handleEventMouseUpOutsideWidget\n";
+    else {
         (*mouseDownIn)->handleEventMouseUpOutsideWidget();
     }
     mouseDownIn = none();
