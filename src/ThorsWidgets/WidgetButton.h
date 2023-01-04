@@ -3,18 +3,26 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "WidgetLabel.h"
-#include "ThorsUI/Texture.h"
+#include "Widget.h"
 #include "ThorsUI/Util.h"
+#include <functional>
+#include <string>
+
+namespace ThorsAnvil::UI
+{
+    class DrawContext;
+}
 
 namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
+class WidgetView;
+struct Theme;
 
 enum ButtonState {Up, Hover, Down, DownOutside};
 using ButtonAction = std::function<void()>;
 
-struct Theme;
 class WidgetButton: public WidgetLabel, public WidgetMouseFocusInterface
 {
     friend struct Theme;

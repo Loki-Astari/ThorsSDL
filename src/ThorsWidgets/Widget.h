@@ -7,6 +7,8 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "ThorsUI/Util.h"
+#include <functional>
+#include <string_view>
 
 namespace ThorsAnvil::UI
 {
@@ -17,14 +19,13 @@ namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
-
-enum WidgetType {Unknown, Label};
-
 class Layout;
 class WidgetView;
-struct Theme;
 class EventFocusKeyboard;
 class EventFocusMouse;
+struct Theme;
+
+enum WidgetType {Unknown, Label};
 
 class Widget
 {

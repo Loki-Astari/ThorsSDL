@@ -16,10 +16,17 @@
  */
 
 #include "ThorsWidgetsConfig.h"
+#include "Layout.h"
+#include "Theme.h"
+#include "View.h"
 #include "WidgetInputText.h"
+#include "WidgetLabel.h"
+#include "WidgetButton.h"
 #include "ThorsUI/Window.h"
-
 #include <tuple>
+#include <string>
+#include <functional>
+#include <utility>
 
 namespace ThorsAnvil::Widgets
 {

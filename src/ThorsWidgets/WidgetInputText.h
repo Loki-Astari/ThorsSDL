@@ -7,19 +7,25 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
-#include "EventFocusKeyboard.h"
-#include "EventFocusMouse.h"
 #include "ThorsUI/Texture.h"
 #include "ThorsUI/Util.h"
+#include <string>
+#include <string_view>
+
+namespace ThorsAnvil::UI
+{
+    class DrawContext;
+}
 
 namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
+class WidgetView;
+struct Theme;
 
 enum InputTextState {Normal, Focus, Drag};
 
-struct Theme;
 class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface, public WidgetMouseFocusInterface
 {
     friend struct Theme;

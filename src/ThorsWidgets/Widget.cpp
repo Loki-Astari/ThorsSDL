@@ -1,7 +1,7 @@
 #include "Widget.h"
 #include "WidgetView.h"
-#include "View.h"
 #include "EventFocusKeyboard.h"
+#include "EventFocusMouse.h"
 
 using namespace ThorsAnvil::Widgets;
 

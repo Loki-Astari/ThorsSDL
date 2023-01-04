@@ -13,15 +13,18 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "ThorsUI/Util.h"
-#include "ThorsUI/DrawContext.h"
 #include "ThorsUI/Pen.h"
+#include <string>
 
+namespace ThorsAnvil::UI
+{
+    class DrawContext;
+}
 
 namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
-
 class WidgetView;
 class WidgetLabel;
 class WidgetInputText;

@@ -1,6 +1,6 @@
 #include "View.h"
+#include "Theme.h"
 #include "ThorsUI/Window.h"
-#include <string_view>
 
 using namespace ThorsAnvil::Widgets;
 
@@ -9,10 +9,8 @@ View::View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize, Hor
     , UI::View(window)
     , theme(theme)
     , minSize(minSize)
-    //, mouseDownIn(nullptr)
     , hAlign(hAlign)
     , vAlign(vAlign)
-    // Force re-draw first time
     , updated(true)
 {}
 

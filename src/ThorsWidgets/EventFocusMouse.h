@@ -8,6 +8,7 @@
 namespace ThorsAnvil::Widgets
 {
 
+namespace UI = ThorsAnvil::UI;
 class WidgetMouseFocusInterface;
 class EventFocusKeyboard;
 

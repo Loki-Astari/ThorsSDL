@@ -1,14 +1,5 @@
 #include "ThorsUI/Application.h"
-#include "ThorsUI/Window.h"
-#include "LayoutUtil.h"
-#include "View.h"
-#include "WidgetView.h"
-#include "Layout.h"
-#include "Theme.h"
 #include "WidgetExample.h"
-#include "WidgetLabel.h"
-#include "WidgetInputText.h"
-#include "WidgetButton.h"
 #include "Dialog.h"
 
 class DialogNameAge: public ThorsAnvil::Widgets::Dialog<std::string, std::string>

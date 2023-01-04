@@ -9,13 +9,15 @@
  */
 
 #include "ThorsWidgetsConfig.h"
-#include "Widget.h"
+#include "ThorsUI/Util.h"
 #include <list>
 
 namespace ThorsAnvil::Widgets
 {
 
+namespace UI = ThorsAnvil::UI;
 class Widget;
+class WidgetKeyboardFocusInterface;
 
 class EventFocusKeyboard
 {
@@ -38,10 +40,10 @@ class EventFocusKeyboard
     private:
         // TODO Move to MouseFocusSet
         void handleEventMouseDown(Widget& mouseDownIn);
+
     private:
         // Handle mouse and keyboard events.
         friend class View;
-        friend class MouseFocusSet;
         void handleEventKeyDown(SDL_KeyboardEvent const& event);
         void handleEventKeyUp(SDL_KeyboardEvent const& event);
         void handleEventTextEditting(SDL_TextEditingEvent const& event);

@@ -3,7 +3,6 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
-#include <gtest/gtest_prod.h>
 #include <vector>
 
 namespace ThorsAnvil::UI
@@ -11,19 +10,16 @@ namespace ThorsAnvil::UI
     class DrawContext;
 }
 
-class WidgetViewTest_CheckWidgetStored_Test;
 namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
-
-class Widget;
 class Layout;
-class TextInputSet;
-class MouseFocusSet;
+class WidgetView;
+struct Theme;
+
 class WidgetView: public Widget
 {
-    FRIEND_TEST(::WidgetViewTest, CheckWidgetStored);
     Layout&                     layout;
     std::vector<Widget*>        widgets;
     Widget*                     mouseOver;

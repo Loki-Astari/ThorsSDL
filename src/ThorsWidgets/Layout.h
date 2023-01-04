@@ -3,7 +3,7 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "LayoutUtil.h"
-#include "Theme.h"
+#include "ThorsUI/DrawContext.h"
 #include "ThorsUI/Util.h"
 #include <vector>
 
@@ -35,7 +35,6 @@
 namespace ThorsAnvil::Widgets
 {
 
-// Forward Declaration
 namespace UI = ThorsAnvil::UI;
 class Widget;
 struct Theme;

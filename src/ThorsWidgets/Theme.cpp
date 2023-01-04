@@ -1,9 +1,7 @@
 #include "Theme.h"
-#include "WidgetView.h"
 #include "WidgetLabel.h"
 #include "WidgetInputText.h"
 #include "WidgetButton.h"
-#include "ThorsUI/Pen.h"
 
 using namespace ThorsAnvil::Widgets;
 

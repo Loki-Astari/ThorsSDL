@@ -1,7 +1,6 @@
 #include "WidgetView.h"
-#include "Widget.h"
 #include "Layout.h"
-#include "ThorsUI/DrawContext.h"
+#include "Theme.h"
 
 using namespace ThorsAnvil::Widgets;
 

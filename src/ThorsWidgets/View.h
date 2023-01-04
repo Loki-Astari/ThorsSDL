@@ -23,10 +23,10 @@
 #include "ThorsWidgetsConfig.h"
 #include "LayoutUtil.h"
 #include "WidgetView.h"
-#include "Theme.h"
 #include "EventFocusKeyboard.h"
 #include "EventFocusMouse.h"
 #include "ThorsUI/View.h"
+#include "ThorsUI/Util.h"
 
 namespace ThorsAnvil::UI
 {
@@ -37,8 +37,8 @@ namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
-struct Theme;
 class Layout;
+struct Theme;
 
 class View: public WidgetView, public UI::View
 {
