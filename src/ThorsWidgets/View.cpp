@@ -90,12 +90,16 @@ void View::handleEventWindowLeave(SDL_WindowEvent const& event)
 
 void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 {
-    mouseInputSet.handleEventMouseMoveInWidget({event.x, event.y});
+    mouseInputSet.handleEventMouseMoveInWidget(event);
 }
 
 void View::handleEventMouseDown(SDL_MouseButtonEvent const& event)
 {
-    mouseInputSet.handleEventMouseDownInWidget(event, textInputSet);
+    mouseInputSet.handleEventMouseDownInWidget(event);
+    auto mouseDownIn = mouseInputSet.getMouseDownIn();
+    if (mouseDownIn) {
+        textInputSet.handleEventMouseDown(dynamic_cast<Widget&>(*mouseDownIn));
+    }
 }
 
 void View::handleEventMouseUp(SDL_MouseButtonEvent const& event)

@@ -16,7 +16,7 @@ void EventFocusMouse::addInterface(WidgetMouseFocusInterface& interface)
 
 void EventFocusMouse::remInterface(WidgetMouseFocusInterface& interface)
 {
-    auto find = std::find(std::begin(mouseInputWidgets), std::end(mouseInputWidgets), &interface);
+    auto find = std::find(std::cbegin(mouseInputWidgets), std::cend(mouseInputWidgets), &interface);
     if (find != none())
     {
         if (find == mouseDownIn)
@@ -48,8 +48,9 @@ void EventFocusMouse::handleEventMouseMoveLeaveWidget(SDL_WindowEvent const& /*e
     mouseOver = none();
 }
 
-void EventFocusMouse::handleEventMouseMoveInWidget(UI::Pt const& mousePosition)
+void EventFocusMouse::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
 {
+    UI::Pt  mousePosition = {event.x, event.y};
     if (isValid(mouseOver))
     {
         UI::Rect const& rect = (*mouseOver)->getRect();
@@ -65,7 +66,7 @@ void EventFocusMouse::handleEventMouseMoveInWidget(UI::Pt const& mousePosition)
         }
     }
     mouseOver = none();
-    for (auto loop = std::begin(mouseInputWidgets); loop != std::end(mouseInputWidgets); ++loop)
+    for (auto loop = std::cbegin(mouseInputWidgets); loop != std::cend(mouseInputWidgets); ++loop)
     {
         UI::Rect const& rect = (*loop)->getRect();
         if ((*loop)->isVisible() && rect.contains(mousePosition))
@@ -77,14 +78,13 @@ void EventFocusMouse::handleEventMouseMoveInWidget(UI::Pt const& mousePosition)
     }
 }
 
-void EventFocusMouse::handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/, EventFocusKeyboard& textInputSet)
+void EventFocusMouse::handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/)
 {
     mouseDownIn = none();
     if (isValid(mouseOver))
     {
         mouseDownIn = mouseOver;
         (*mouseDownIn)->handleEventMouseDownInWidget();
-        textInputSet.handleEventMouseDown(dynamic_cast<Widget&>(**mouseDownIn));
     }
 }
 
