@@ -1,20 +1,20 @@
-#include "EventFocusMouse.h"
-#include "EventFocusKeyboard.h"
+#include "FocusTrackerMouse.h"
+#include "FocusTrackerKeyboard.h"
 #include "Widget.h"
 
 using namespace ThorsAnvil::Widgets;
 
-EventFocusMouse::EventFocusMouse()
+FocusTrackerMouse::FocusTrackerMouse()
     : mouseOver(none())
     , mouseDownIn(none())
 {}
 
-void EventFocusMouse::addInterface(WidgetMouseFocusInterface& interface)
+void FocusTrackerMouse::addInterface(WidgetMouseFocusInterface& interface)
 {
     mouseInputWidgets.emplace_back(&interface);
 }
 
-void EventFocusMouse::remInterface(WidgetMouseFocusInterface& interface)
+void FocusTrackerMouse::remInterface(WidgetMouseFocusInterface& interface)
 {
     auto find = std::find(std::cbegin(mouseInputWidgets), std::cend(mouseInputWidgets), &interface);
     if (find != none())
@@ -33,14 +33,14 @@ void EventFocusMouse::remInterface(WidgetMouseFocusInterface& interface)
     }
 }
 
-void EventFocusMouse::handleEventMouseMoveEnterWidget(SDL_WindowEvent const& /*event*/)
+void FocusTrackerMouse::handleEventMouseMoveEnterWidget(SDL_WindowEvent const& /*event*/)
 {
     if (isValid(mouseOver)) {
         (*mouseOver)->handleEventMouseMoveEnterWidget();
     }
 }
 
-void EventFocusMouse::handleEventMouseMoveLeaveWidget(SDL_WindowEvent const& /*event*/)
+void FocusTrackerMouse::handleEventMouseMoveLeaveWidget(SDL_WindowEvent const& /*event*/)
 {
     if (isValid(mouseOver)) {
         (*mouseOver)->handleEventMouseMoveLeaveWidget();
@@ -48,7 +48,7 @@ void EventFocusMouse::handleEventMouseMoveLeaveWidget(SDL_WindowEvent const& /*e
     mouseOver = none();
 }
 
-void EventFocusMouse::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
+void FocusTrackerMouse::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
 {
     UI::Pt  mousePosition = {event.x, event.y};
     if (isValid(mouseOver))
@@ -78,7 +78,7 @@ void EventFocusMouse::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& e
     }
 }
 
-void EventFocusMouse::handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/)
+void FocusTrackerMouse::handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /*event*/)
 {
     mouseDownIn = none();
     if (isValid(mouseOver))
@@ -88,7 +88,7 @@ void EventFocusMouse::handleEventMouseDownInWidget(SDL_MouseButtonEvent const& /
     }
 }
 
-void EventFocusMouse::handleEventMouseUpInWidget(SDL_MouseButtonEvent const& /*event*/)
+void FocusTrackerMouse::handleEventMouseUpInWidget(SDL_MouseButtonEvent const& /*event*/)
 {
     if (!isValid(mouseDownIn)) {
         return;

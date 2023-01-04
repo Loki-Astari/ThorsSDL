@@ -21,8 +21,8 @@ namespace ThorsAnvil::Widgets
 namespace UI = ThorsAnvil::UI;
 class Layout;
 class WidgetView;
-class EventFocusKeyboard;
-class EventFocusMouse;
+class FocusTrackerKeyboard;
+class FocusTrackerMouse;
 struct Theme;
 
 enum WidgetType {Unknown, Label};
@@ -68,11 +68,11 @@ class Widget
 
     private:
         // Utility for handling keyboard focus.
-        friend class EventFocusKeyboard;
+        friend class FocusTrackerKeyboard;
         friend class WidgetKeyboardFocusInterface;
         friend class WidgetMouseFocusInterface;
-        virtual EventFocusKeyboard&   getKeyboardInterfaceSet();
-        virtual EventFocusMouse&      getMouseInterfaceSet();
+        virtual FocusTrackerKeyboard&   getKeyboardInterfaceSet();
+        virtual FocusTrackerMouse&      getMouseInterfaceSet();
 
 };
 
@@ -82,7 +82,7 @@ class Widget
 class WidgetKeyboardFocusInterface
 {
     protected:
-        EventFocusKeyboard&         keyboardFocusWidgets;
+        FocusTrackerKeyboard&       keyboardFocusWidgets;
         std::function<bool()>       iVis;
     public:
         WidgetKeyboardFocusInterface(WidgetView& parentWidget, std::function<bool()>&& iVis);
@@ -99,7 +99,7 @@ class WidgetKeyboardFocusInterface
 class WidgetMouseFocusInterface
 {
     protected:
-        EventFocusMouse&            mouseFocusWidgets;
+        FocusTrackerMouse&          mouseFocusWidgets;
         std::function<UI::Rect()>   gRect;
         std::function<bool()>       iVis;
     public:

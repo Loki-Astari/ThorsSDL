@@ -15,7 +15,7 @@
  *                              All subsequent mouse events will be passed to this widget for processing.
  *                              Note 1: by default this is nullptr
  *                              Note 2: Mouse down followed by Mouse up not in the same element will set it to nullptr.
- *      EventFocusKeyboard:     This object handles keyboard events.
+ *      FocusTrackerKeyboard:   This object handles keyboard events.
  *                              It will track all controls that can accept keyboard focus and track the change in keyboard
  *                              focus.
  */
@@ -23,8 +23,8 @@
 #include "ThorsWidgetsConfig.h"
 #include "LayoutUtil.h"
 #include "WidgetView.h"
-#include "EventFocusKeyboard.h"
-#include "EventFocusMouse.h"
+#include "FocusTrackerKeyboard.h"
+#include "FocusTrackerMouse.h"
 #include "ThorsUI/View.h"
 #include "ThorsUI/Util.h"
 
@@ -42,14 +42,13 @@ struct Theme;
 
 class View: public WidgetView, public UI::View
 {
-    Theme&              theme;
-    UI::Sz              minSize;
-    //Widget*             mouseDownIn;
-    HorzAlign           hAlign;
-    VertAlign           vAlign;
-    EventFocusKeyboard  textInputSet;
-    EventFocusMouse     mouseInputSet;
-    bool                updated;
+    Theme&                  theme;
+    UI::Sz                  minSize;
+    HorzAlign               hAlign;
+    VertAlign               vAlign;
+    FocusTrackerKeyboard    textInputSet;
+    FocusTrackerMouse       mouseInputSet;
+    bool                    updated;
 
     public:
         View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize = {0, 0}, HorzAlign hAlign = Middle, VertAlign vAlign = Center);
@@ -74,8 +73,8 @@ class View: public WidgetView, public UI::View
         virtual void handleEventTextInput(SDL_TextInputEvent const& event) override;
         virtual void handleEventTextEditingExt(SDL_TextEditingExtEvent const& event) override;
 
-        virtual EventFocusKeyboard&   getKeyboardInterfaceSet() override;
-        virtual EventFocusMouse&      getMouseInterfaceSet() override;
+        virtual FocusTrackerKeyboard&   getKeyboardInterfaceSet() override;
+        virtual FocusTrackerMouse&      getMouseInterfaceSet() override;
 };
 
 }

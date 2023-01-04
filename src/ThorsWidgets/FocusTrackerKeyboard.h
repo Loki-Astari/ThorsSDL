@@ -2,7 +2,7 @@
 #define THORSANVIL_WIDGETS_EVENT_FOCUS_KEYBOARD_H
 
 /*
- * EventFocusKeyboard:
+ * FocusTrackerKeyboard:
  *  Used by View to track all Widgets that can accept keyboard input.
  *  Then tracks the current widget that accepts keyboard input.
  *  forward all keyboard / text events to the widget that can handle text input
@@ -17,10 +17,10 @@ namespace ThorsAnvil::Widgets
 
 namespace UI = ThorsAnvil::UI;
 class Widget;
-class EventFocusMouse;
+class FocusTrackerMouse;
 class WidgetKeyboardFocusInterface;
 
-class EventFocusKeyboard
+class FocusTrackerKeyboard
 {
     using Storage   = std::list<WidgetKeyboardFocusInterface*>;
     using Iterator  = Storage::iterator;
@@ -30,7 +30,7 @@ class EventFocusKeyboard
 
 
     public:
-        EventFocusKeyboard();
+        FocusTrackerKeyboard();
         void reset();
         void moveKeyboardFocusToNextAvailableWidget(bool forward);
 
@@ -40,7 +40,7 @@ class EventFocusKeyboard
 
     private:
         // TODO Move to MouseFocusSet
-        friend class EventFocusMouse;
+        friend class FocusTrackerMouse;
         void handleEventMouseDown(Widget& mouseDownIn);
 
     private:

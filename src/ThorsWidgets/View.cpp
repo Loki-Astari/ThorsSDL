@@ -132,12 +132,12 @@ void View::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event)
     textInputSet.handleEventTextEditingExt(event);
 }
 
-EventFocusKeyboard& View::getKeyboardInterfaceSet()
+FocusTrackerKeyboard& View::getKeyboardInterfaceSet()
 {
     return textInputSet;
 }
 
-EventFocusMouse& View::getMouseInterfaceSet()
+FocusTrackerMouse& View::getMouseInterfaceSet()
 {
     return mouseInputSet;
 }

@@ -10,9 +10,9 @@ namespace ThorsAnvil::Widgets
 
 namespace UI = ThorsAnvil::UI;
 class WidgetMouseFocusInterface;
-class EventFocusKeyboard;
+class FocusTrackerKeyboard;
 
-class EventFocusMouse
+class FocusTrackerMouse
 {
     using Storage   = std::list<WidgetMouseFocusInterface*>;
     using Iterator  = Storage::const_iterator;
@@ -26,7 +26,7 @@ class EventFocusMouse
     bool        isValid(Iterator iter)  const {return iter != std::cend(mouseInputWidgets);}
 
     public:
-        EventFocusMouse();
+        FocusTrackerMouse();
         // Adding new Widgets that can handle text.
         void addInterface(WidgetMouseFocusInterface& interface);
         void remInterface(WidgetMouseFocusInterface& interface);
