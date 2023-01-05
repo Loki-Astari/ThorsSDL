@@ -24,6 +24,15 @@ Lib_TTF::~Lib_TTF()
     TTF_Quit();
 }
 
+Lib_Image::Lib_Image()
+    : BaseWrapper(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP | IMG_INIT_JXL | IMG_INIT_AVIF), "Failed to Initialize SDL2 Image")
+{}
+
+Lib_Image::~Lib_Image()
+{
+    IMG_Quit();
+}
+
 Window::Window(std::string const& title, Rect const& rect, WindowState const& winState)
     : PointerWrapper(SDL_CreateWindow(title.c_str(), rect.x, rect.y, rect.w, rect.h, winState), "Failed to Create SDL-Window")
 {}

@@ -92,12 +92,18 @@ void Application::initSubSystem(InitLibs init)
     if (init & Fonts) {
         sdl2ttf = std::make_unique<SDL::Lib_TTF>();
     }
+    if (init & Images) {
+        sdl2image = std::make_unique<SDL::Lib_Image>();
+    }
 }
 
 void Application::quitSubSystem(InitLibs init)
 {
     if (init & Fonts) {
         sdl2ttf.reset();
+    }
+    if (init & Images) {
+        sdl2image.reset();
     }
 }
 

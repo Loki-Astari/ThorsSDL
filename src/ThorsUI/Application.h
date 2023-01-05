@@ -32,6 +32,7 @@ class Application
         static Application* initialized;
         std::unique_ptr<SDL::Lib_Main>    sdl2;
         std::unique_ptr<SDL::Lib_TTF>     sdl2ttf;
+        std::unique_ptr<SDL::Lib_Image>   sdl2image;
         Hardware                          hardware;
 
     private:

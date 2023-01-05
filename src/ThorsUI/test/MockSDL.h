@@ -44,6 +44,8 @@ enum {
     , countTTF_OpenFont
     , countTTF_CloseFont
 
+    , countIMG_Init
+    , countIMG_Quit
 
     , count_Max
 };
@@ -100,6 +102,9 @@ struct MocksSDLActions
     std::function<void()>                                               mockTTF_Quit                = [](){};
     std::function<TTF_Font*(char const*, int)>                          mockTTF_OpenFont            = [](char const*, int){return reinterpret_cast<TTF_Font*>(1);};
     std::function<void(TTF_Font*)>                                      mockTTF_CloseFont           = [](TTF_Font*){};
+
+    std::function<int(int)>                                             mockIMG_Init                = [](int){return 0;};
+    std::function<void()>                                               mockIMG_Quit                = [](){};
 };
 
 class MockSDL
@@ -142,6 +147,9 @@ class MockSDL
     MOCK_MEM_DECL(TTF_OpenFont);
     MOCK_MEM_DECL(TTF_CloseFont);
 
+    MOCK_MEM_DECL(IMG_Init);
+    MOCK_MEM_DECL(IMG_Quit);
+
     public:
         MockSDL(MocksSDLActions& action)
             : MOCK_MEM_INIT(SDL_Init,               [&action](Uint32 f)                                             {++action.count[countSDL_Init];return action.mockSDL_Init(f);})
@@ -181,6 +189,9 @@ class MockSDL
             , MOCK_MEM_INIT(TTF_Quit,               [&action]()                                                     {++action.count[countTTF_Quit];return action.mockTTF_Quit();})
             , MOCK_MEM_INIT(TTF_OpenFont,           [&action](char const* n, int p)                                 {++action.count[countTTF_OpenFont];return action.mockTTF_OpenFont(n, p);})
             , MOCK_MEM_INIT(TTF_CloseFont,          [&action](TTF_Font* f)                                          {++action.count[countTTF_CloseFont];return action.mockTTF_CloseFont(f);})
+
+            , MOCK_MEM_INIT(IMG_Init,               [&action](int flag)                                             {++action.count[countIMG_Init];return action.mockIMG_Init(flag);})
+            , MOCK_MEM_INIT(IMG_Quit,               [&action]()                                                     {++action.count[countIMG_Quit];return action.mockIMG_Quit();})
         {}
 
 };

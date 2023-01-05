@@ -5,6 +5,7 @@
 #include "Util.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 #include <iostream>
 
 namespace ThorsAnvil::UI
@@ -181,6 +182,12 @@ struct Lib_TTF: public BaseWrapper
 {
     Lib_TTF();
     ~Lib_TTF();
+};
+
+struct Lib_Image: public BaseWrapper
+{
+    Lib_Image();
+    ~Lib_Image();
 };
 
 struct Window: public PointerWrapper<SDL_Window>
