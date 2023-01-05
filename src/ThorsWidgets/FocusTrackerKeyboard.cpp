@@ -75,7 +75,9 @@ void FocusTrackerKeyboard::remInterface(ControleHandlerKeyboard& interface)
             (*current)->handleEventTextGainFocus();
         }
     }
-    textInputWidgets.erase(find);
+    if (find != std::end(textInputWidgets)) {
+        textInputWidgets.erase(find);
+    }
 }
 
 void FocusTrackerKeyboard::reset()
