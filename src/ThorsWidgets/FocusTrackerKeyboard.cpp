@@ -1,4 +1,5 @@
 #include "FocusTrackerKeyboard.h"
+#include "ControleHandlerKeyboard.h"
 #include "Widget.h"
 
 using namespace ThorsAnvil::Widgets;
@@ -10,7 +11,7 @@ FocusTrackerKeyboard::FocusTrackerKeyboard()
 
 void FocusTrackerKeyboard::handleEventMouseDown(Widget& mouseDownIn)
 {
-    WidgetKeyboardFocusInterface*  keyboardFocus = dynamic_cast<WidgetKeyboardFocusInterface*>(&mouseDownIn);
+    ControleHandlerKeyboard*  keyboardFocus = dynamic_cast<ControleHandlerKeyboard*>(&mouseDownIn);
     if (keyboardFocus)
     {
         if (current != std::end(textInputWidgets)) {
@@ -52,7 +53,7 @@ void FocusTrackerKeyboard::handleEventTextEditingExt(SDL_TextEditingExtEvent con
     }
 }
 
-void FocusTrackerKeyboard::addInterface(WidgetKeyboardFocusInterface& interface)
+void FocusTrackerKeyboard::addInterface(ControleHandlerKeyboard& interface)
 {
     textInputWidgets.emplace_back(&interface);
 
@@ -61,7 +62,7 @@ void FocusTrackerKeyboard::addInterface(WidgetKeyboardFocusInterface& interface)
     }
 }
 
-void FocusTrackerKeyboard::remInterface(WidgetKeyboardFocusInterface& interface)
+void FocusTrackerKeyboard::remInterface(ControleHandlerKeyboard& interface)
 {
     auto find = std::find(std::begin(textInputWidgets), std::end(textInputWidgets), &interface);
     if (find == current)

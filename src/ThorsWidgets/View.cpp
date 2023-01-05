@@ -1,5 +1,6 @@
 #include "View.h"
 #include "Theme.h"
+#include "ControleHandlerMouse.h"
 #include "ThorsUI/Window.h"
 
 using namespace ThorsAnvil::Widgets;

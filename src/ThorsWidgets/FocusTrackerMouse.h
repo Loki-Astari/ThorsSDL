@@ -1,5 +1,5 @@
-#ifndef THORSANVIL_WIDGETS_EVENT_FOCUS_MOUSE_H
-#define THORSANVIL_WIDGETS_EVENT_FOCUS_MOUSE_H
+#ifndef THORSANVIL_WIDGETS_FOCUS_TRACKER_MOUSE_H
+#define THORSANVIL_WIDGETS_FOCUS_TRACKER_MOUSE_H
 
 #include "ThorsWidgetsConfig.h"
 #include "ThorsUI/Util.h"
@@ -9,12 +9,12 @@ namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
-class WidgetMouseFocusInterface;
+class ControleHandlerMouse;
 class FocusTrackerKeyboard;
 
 class FocusTrackerMouse
 {
-    using Storage   = std::list<WidgetMouseFocusInterface*>;
+    using Storage   = std::list<ControleHandlerMouse*>;
     using Iterator  = Storage::const_iterator;
 
     Storage     mouseInputWidgets;
@@ -29,9 +29,9 @@ class FocusTrackerMouse
     public:
         FocusTrackerMouse();
         // Adding new Widgets that can handle text.
-        void addInterface(WidgetMouseFocusInterface& interface);
-        void remInterface(WidgetMouseFocusInterface& interface);
-        WidgetMouseFocusInterface*  getWidgetPressed()    const {return widgetPressed == none() ? nullptr : *widgetPressed;}
+        void addInterface(ControleHandlerMouse& interface);
+        void remInterface(ControleHandlerMouse& interface);
+        ControleHandlerMouse*  getWidgetPressed()    const {return widgetPressed == none() ? nullptr : *widgetPressed;}
 
     private:
         friend class View;

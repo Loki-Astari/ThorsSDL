@@ -1,5 +1,5 @@
-#ifndef THORSANVIL_WIDGETS_EVENT_FOCUS_KEYBOARD_H
-#define THORSANVIL_WIDGETS_EVENT_FOCUS_KEYBOARD_H
+#ifndef THORSANVIL_WIDGETS_FOCUS_TRACKER_KEYBOARD_H
+#define THORSANVIL_WIDGETS_FOCUS_TRACKER_KEYBOARD_H
 
 /*
  * FocusTrackerKeyboard:
@@ -18,11 +18,11 @@ namespace ThorsAnvil::Widgets
 namespace UI = ThorsAnvil::UI;
 class Widget;
 class FocusTrackerMouse;
-class WidgetKeyboardFocusInterface;
+class ControleHandlerKeyboard;
 
 class FocusTrackerKeyboard
 {
-    using Storage   = std::list<WidgetKeyboardFocusInterface*>;
+    using Storage   = std::list<ControleHandlerKeyboard*>;
     using Iterator  = Storage::iterator;
 
     Storage     textInputWidgets;
@@ -35,8 +35,8 @@ class FocusTrackerKeyboard
         void moveKeyboardFocusToNextAvailableWidget(bool forward);
 
         // Adding new Widgets that can handle text.
-        void addInterface(WidgetKeyboardFocusInterface& interface);
-        void remInterface(WidgetKeyboardFocusInterface& interface);
+        void addInterface(ControleHandlerKeyboard& interface);
+        void remInterface(ControleHandlerKeyboard& interface);
 
     private:
         // TODO Move to MouseFocusSet

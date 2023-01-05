@@ -81,27 +81,3 @@ FocusTrackerMouse& Widget::getMouseInterfaceSet()
 
     return parentWidget->getMouseInterfaceSet();
 }
-
-WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWidget, std::function<bool()>&& iVis)
-    : keyboardFocusWidgets(parentWidget.getKeyboardInterfaceSet())
-    , iVis(std::move(iVis))
-{
-    keyboardFocusWidgets.addInterface(*this);
-}
-
-WidgetKeyboardFocusInterface::~WidgetKeyboardFocusInterface()
-{
-    keyboardFocusWidgets.remInterface(*this);
-}
-
-WidgetMouseFocusInterface::WidgetMouseFocusInterface(WidgetView& parentWidget, std::function<UI::Rect()>&& gRect, std::function<bool()>&& iVis)
-    : mouseFocusWidgets(parentWidget.getMouseInterfaceSet())
-    , gRect(std::move(gRect))
-    , iVis(std::move(iVis))
-{
-    mouseFocusWidgets.addInterface(*this);
-}
-WidgetMouseFocusInterface::~WidgetMouseFocusInterface()
-{
-    mouseFocusWidgets.remInterface(*this);
-}

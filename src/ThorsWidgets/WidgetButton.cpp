@@ -8,7 +8,7 @@ WidgetButton::WidgetButton(WidgetView& parent, std::string const& text,
                            ButtonAction&& action,
                            UI::Sz minSize, bool visible)
     : WidgetLabel(parent, text, minSize, visible)
-    , WidgetMouseFocusInterface(parent, [&](){return dynamic_cast<Widget&>(*this).getRect();}, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
+    , ControleHandlerMouse(parent, [&](){return dynamic_cast<Widget&>(*this).getRect();}, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
     , action(std::move(action))
 {}
 

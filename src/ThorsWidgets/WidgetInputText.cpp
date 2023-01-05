@@ -9,8 +9,8 @@ WidgetInputText::WidgetInputText(WidgetView& parent,
                                  std::string const& textParam,
                                  UI::Sz minSize, bool visible)
     : Widget(parent, minSize, visible)
-    , WidgetKeyboardFocusInterface(parent, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
-    , WidgetMouseFocusInterface(parent, [&](){return dynamic_cast<Widget&>(*this).getRect();}, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
+    , ControleHandlerKeyboard(parent, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
+    , ControleHandlerMouse(parent, [&](){return dynamic_cast<Widget&>(*this).getRect();}, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
     , text(textParam)
     , insertPoint(text.size())
     , insertEnd(insertPoint)

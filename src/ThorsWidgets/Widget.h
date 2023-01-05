@@ -7,8 +7,6 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "ThorsUI/Util.h"
-#include <functional>
-#include <string_view>
 
 namespace ThorsAnvil::UI
 {
@@ -68,53 +66,14 @@ class Widget
 
     private:
         // Utility for handling keyboard focus.
-        friend class FocusTrackerKeyboard;
-        friend class WidgetKeyboardFocusInterface;
-        friend class WidgetMouseFocusInterface;
+        friend class ControleHandlerKeyboard;
         virtual FocusTrackerKeyboard&   getKeyboardInterfaceSet();
+
+    private:
+        // Utility for handling keyboard focus.
+        friend class ControleHandlerMouse;
         virtual FocusTrackerMouse&      getMouseInterfaceSet();
 
-};
-
-/*
- * A Widget that accepts Keyboard Focus
- */
-class WidgetKeyboardFocusInterface
-{
-    protected:
-        FocusTrackerKeyboard&       keyboardFocusWidgets;
-        std::function<bool()>       iVis;
-    public:
-        WidgetKeyboardFocusInterface(WidgetView& parentWidget, std::function<bool()>&& iVis);
-        virtual ~WidgetKeyboardFocusInterface();
-
-                bool    isVisible() const   {return iVis();}
-
-        virtual void    handleEventTextGainFocus()                              {}
-        virtual void    handleEventTextLoseFocus()                              {}
-        virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)   {}
-        virtual void    handleEventTextInsert(std::string_view view)            {}
-};
-
-class WidgetMouseFocusInterface
-{
-    protected:
-        FocusTrackerMouse&          mouseFocusWidgets;
-        std::function<UI::Rect()>   gRect;
-        std::function<bool()>       iVis;
-    public:
-        WidgetMouseFocusInterface(WidgetView& parentWidget, std::function<UI::Rect()>&& geRect, std::function<bool()>&& iVis);
-        virtual ~WidgetMouseFocusInterface();
-
-                bool        isVisible() const   {return iVis();}
-                UI::Rect    getRect() const     {return gRect();}
-
-        virtual void    handleEventMouseMoveInWidget()                          {}
-        virtual void    handleEventMouseMoveEnterWidget()                       {}
-        virtual void    handleEventMouseMoveLeaveWidget()                       {}
-        virtual void    handleEventMouseDownInWidget()                          {}
-        virtual void    handleEventMouseUpInWidget()                            {}
-        virtual void    handleEventMouseUpOutsideWidget()                       {}
 };
 
 }

@@ -7,6 +7,8 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
+#include "ControleHandlerKeyboard.h"
+#include "ControleHandlerMouse.h"
 #include "ThorsUI/Texture.h"
 #include "ThorsUI/Util.h"
 #include <string>
@@ -26,7 +28,7 @@ struct Theme;
 
 enum InputTextState {Normal, Focus, Drag};
 
-class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface, public WidgetMouseFocusInterface
+class WidgetInputText: public Widget, public ControleHandlerKeyboard, public ControleHandlerMouse
 {
     friend struct Theme;
     UI::Texture     textTexture;
@@ -63,7 +65,7 @@ class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface, publi
         virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key) override;
         virtual void    handleEventTextInsert(std::string_view view) override;
 
-        // Override for Interface WidgetKeyboardFocusInterface
+        // Override for Interface ControleHandlerKeyboard
         virtual void    handleEventTextGainFocus() override;
         virtual void    handleEventTextLoseFocus() override;
 };

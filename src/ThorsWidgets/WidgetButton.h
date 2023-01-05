@@ -4,6 +4,7 @@
 #include "ThorsWidgetsConfig.h"
 #include "WidgetLabel.h"
 #include "Widget.h"
+#include "ControleHandlerMouse.h"
 #include "ThorsUI/Util.h"
 #include <functional>
 #include <string>
@@ -23,7 +24,7 @@ struct Theme;
 enum ButtonState {Up, Hover, Down, DownOutside};
 using ButtonAction = std::function<void()>;
 
-class WidgetButton: public WidgetLabel, public WidgetMouseFocusInterface
+class WidgetButton: public WidgetLabel, public ControleHandlerMouse
 {
     friend struct Theme;
     ButtonState     state   = Up;

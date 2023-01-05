@@ -1,6 +1,5 @@
 #include "FocusTrackerMouse.h"
-#include "FocusTrackerKeyboard.h"
-#include "Widget.h"
+#include "ControleHandlerMouse.h"
 
 using namespace ThorsAnvil::Widgets;
 
@@ -10,12 +9,12 @@ FocusTrackerMouse::FocusTrackerMouse()
     , widgetPressed(none())
 {}
 
-void FocusTrackerMouse::addInterface(WidgetMouseFocusInterface& interface)
+void FocusTrackerMouse::addInterface(ControleHandlerMouse& interface)
 {
     mouseInputWidgets.emplace_back(&interface);
 }
 
-void FocusTrackerMouse::remInterface(WidgetMouseFocusInterface& interface)
+void FocusTrackerMouse::remInterface(ControleHandlerMouse& interface)
 {
     auto find = std::find(std::cbegin(mouseInputWidgets), std::cend(mouseInputWidgets), &interface);
     if (find != none())
