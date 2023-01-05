@@ -30,26 +30,6 @@ class WidgetLabel;
 class WidgetInputText;
 class WidgetButton;
 
-/*
- * For now this is in the Widget Class.
- * I expect long term to move this into ThorsUI (maybe) still working on it.
- * The basic font takes an absolute path. This utility abstract the need for an absolute path.
- */
-class ThemeUtility
-{
-    public:
-        static UI::TextPen getPen(std::string const& font, int point, UI::Color ink , UI::Color background = {0, 0, 0, 255})
-        {
-            static const std::string fontPath[] = {   "/Library/Fonts"
-                                                    , "/System/Library/Fonts/Supplemental/"
-                                                    , "/System Folder/Fonts"
-                                                  };
-            // TODO
-            // If a font is already loaded then reuse the data.
-            return UI::TextPen(fontPath[1] + font + ".ttf", point, ink, background);
-        }
-};
-
 struct Theme
 {
     // Space around edge of View.
@@ -62,13 +42,13 @@ struct Theme
 
     // WidgetLabels
     UI::Rect    labelBorder         = {2, 2, 2, 2};
-    UI::TextPen labelNormalTextPen  = ThemeUtility::getPen("Arial Unicode", 16, UI::C::lightgrey);
+    UI::TextPen labelNormalTextPen  = {"Arial Unicode", 16, UI::C::lightgrey};
     virtual void drawWidget(UI::DrawContext&, WidgetLabel const&) const;
 
     // WidgetInputText
     UI::Rect    inputTextBorder     = {4, 4, 4, 4};
-    UI::TextPen inputNormalTextPen  = ThemeUtility::getPen("Arial Unicode", 16, UI::C::darkgrey);
-    UI::Pen     inputSelectedTextPen= ThemeUtility::getPen("Arial Unicode", 16, UI::C::yellow, UI::C::yellow);
+    UI::TextPen inputNormalTextPen  = {"Arial Unicode", 16, UI::C::darkgrey};
+    UI::TextPen inputSelectedTextPen= {"Arial Unicode", 16, UI::C::yellow, UI::C::yellow};
     UI::Pen     inputNormalBorderPen= UI::Pen(UI::C::white);
     UI::Pen     inputFocusBorderPen = UI::Pen(UI::C::white);
     virtual void drawWidget(UI::DrawContext&, WidgetInputText const&) const;
@@ -77,9 +57,9 @@ struct Theme
     int         buttonLineWidth     = 2;
     UI::Rect    buttonBorder        = {2, 2, 2, 2};
     UI::Rect    buttonPadding       = {2, 2, 2, 2};
-    UI::TextPen butNormalTextPen    = ThemeUtility::getPen("Arial Unicode", 16, UI::C::lightgrey);
-    UI::TextPen butHoverTextPen     = ThemeUtility::getPen("Arial Unicode", 16, UI::C::darkslateblue);
-    UI::TextPen butPressTextPen     = ThemeUtility::getPen("Arial Unicode", 16, UI::C::white);
+    UI::TextPen butNormalTextPen    = {"Arial Unicode", 16, UI::C::lightgrey};
+    UI::TextPen butHoverTextPen     = {"Arial Unicode", 16, UI::C::darkslateblue};
+    UI::TextPen butPressTextPen     = {"Arial Unicode", 16, UI::C::white};
     UI::Pen     buttonBorderPen     = UI::Pen(UI::C::white, UI::C::antiquewhite);
     UI::Pen     buttonPressedPen    = UI::Pen(UI::C::white, UI::C::black);
     virtual void drawWidget(UI::DrawContext&, WidgetButton const&) const;
