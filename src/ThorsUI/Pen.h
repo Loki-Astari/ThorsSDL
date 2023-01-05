@@ -76,10 +76,15 @@ class Pen
         // void drawGeometry: SDL_RenderGeometry
 };
 
+namespace Util
+{
+    std::shared_ptr<SDL::TTFont> getFont(std::string const& fontName, int point);
+}
+
 class TextPen: public Pen
 {
     public:
-        TextPen(std::string const& fileName, int point = 12, Color ink =  {0, 0, 0, 255}, Color fill = {255, 255, 255, 0});
+        TextPen(std::string const& fontName, int point = 12, Color ink =  {0, 0, 0, 255}, Color fill = {255, 255, 255, 0});
 
         Texture     createTextureFromString(DrawContext& drawContext, char const* message)                const;
         Texture     createTextureFromString(DrawContext& drawContext, std::string const& message)         const   {return createTextureFromString(drawContext, message.c_str());}

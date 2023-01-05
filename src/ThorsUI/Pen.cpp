@@ -1,5 +1,7 @@
 #include "Pen.h"
 #include "DrawContext.h"
+#include <map>
+#include <filesystem>
 
 
 using namespace ThorsAnvil::UI;
@@ -63,9 +65,53 @@ void Pen::drawRects(DrawContext& drawContext, std::initializer_list<Rect> rects)
     }
 }
 
-TextPen::TextPen(std::string const& fileName, int point, Color ink, Color fill)
+std::shared_ptr<SDL::TTFont> Util::getFont(std::string const& fontName, int point)
+{
+    using Key = std::pair<std::string, int>;
+    static std::map<Key, std::weak_ptr<SDL::TTFont>>      loadedFonts;
+    static const std::string fontDirs[] = {   "/Library/Fonts/"
+                                            , "/System/Library/Fonts/Supplemental/"
+                                            , "/System Folder/Fonts/"
+                                          };
+
+    std::shared_ptr<SDL::TTFont>    result;
+    std::weak_ptr<SDL::TTFont>&     font    = loadedFonts[{fontName, point}];
+
+    if (font.use_count() == 0)
+    {
+        std::filesystem::path   fontPath(fontName);
+        std::string             extension = fontPath.extension() == "" ? ".ttf" : "";
+        std::string             path;
+
+        std::cerr << "Search Start:\n";
+        if (fontName.size() == 0 || fontName[0] != '/')
+        {
+            for (auto const& testPath: fontDirs)
+            {
+                std::string             fullPathName = testPath + fontName + extension;
+                std::cerr << "\t C: " << fullPathName << "\n";
+                if (std::filesystem::exists(fullPathName))
+                {
+                    std::cerr << "\t\tFound\n";
+                    path = testPath;
+                    break;
+                }
+            }
+        }
+        std::cerr << "Loading: " << path << fontName << extension << "\n";
+        result = std::make_shared<SDL::TTFont>(path + fontName + extension, point);
+        font = result;
+    }
+    else
+    {
+        result = font.lock();
+    }
+    return result;
+}
+
+TextPen::TextPen(std::string const& fontName, int point, Color ink, Color fill)
     : Pen(ink, fill)
-    , font(std::make_shared<SDL::TTFont>(fileName, point))
+    , font(Util::getFont(fontName, point))
 {}
 
 Texture TextPen::createTextureFromString(DrawContext& drawContext, char const* message) const
