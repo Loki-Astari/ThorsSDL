@@ -58,10 +58,6 @@ class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface, publi
 
     private:
         // Handle mouse clicks text input events:w
-        virtual void    handleEventMouseMoveInWidget() override     {}
-        virtual void    handleEventMouseMoveEnterWidget() override  {}
-        virtual void    handleEventMouseMoveLeaveWidget() override  {}
-        virtual void    handleEventMouseDownInWidget() override     {}
         virtual void    handleEventMouseUpInWidget() override;
         virtual void    handleEventMouseUpOutsideWidget() override;
         virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key) override;

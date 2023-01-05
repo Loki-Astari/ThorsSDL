@@ -90,10 +90,10 @@ class WidgetKeyboardFocusInterface
 
                 bool    isVisible() const   {return iVis();}
 
-        virtual void    handleEventTextGainFocus() = 0;
-        virtual void    handleEventTextLoseFocus()  = 0;
-        virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)   = 0;
-        virtual void    handleEventTextInsert(std::string_view view)            = 0;
+        virtual void    handleEventTextGainFocus()                              {}
+        virtual void    handleEventTextLoseFocus()                              {}
+        virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)   {}
+        virtual void    handleEventTextInsert(std::string_view view)            {}
 };
 
 class WidgetMouseFocusInterface
@@ -109,13 +109,12 @@ class WidgetMouseFocusInterface
                 bool        isVisible() const   {return iVis();}
                 UI::Rect    getRect() const     {return gRect();}
 
-        virtual void    handleEventMouseMoveInWidget()                          = 0;
-
-        virtual void    handleEventMouseMoveEnterWidget()                       = 0;
-        virtual void    handleEventMouseMoveLeaveWidget()                       = 0;
-        virtual void    handleEventMouseDownInWidget()                          = 0;
-        virtual void    handleEventMouseUpInWidget()                            = 0;
-        virtual void    handleEventMouseUpOutsideWidget()                       = 0;
+        virtual void    handleEventMouseMoveInWidget()                          {}
+        virtual void    handleEventMouseMoveEnterWidget()                       {}
+        virtual void    handleEventMouseMoveLeaveWidget()                       {}
+        virtual void    handleEventMouseDownInWidget()                          {}
+        virtual void    handleEventMouseUpInWidget()                            {}
+        virtual void    handleEventMouseUpOutsideWidget()                       {}
 };
 
 }

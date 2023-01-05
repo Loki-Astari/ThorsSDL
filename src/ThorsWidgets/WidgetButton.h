@@ -40,7 +40,6 @@ class WidgetButton: public WidgetLabel, public WidgetMouseFocusInterface
 
     private:
         // Handle mouse clicks on the button.
-        virtual void    handleEventMouseMoveInWidget() override {}
         virtual void    handleEventMouseMoveEnterWidget() override;
         virtual void    handleEventMouseMoveLeaveWidget() override;
         virtual void    handleEventMouseDownInWidget() override;
