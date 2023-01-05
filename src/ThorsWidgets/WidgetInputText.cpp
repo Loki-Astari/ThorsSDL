@@ -1,8 +1,7 @@
 #include "WidgetInputText.h"
-#include "WidgetView.h"
 #include "Theme.h"
 #include "ThorsUI/Pen.h"
-#include <chrono>
+#include "FocusTrackerKeyboard.h"
 
 using namespace ThorsAnvil::Widgets;
 
@@ -10,7 +9,8 @@ WidgetInputText::WidgetInputText(WidgetView& parent,
                                  std::string const& textParam,
                                  UI::Sz minSize, bool visible)
     : Widget(parent, minSize, visible)
-    , WidgetKeyboardFocusInterface(parent)
+    , ControleHandlerKeyboard(parent, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
+    , ControleHandlerMouse(parent, [&](){return dynamic_cast<Widget&>(*this).getRect();}, [&](){return dynamic_cast<Widget&>(*this).isVisible();})
     , text(textParam)
     , insertPoint(text.size())
     , insertEnd(insertPoint)
@@ -77,31 +77,25 @@ UI::TextPen const& WidgetInputText::getTextPen(Theme const& theme)
     return theme.inputNormalTextPen;
 }
 
-Widget* WidgetInputText::handleEventMouseDownInWidget()
-{
-    return this;
-}
-
-Widget* WidgetInputText::handleEventMouseUpInWidget(Widget* /*mouseDownIn*/)
+void WidgetInputText::handleEventMouseUpInWidget()
 {
     markDirty();
-    state = state != Normal ? Focus : Normal;
-    return nullptr;
+    state = Normal;
 }
 
 void WidgetInputText::handleEventMouseUpOutsideWidget()
 {
     markDirty();
+    state = Normal;
+}
+
+void WidgetInputText::handleEventTextGainFocus()
+{
+    markDirty();
     state = Focus;
 }
 
-void WidgetInputText::acceptKeyboardFocus()
-{
-    markDirty();
-    state = Drag;
-}
-
-void WidgetInputText::looseKeyboardFocus()
+void WidgetInputText::handleEventTextLoseFocus()
 {
     markDirty();
     state = Normal;

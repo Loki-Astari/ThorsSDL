@@ -1,6 +1,7 @@
 #include "View.h"
+#include "Theme.h"
+#include "ControleHandlerMouse.h"
 #include "ThorsUI/Window.h"
-#include <string_view>
 
 using namespace ThorsAnvil::Widgets;
 
@@ -9,10 +10,8 @@ View::View(UI::Window& window, Layout& layout, Theme& theme, UI::Sz minSize, Hor
     , UI::View(window)
     , theme(theme)
     , minSize(minSize)
-    , mouseDownIn(nullptr)
     , hAlign(hAlign)
     , vAlign(vAlign)
-    // Force re-draw first time
     , updated(true)
 {}
 
@@ -80,37 +79,32 @@ UI::Sz View::reset(bool fitWindowToView)
     return size;
 }
 
-void View::handleEventWindowEnter(SDL_WindowEvent const& /*event*/)
+void View::handleEventWindowEnter(SDL_WindowEvent const& event)
 {
-    handleEventMouseMoveEnterWidget();
+    mouseInputSet.handleEventMouseMoveEnterWidget(event);
 }
 
-void View::handleEventWindowLeave(SDL_WindowEvent const& /*event*/)
+void View::handleEventWindowLeave(SDL_WindowEvent const& event)
 {
-    handleEventMouseMoveLeaveWidget();
+    mouseInputSet.handleEventMouseMoveLeaveWidget(event);
 }
 
 void View::handleEventMouseMove(SDL_MouseMotionEvent const& event)
 {
-    handleEventMouseMoveInWidget(event);
+    mouseInputSet.handleEventMouseMoveInWidget(event);
 }
 
-void View::handleEventMouseDown(SDL_MouseButtonEvent const& /*event*/)
+void View::handleEventMouseDown(SDL_MouseButtonEvent const& event)
 {
-    mouseDownIn = handleEventMouseDownInWidget();
-    if (mouseDownIn)
-    {
-        textInputSet.handleEventMouseDown(*mouseDownIn);
-    }
+    mouseInputSet.handleEventMouseDownInWidget(event);
 }
 
-void View::handleEventMouseUp(SDL_MouseButtonEvent const& /*event*/)
+void View::handleEventMouseUp(SDL_MouseButtonEvent const& event)
 {
-    mouseDownIn = handleEventMouseUpInWidget(mouseDownIn);
-    if (mouseDownIn)
-    {
-        mouseDownIn->handleEventMouseUpOutsideWidget();
-        mouseDownIn = nullptr;
+    mouseInputSet.handleEventMouseUpInWidget(event);
+    auto widgetPressed = mouseInputSet.getWidgetPressed();
+    if (widgetPressed) {
+        textInputSet.handleEventMouseDown(dynamic_cast<Widget&>(*widgetPressed));
     }
 }
 
@@ -139,7 +133,12 @@ void View::handleEventTextEditingExt(SDL_TextEditingExtEvent const& event)
     textInputSet.handleEventTextEditingExt(event);
 }
 
-KeyboardFocusSet& View::getInterfaceSet()
+FocusTrackerKeyboard& View::getKeyboardInterfaceSet()
 {
     return textInputSet;
+}
+
+FocusTrackerMouse& View::getMouseInterfaceSet()
+{
+    return mouseInputSet;
 }

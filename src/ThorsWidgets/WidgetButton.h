@@ -3,19 +3,28 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "WidgetLabel.h"
-#include "ThorsUI/Texture.h"
+#include "Widget.h"
+#include "ControleHandlerMouse.h"
 #include "ThorsUI/Util.h"
+#include <functional>
+#include <string>
+
+namespace ThorsAnvil::UI
+{
+    class DrawContext;
+}
 
 namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
+class WidgetView;
+struct Theme;
 
 enum ButtonState {Up, Hover, Down, DownOutside};
 using ButtonAction = std::function<void()>;
 
-struct Theme;
-class WidgetButton: public WidgetLabel
+class WidgetButton: public WidgetLabel, public ControleHandlerMouse
 {
     friend struct Theme;
     ButtonState     state   = Up;
@@ -34,8 +43,8 @@ class WidgetButton: public WidgetLabel
         // Handle mouse clicks on the button.
         virtual void    handleEventMouseMoveEnterWidget() override;
         virtual void    handleEventMouseMoveLeaveWidget() override;
-        virtual Widget* handleEventMouseDownInWidget() override;
-        virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
+        virtual void    handleEventMouseDownInWidget() override;
+        virtual void    handleEventMouseUpInWidget() override;
         virtual void    handleEventMouseUpOutsideWidget() override;
 
     private:

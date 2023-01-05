@@ -1,7 +1,6 @@
 #include "WidgetView.h"
-#include "Widget.h"
 #include "Layout.h"
-#include "ThorsUI/DrawContext.h"
+#include "Theme.h"
 
 using namespace ThorsAnvil::Widgets;
 
@@ -44,62 +43,4 @@ UI::Sz WidgetView::doPreferredLayout(UI::DrawContext& drawContext, Theme const& 
 void WidgetView::doPerformLayout(UI::Pt topLeft, Theme const& theme)
 {
     layout.performLayout(topLeft, theme, widgets);
-}
-
-void WidgetView::handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event)
-{
-    for (auto& widget: widgets)
-    {
-        if (widget->handleEventMouseMoveInWidget(event))
-        {
-            if (widget != mouseOver)
-            {
-                if (mouseOver != nullptr) {
-                    mouseOver->handleEventMouseMoveLeaveWidget();
-                }
-                mouseOver = widget;
-                mouseOver->handleEventMouseMoveEnterWidget();
-            }
-            return;
-        }
-    }
-    if (mouseOver)
-    {
-        mouseOver->handleEventMouseMoveLeaveWidget();
-        mouseOver = nullptr;
-    }
-}
-
-void WidgetView::handleEventMouseMoveEnterWidget()
-{}
-
-void WidgetView::handleEventMouseMoveLeaveWidget()
-{
-    if (mouseOver) {
-        mouseOver->handleEventMouseMoveLeaveWidget();
-    }
-    mouseOver = nullptr;
-}
-
-Widget* WidgetView::handleEventMouseDownInWidget()
-{
-    if (mouseOver) {
-        return mouseOver->handleEventMouseDownInWidget();
-    }
-    return nullptr;
-}
-
-Widget* WidgetView::handleEventMouseUpInWidget(Widget* mouseDownIn)
-{
-    if (mouseOver) {
-        return mouseOver->handleEventMouseUpInWidget(mouseDownIn);
-    }
-    return mouseDownIn;
-}
-
-void WidgetView::handleEventMouseUpOutsideWidget()
-{
-    if (mouseOver) {
-        mouseOver->handleEventMouseUpOutsideWidget();
-    }
 }

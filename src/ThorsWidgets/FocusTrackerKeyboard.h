@@ -1,25 +1,28 @@
-#ifndef THORSANVIL_WIDGETS_TEXT_INPUT_INTERFACE_H
-#define THORSANVIL_WIDGETS_TEXT_INPUT_INTERFACE_H
+#ifndef THORSANVIL_WIDGETS_FOCUS_TRACKER_KEYBOARD_H
+#define THORSANVIL_WIDGETS_FOCUS_TRACKER_KEYBOARD_H
 
 /*
- * KeyboardFocusSet:
+ * FocusTrackerKeyboard:
  *  Used by View to track all Widgets that can accept keyboard input.
  *  Then tracks the current widget that accepts keyboard input.
  *  forward all keyboard / text events to the widget that can handle text input
  */
 
 #include "ThorsWidgetsConfig.h"
-#include "Widget.h"
+#include "ThorsUI/Util.h"
 #include <list>
 
 namespace ThorsAnvil::Widgets
 {
 
+namespace UI = ThorsAnvil::UI;
 class Widget;
+class FocusTrackerMouse;
+class ControleHandlerKeyboard;
 
-class KeyboardFocusSet
+class FocusTrackerKeyboard
 {
-    using Storage   = std::list<WidgetKeyboardFocusInterface*>;
+    using Storage   = std::list<ControleHandlerKeyboard*>;
     using Iterator  = Storage::iterator;
 
     Storage     textInputWidgets;
@@ -27,17 +30,19 @@ class KeyboardFocusSet
 
 
     public:
-        KeyboardFocusSet();
+        FocusTrackerKeyboard();
         void reset();
         void moveKeyboardFocusToNextAvailableWidget(bool forward);
 
         // Adding new Widgets that can handle text.
-        void addInterface(WidgetKeyboardFocusInterface& interface);
-        void remInterface(WidgetKeyboardFocusInterface& interface);
+        void addInterface(ControleHandlerKeyboard& interface);
+        void remInterface(ControleHandlerKeyboard& interface);
 
     private:
         // TODO Move to MouseFocusSet
+        friend class FocusTrackerMouse;
         void handleEventMouseDown(Widget& mouseDownIn);
+
     private:
         // Handle mouse and keyboard events.
         friend class View;

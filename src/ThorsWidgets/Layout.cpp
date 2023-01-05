@@ -1,4 +1,5 @@
 #include "Layout.h"
+#include "Theme.h"
 #include "Widget.h"
 #include <algorithm>
 #include <numeric>

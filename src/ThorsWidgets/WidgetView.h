@@ -3,7 +3,6 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
-#include <gtest/gtest_prod.h>
 #include <vector>
 
 namespace ThorsAnvil::UI
@@ -11,18 +10,16 @@ namespace ThorsAnvil::UI
     class DrawContext;
 }
 
-class WidgetViewTest_CheckWidgetStored_Test;
 namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
-
-class Widget;
 class Layout;
-class TextInputSet;
+class WidgetView;
+struct Theme;
+
 class WidgetView: public Widget
 {
-    FRIEND_TEST(::WidgetViewTest, CheckWidgetStored);
     Layout&                     layout;
     std::vector<Widget*>        widgets;
     Widget*                     mouseOver;
@@ -48,15 +45,6 @@ class WidgetView: public Widget
         // The Layout class handles all the layout stuff to do with Widgets.
         virtual UI::Sz  doPreferredLayout(UI::DrawContext& drawContext, Theme const& theme, UI::Sz size) override;
         virtual void    doPerformLayout(UI::Pt topLeft, Theme const& theme) override;
-
-    private:
-        // Handle mouse clicks on the button.
-        virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& event) override;
-        virtual void    handleEventMouseMoveEnterWidget() override;
-        virtual void    handleEventMouseMoveLeaveWidget() override;
-        virtual Widget* handleEventMouseDownInWidget() override;
-        virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
-        virtual void    handleEventMouseUpOutsideWidget() override;
 };
 
 }

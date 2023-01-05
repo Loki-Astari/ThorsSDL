@@ -3,7 +3,6 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
-#include "ThorsUI/Util.h"
 
 namespace ThorsAnvil::Widgets
 {

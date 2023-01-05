@@ -1,6 +1,7 @@
 #include "Widget.h"
 #include "WidgetView.h"
-#include "KeyboardFocusSet.h"
+#include "FocusTrackerKeyboard.h"
+#include "FocusTrackerMouse.h"
 
 using namespace ThorsAnvil::Widgets;
 
@@ -63,40 +64,20 @@ UI::Sz Widget::doPreferredLayout(UI::DrawContext& /*drawContext*/, Theme const& 
 void Widget::doPerformLayout(UI::Pt /*newTopLeft*/, Theme const& /*theme*/)
 {}
 
-// Handle Events
-bool Widget::handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event)
-{
-    UI::Rect rect = getRect();
-
-    if (!rect.contains({event.x, event.y}))
-    {
-        return false;
-    }
-    handleEventMouseMoveInWidgetAction(event);
-    return true;
-}
-
-Widget* Widget::handleEventMouseUpInWidget(Widget* mouseDownIn)
-{
-    return mouseDownIn;
-}
-
-KeyboardFocusSet& Widget::getInterfaceSet()
+FocusTrackerKeyboard& Widget::getKeyboardInterfaceSet()
 {
     if (parentWidget == nullptr) {
         throw std::runtime_error("Root Widget should override");
     }
 
-    return parentWidget->getInterfaceSet();
+    return parentWidget->getKeyboardInterfaceSet();
 }
 
-WidgetKeyboardFocusInterface::WidgetKeyboardFocusInterface(WidgetView& parentWidget)
-    : keyboardFocusWidgets(parentWidget.getInterfaceSet())
+FocusTrackerMouse& Widget::getMouseInterfaceSet()
 {
-    keyboardFocusWidgets.addInterface(*this);
-}
+    if (parentWidget == nullptr) {
+        throw std::runtime_error("Root Widget should override");
+    }
 
-WidgetKeyboardFocusInterface::~WidgetKeyboardFocusInterface()
-{
-    keyboardFocusWidgets.remInterface(*this);
+    return parentWidget->getMouseInterfaceSet();
 }

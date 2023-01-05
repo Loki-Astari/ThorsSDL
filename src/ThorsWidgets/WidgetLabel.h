@@ -5,13 +5,20 @@
 #include "Widget.h"
 #include "ThorsUI/Texture.h"
 #include "ThorsUI/Util.h"
+#include <string>
+
+namespace ThorsAnvil::UI
+{
+    class DrawContext;
+}
 
 namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
-
+class WidgetView;
 struct Theme;
+
 class WidgetLabel: public Widget
 {
     friend struct Theme;

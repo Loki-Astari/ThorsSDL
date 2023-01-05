@@ -17,13 +17,14 @@ namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
+class Layout;
+class WidgetView;
+class FocusTrackerKeyboard;
+class FocusTrackerMouse;
+struct Theme;
 
 enum WidgetType {Unknown, Label};
 
-class Layout;
-class WidgetView;
-struct Theme;
-class KeyboardFocusSet;
 class Widget
 {
     WidgetView*         parentWidget;
@@ -38,10 +39,10 @@ class Widget
         Widget(WidgetView& parentWidget, UI::Sz minSize, bool visible = true);
         virtual ~Widget();
 
-    protected:
                 UI::Pt const&       getPos()    const   {return topLeft;}
                 UI::Sz const&       getSize()   const   {return size;}
                 UI::Rect            getRect()   const   {return {topLeft.x, topLeft.y, size.x, size.y};}
+                bool                isVisible() const   {return visible;}
         virtual void                markDirty();
 
     private:
@@ -62,48 +63,17 @@ class Widget
         virtual void    doPerformLayout(UI::Pt newTopLeft, Theme const& theme);
         // Utility functions to help in layout.
         virtual WidgetType          type()      const   {return Unknown;}
-                bool                isVisible() const   {return visible;}
-
-    private:
-        // Handle Events.
-        // All events are passed by the Window to the View.
-        // The view then passes Key/Mouse events to the appropriate widget.
-        friend class View;
-                bool    handleEventMouseMoveInWidget(SDL_MouseMotionEvent const& event);
-        virtual void    handleEventMouseMoveInWidgetAction(SDL_MouseMotionEvent const& /*event*/)   {}
-        virtual void    handleEventMouseMoveEnterWidget()                                           {}
-        virtual void    handleEventMouseMoveLeaveWidget()                                           {}
-        virtual Widget* handleEventMouseDownInWidget()                                              {return nullptr;}
-        virtual Widget* handleEventMouseUpInWidget(Widget* downIn);
-        virtual void    handleEventMouseUpOutsideWidget()                                           {}
 
     private:
         // Utility for handling keyboard focus.
-        friend class KeyboardFocusSet;
-        friend class WidgetKeyboardFocusInterface;
-        virtual KeyboardFocusSet&   getInterfaceSet();
+        friend class ControleHandlerKeyboard;
+        virtual FocusTrackerKeyboard&   getKeyboardInterfaceSet();
 
-};
+    private:
+        // Utility for handling keyboard focus.
+        friend class ControleHandlerMouse;
+        virtual FocusTrackerMouse&      getMouseInterfaceSet();
 
-/*
- * A Widget that accepts Keyboard Focus
- */
-class WidgetKeyboardFocusInterface
-{
-    protected:
-        KeyboardFocusSet&   keyboardFocusWidgets;
-    public:
-        WidgetKeyboardFocusInterface(WidgetView& parentWidget);
-
-        virtual ~WidgetKeyboardFocusInterface();
-
-        virtual void    acceptKeyboardFocus() = 0;
-        virtual void    looseKeyboardFocus()  = 0;
-                // TODO Fix.
-                bool    isVisible() const   {return true;}
-
-        virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key)   = 0;
-        virtual void    handleEventTextInsert(std::string_view view)            = 0;
 };
 
 }

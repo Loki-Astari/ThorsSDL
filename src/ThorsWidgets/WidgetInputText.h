@@ -7,19 +7,28 @@
 
 #include "ThorsWidgetsConfig.h"
 #include "Widget.h"
-#include "KeyboardFocusSet.h"
+#include "ControleHandlerKeyboard.h"
+#include "ControleHandlerMouse.h"
 #include "ThorsUI/Texture.h"
 #include "ThorsUI/Util.h"
+#include <string>
+#include <string_view>
+
+namespace ThorsAnvil::UI
+{
+    class DrawContext;
+}
 
 namespace ThorsAnvil::Widgets
 {
 
 namespace UI = ThorsAnvil::UI;
+class WidgetView;
+struct Theme;
 
 enum InputTextState {Normal, Focus, Drag};
 
-struct Theme;
-class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface
+class WidgetInputText: public Widget, public ControleHandlerKeyboard, public ControleHandlerMouse
 {
     friend struct Theme;
     UI::Texture     textTexture;
@@ -51,15 +60,14 @@ class WidgetInputText: public Widget, public WidgetKeyboardFocusInterface
 
     private:
         // Handle mouse clicks text input events:w
-        virtual Widget* handleEventMouseDownInWidget() override;
-        virtual Widget* handleEventMouseUpInWidget(Widget* mouseDownIn) override;
+        virtual void    handleEventMouseUpInWidget() override;
         virtual void    handleEventMouseUpOutsideWidget() override;
         virtual void    handleEventTextInsert(Uint16 keyMod, SDL_Keycode key) override;
         virtual void    handleEventTextInsert(std::string_view view) override;
 
-        // Override for Interface WidgetKeyboardFocusInterface
-        virtual void    acceptKeyboardFocus() override;
-        virtual void    looseKeyboardFocus() override;
+        // Override for Interface ControleHandlerKeyboard
+        virtual void    handleEventTextGainFocus() override;
+        virtual void    handleEventTextLoseFocus() override;
 };
 
 }
