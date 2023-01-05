@@ -19,12 +19,12 @@ void FocusTrackerMouse::remInterface(ControleHandlerMouse& interface)
     auto find = std::find(std::cbegin(mouseInputWidgets), std::cend(mouseInputWidgets), &interface);
     if (find != none())
     {
-        if (find == mouseDownIn)
+        if (find == mouseDownIn && mouseDownIn != none())
         {
             (*mouseDownIn)->handleEventMouseUpOutsideWidget();
             mouseDownIn = none();
         }
-        if (find != mouseOver)
+        if (find != mouseOver && mouseOver != none())
         {
             (*mouseOver)->handleEventMouseMoveLeaveWidget();
             mouseOver = none();
