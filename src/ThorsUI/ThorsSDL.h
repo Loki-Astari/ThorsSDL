@@ -169,7 +169,8 @@ struct PointerWrapper: public BaseWrapper
         , pointer(pointer)
     {}
     PointerWrapper(PointerWrapper&& src) noexcept
-        : pointer(std::exchange(src.pointer, nullptr))
+        : BaseWrapper(std::move(src))
+        , pointer(std::exchange(src.pointer, nullptr))
     {}
     PointerWrapper& operator=(PointerWrapper&& src) noexcept
     {
@@ -177,7 +178,13 @@ struct PointerWrapper: public BaseWrapper
         return *this;
     }
 
-    operator T*()
+    void swap(PointerWrapper& other) noexcept
+    {
+        std::swap(pointer, other.pointer);
+    }
+    friend void swap(PointerWrapper& lhs, PointerWrapper& rhs)   {lhs.swap(rhs);}
+
+    operator T*() const
     {
         return pointer;
     }
@@ -229,8 +236,8 @@ struct Surface: public PointerWrapper<SDL_Surface>
 {
     Surface();
     Surface(SDL_Surface* surface, char const* message = "Invalid NullPtr passed to Surface cretion");
-    Surface(Surface&& src)              = default;
-    Surface& operator=(Surface&& rc)    = default;
+    Surface(Surface&& src) noexcept             = default;
+    Surface& operator=(Surface&& rc) noexcept   = default;
     ~Surface();
 };
 

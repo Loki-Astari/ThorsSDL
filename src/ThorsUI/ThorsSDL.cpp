@@ -24,8 +24,9 @@ Lib_TTF::~Lib_TTF()
     TTF_Quit();
 }
 
+auto const IMG_ALL = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP | IMG_INIT_JXL | IMG_INIT_AVIF;
 Lib_Image::Lib_Image()
-    : BaseWrapper(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP | IMG_INIT_JXL | IMG_INIT_AVIF), "Failed to Initialize SDL2 Image")
+    : BaseWrapper(IMG_Init(IMG_ALL) == IMG_ALL ? 0 : -1, "Failed to Initialize SDL2 Image")
 {}
 
 Lib_Image::~Lib_Image()

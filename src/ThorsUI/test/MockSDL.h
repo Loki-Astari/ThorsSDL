@@ -46,6 +46,9 @@ enum {
 
     , countIMG_Init
     , countIMG_Quit
+    , countIMG_Load_RW
+    , countIMG_SavePNG_RW
+    , countIMG_SaveJPG_RW
 
     , count_Max
 };
@@ -98,13 +101,16 @@ struct MocksSDLActions
     std::function<int(SDL_Texture*, Uint32*, int*, int*, int*)>         mockSDL_QueryTexture                = [](SDL_Texture*, Uint32*, int*, int*, int*){return 0;};
     std::function<int(SDL_Renderer*, SDL_Texture*, SDL_Rect const*, SDL_Rect const*)>   mockSDL_RenderCopy  = [](SDL_Renderer*, SDL_Texture*, SDL_Rect const*, SDL_Rect const*){return 0;};
 
-    std::function<int()>                                                mockTTF_Init                = [](){return 0;};
-    std::function<void()>                                               mockTTF_Quit                = [](){};
-    std::function<TTF_Font*(char const*, int)>                          mockTTF_OpenFont            = [](char const*, int){return reinterpret_cast<TTF_Font*>(1);};
-    std::function<void(TTF_Font*)>                                      mockTTF_CloseFont           = [](TTF_Font*){};
+    std::function<int()>                                                mockTTF_Init                = []()                  {return 0;};
+    std::function<void()>                                               mockTTF_Quit                = []()                  {};
+    std::function<TTF_Font*(char const*, int)>                          mockTTF_OpenFont            = [](char const*, int)  {return reinterpret_cast<TTF_Font*>(1);};
+    std::function<void(TTF_Font*)>                                      mockTTF_CloseFont           = [](TTF_Font*)         {};
 
-    std::function<int(int)>                                             mockIMG_Init                = [](int){return 0;};
-    std::function<void()>                                               mockIMG_Quit                = [](){};
+    std::function<int(int)>                                             mockIMG_Init                = [](int)                                   {return 0;};
+    std::function<void()>                                               mockIMG_Quit                = []()                                      {};
+    std::function<SDL_Surface*(SDL_RWops*, int)>                        mockIMG_Load_RW             = [](SDL_RWops*, int)                       {return reinterpret_cast<SDL_Surface*>(1);};
+    std::function<int(SDL_Surface*, SDL_RWops*, int)>                   mockIMG_SavePNG_RW          = [](SDL_Surface*, SDL_RWops*, int)         {return 0;};
+    std::function<int(SDL_Surface*, SDL_RWops*, int, int)>              mockIMG_SaveJPG_RW          = [](SDL_Surface*, SDL_RWops*, int, int)    {return 0;};
 };
 
 class MockSDL
@@ -149,7 +155,10 @@ class MockSDL
 
     MOCK_MEM_DECL(IMG_Init);
     MOCK_MEM_DECL(IMG_Quit);
-
+    MOCK_MEM_DECL(IMG_Load_RW);
+    MOCK_MEM_DECL(IMG_SavePNG_RW);
+    MOCK_MEM_DECL(IMG_SaveJPG_RW);
+ 
     public:
         MockSDL(MocksSDLActions& action)
             : MOCK_MEM_INIT(SDL_Init,               [&action](Uint32 f)                                             {++action.count[countSDL_Init];return action.mockSDL_Init(f);})
@@ -192,6 +201,10 @@ class MockSDL
 
             , MOCK_MEM_INIT(IMG_Init,               [&action](int flag)                                             {++action.count[countIMG_Init];return action.mockIMG_Init(flag);})
             , MOCK_MEM_INIT(IMG_Quit,               [&action]()                                                     {++action.count[countIMG_Quit];return action.mockIMG_Quit();})
+            , MOCK_MEM_INIT(IMG_Load_RW,            [&action](SDL_RWops* w,int f)                                   {++action.count[countIMG_Load_RW];return action.mockIMG_Load_RW(w, f);})
+            , MOCK_MEM_INIT(IMG_SavePNG_RW,         [&action](SDL_Surface* s,SDL_RWops* w, int f)                   {++action.count[countIMG_SavePNG_RW];return action.mockIMG_SavePNG_RW(s, w, f);})
+            , MOCK_MEM_INIT(IMG_SaveJPG_RW,         [&action](SDL_Surface* s,SDL_RWops* w, int f, int q)            {++action.count[countIMG_SaveJPG_RW];return action.mockIMG_SaveJPG_RW(s, w, f, q);})
+
         {}
 
 };
