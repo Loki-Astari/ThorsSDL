@@ -152,19 +152,30 @@ struct BaseWrapper
     virtual ~BaseWrapper()   = 0;
 
     BaseWrapper(BaseWrapper const&)               = delete;
-    BaseWrapper(BaseWrapper&&)                    = delete;
+    BaseWrapper(BaseWrapper&&)                    = default;
     BaseWrapper& operator=(BaseWrapper const&)    = delete;
-    BaseWrapper& operator=(BaseWrapper&&)         = delete;
+    BaseWrapper& operator=(BaseWrapper&&)         = default;
 };
 
 template<typename T>
 struct PointerWrapper: public BaseWrapper
 {
     T*      pointer;
+    PointerWrapper()
+        : BaseWrapper(0, "")
+    {}
     PointerWrapper(T* pointer, char const* message)
         : BaseWrapper(pointer == nullptr ? -1 : 0, message)
         , pointer(pointer)
     {}
+    PointerWrapper(PointerWrapper&& src) noexcept
+        : pointer(std::exchange(src.pointer, nullptr))
+    {}
+    PointerWrapper& operator=(PointerWrapper&& src) noexcept
+    {
+        std::swap(pointer, src.pointer);
+        return *this;
+    }
 
     operator T*()
     {
@@ -216,7 +227,10 @@ struct TTFont: public PointerWrapper<TTF_Font>
 
 struct Surface: public PointerWrapper<SDL_Surface>
 {
-    Surface(SDL::TTFont& font, std::string const& message, Color const& ink);
+    Surface();
+    Surface(SDL_Surface* surface, char const* message = "Invalid NullPtr passed to Surface cretion");
+    Surface(Surface&& src)              = default;
+    Surface& operator=(Surface&& rc)    = default;
     ~Surface();
 };
 

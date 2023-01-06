@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include "Window.h"
+#include "Pen.h"
 #include "ThorsSDL.h"
 
 TEST(TextureTest, TextureCreate)
@@ -14,10 +15,9 @@ TEST(TextureTest, TextureCreate)
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
-        ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
-        ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
+        ThorsAnvil::UI::TextPen         pen("filename", 12);
 
-        ThorsAnvil::UI::Texture         texture(window, *surface);
+        ThorsAnvil::UI::Texture         texture = pen.createTextureFromString(window, "Message"); 
     };
 
     EXPECT_NO_THROW(
@@ -37,10 +37,9 @@ TEST(TextureTest, TextureCreateWithSDL_CreateTextureFromSurfaceFailing)
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
-        ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
-        ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
+        ThorsAnvil::UI::TextPen         pen("filename", 12);
 
-        ThorsAnvil::UI::Texture         texture(window, *surface);
+        ThorsAnvil::UI::Texture         texture = pen.createTextureFromString(window, "Message"); 
     };
 
     EXPECT_THROW(
@@ -62,10 +61,9 @@ TEST(TextureTest, TextureDrawCalcSrcCalcDst)
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
-        ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
-        ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
+        ThorsAnvil::UI::TextPen         pen("filename", 12);
 
-        ThorsAnvil::UI::Texture         texture(window, *surface);
+        ThorsAnvil::UI::Texture         texture = pen.createTextureFromString(window, "Message"); 
 
         texture.draw({0,0,0,0},{0,0,0,0});
     };
@@ -91,10 +89,9 @@ TEST(TextureTest, TextureDrawSpecSrcCalcDst)
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
-        ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
-        ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
+        ThorsAnvil::UI::TextPen         pen("filename", 12);
 
-        ThorsAnvil::UI::Texture         texture(window, *surface);
+        ThorsAnvil::UI::Texture         texture = pen.createTextureFromString(window, "Message"); 
 
         texture.draw({0,0,0,0},{0,0,10,10});
     };
@@ -120,10 +117,9 @@ TEST(TextureTest, TextureDrawCalcSrcSpecDst)
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
-        ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
-        ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
+        ThorsAnvil::UI::TextPen         pen("filename", 12);
 
-        ThorsAnvil::UI::Texture         texture(window, *surface);
+        ThorsAnvil::UI::Texture         texture = pen.createTextureFromString(window, "Message"); 
 
         texture.draw({0,0,10,10},{0,0,0,0});
     };
@@ -149,10 +145,9 @@ TEST(TextureTest, TextureDrawSpecSrcSpecDst)
     {
         ThorsAnvil::UI::Application     application;
         ThorsAnvil::UI::Window          window("Title", {100, 100, 200, 200});
-        ThorsAnvil::UI::SDL::TTFont     font("filename", 12);
-        ThorsAnvil::UI::SDL::Surface    surface(font, "Message", {0,0,0,0});
+        ThorsAnvil::UI::TextPen         pen("filename", 12);
 
-        ThorsAnvil::UI::Texture         texture(window, *surface);
+        ThorsAnvil::UI::Texture         texture = pen.createTextureFromString(window, "Message"); 
 
         texture.draw({0,0,10,10},{0,0,10,10});
     };

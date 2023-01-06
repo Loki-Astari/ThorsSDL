@@ -39,7 +39,9 @@ Window::Window(std::string const& title, Rect const& rect, WindowState const& wi
 
 Window::~Window()
 {
-    SDL_DestroyWindow(pointer);
+    if (pointer != nullptr) {
+        SDL_DestroyWindow(pointer);
+    }
 }
 
 Renderer::Renderer(SDL_Window* sdlWindow, RenderState const& renState)
@@ -48,11 +50,17 @@ Renderer::Renderer(SDL_Window* sdlWindow, RenderState const& renState)
 
 Renderer::~Renderer()
 {
-    SDL_DestroyRenderer(pointer);
+    if (pointer != nullptr) {
+        SDL_DestroyRenderer(pointer);
+    }
 }
 
-Surface::Surface(SDL::TTFont& font, std::string const& message, Color const& ink)
-    : PointerWrapper(TTF_RenderUTF8_Solid(font, message.c_str(), SDL_Color{ink.r, ink.b, ink.g, ink.alpha}), "Failed to Create SDL-Surface")
+Surface::Surface()
+    : PointerWrapper()
+{}
+
+Surface::Surface(SDL_Surface* surface, char const* message)
+    : PointerWrapper(surface, message)
 {}
 
 Surface::~Surface()
