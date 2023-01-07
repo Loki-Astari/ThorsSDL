@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "DrawContext.h"
+#include "Surface.h"
 
 
 using namespace ThorsAnvil::UI;
@@ -8,9 +9,9 @@ Texture::Texture()
     : drawContext(nullptr)
 {}
 
-Texture::Texture(DrawContext& drawContext, SDL_Surface& surface)
+Texture::Texture(DrawContext& drawContext, Surface& surface)
     : drawContext(&drawContext)
-    , texture(SDL_CreateTextureFromSurface(drawContext.getRenderer(), &surface), [](SDL_Texture* t){if (t){SDL_DestroyTexture(t);}})
+    , texture(SDL_CreateTextureFromSurface(drawContext.getRenderer(), surface.surface), [](SDL_Texture* t){if (t){SDL_DestroyTexture(t);}})
 {
     if (!texture) {
         throw std::runtime_error("Failed to Create Texture");

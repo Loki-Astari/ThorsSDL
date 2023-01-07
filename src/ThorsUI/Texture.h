@@ -20,6 +20,7 @@ static constexpr Rect   zero{0, 0, 0, 0};
 
 class TextPen;
 class DrawContext;
+class Surface;
 class Texture
 {
     DrawContext*                    drawContext;
@@ -33,12 +34,11 @@ class Texture
         FRIEND_TEST(::TextureTest, TextureDrawCalcSrcSpecDst);
         FRIEND_TEST(::TextureTest, TextureDrawSpecSrcSpecDst);
 
-        friend class TextPen;
-        Texture(DrawContext& drawContext, SDL_Surface& surface);
     public:
         Texture();
         Texture(Texture& copy)              = default;
         Texture(Texture&& move)             = default;
+        Texture(DrawContext& drawContext, Surface& surface);
 
         Texture& operator=(Texture& copt)   = default;
         Texture& operator=(Texture&& move)  = default;

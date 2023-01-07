@@ -5,6 +5,7 @@
 #include "Util.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 #include <iostream>
 
 namespace ThorsAnvil::UI
@@ -33,9 +34,15 @@ inline InitValue operator|(InitValue lhs, InitValue rhs)
 
 enum InitLibs : Uint32
 {
-    NoLibs  = 0,
-    Fonts   = 1,
-    Images  = 2
+    NoLibs      = 0,
+    Fonts       = 1,
+    ImageJpg    = 2,    // IMG_INIT_JPG
+    ImagePng    = 4,    // IMG_INIT_PNG
+    ImageTif    = 8,    // IMG_INIT_TIF
+    ImageWebp   = 16,   // IMG_INIT_WEBP
+    ImageJxl    = 32,   // IMG_INIT_JXL
+    ImageAvif   = 64,   // IMG_INIT_AVIF
+    Images      = ImageJpg | ImagePng | ImageTif | ImageWebp | ImageJxl | ImageAvif
 };
 
 inline InitLibs operator|(InitLibs lhs, InitLibs rhs)
@@ -151,21 +158,40 @@ struct BaseWrapper
     virtual ~BaseWrapper()   = 0;
 
     BaseWrapper(BaseWrapper const&)               = delete;
-    BaseWrapper(BaseWrapper&&)                    = delete;
+    BaseWrapper(BaseWrapper&&)                    = default;
     BaseWrapper& operator=(BaseWrapper const&)    = delete;
-    BaseWrapper& operator=(BaseWrapper&&)         = delete;
+    BaseWrapper& operator=(BaseWrapper&&)         = default;
 };
 
 template<typename T>
 struct PointerWrapper: public BaseWrapper
 {
     T*      pointer;
+    PointerWrapper()
+        : BaseWrapper(0, "")
+        , pointer(nullptr)
+    {}
     PointerWrapper(T* pointer, char const* message)
         : BaseWrapper(pointer == nullptr ? -1 : 0, message)
         , pointer(pointer)
     {}
+    PointerWrapper(PointerWrapper&& src) noexcept
+        : BaseWrapper(std::move(src))
+        , pointer(std::exchange(src.pointer, nullptr))
+    {}
+    PointerWrapper& operator=(PointerWrapper&& src) noexcept
+    {
+        std::swap(pointer, src.pointer);
+        return *this;
+    }
 
-    operator T*()
+    void swap(PointerWrapper& other) noexcept
+    {
+        std::swap(pointer, other.pointer);
+    }
+    friend void swap(PointerWrapper& lhs, PointerWrapper& rhs)   {lhs.swap(rhs);}
+
+    operator T*() const
     {
         return pointer;
     }
@@ -181,6 +207,14 @@ struct Lib_TTF: public BaseWrapper
 {
     Lib_TTF();
     ~Lib_TTF();
+};
+
+struct Lib_Image: public BaseWrapper
+{
+    Lib_Image(InitLibs init);
+    ~Lib_Image();
+
+    static int initialize(InitLibs init);
 };
 
 struct Window: public PointerWrapper<SDL_Window>
@@ -209,7 +243,10 @@ struct TTFont: public PointerWrapper<TTF_Font>
 
 struct Surface: public PointerWrapper<SDL_Surface>
 {
-    Surface(SDL::TTFont& font, std::string const& message, Color const& ink);
+    Surface();
+    Surface(SDL_Surface* surface, char const* message = "Invalid NullPtr passed to Surface cretion");
+    Surface(Surface&& src) noexcept             = default;
+    Surface& operator=(Surface&& rc) noexcept   = default;
     ~Surface();
 };
 

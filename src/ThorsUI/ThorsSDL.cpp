@@ -1,4 +1,5 @@
 #include "ThorsSDL.h"
+#include <map>
 
 
 using namespace ThorsAnvil::UI::SDL;
@@ -24,13 +25,46 @@ Lib_TTF::~Lib_TTF()
     TTF_Quit();
 }
 
+int Lib_Image::initialize(InitLibs init)
+{
+    static std::map<InitLibs, int>  mapToSDLImageLibs =
+    {
+        {ImageJpg,  IMG_INIT_JPG},
+        {ImagePng,  IMG_INIT_PNG},
+        {ImageTif,  IMG_INIT_TIF},
+        {ImageWebp, IMG_INIT_WEBP},
+        {ImageJxl,  IMG_INIT_JXL},
+        {ImageAvif, IMG_INIT_AVIF}
+    };
+    int flags   = 0;
+    for (auto const& item: mapToSDLImageLibs)
+    {
+        if (item.first & init) {
+            flags |= item.second;
+        }
+    }
+    int result  = IMG_Init(flags);
+    return (result & flags) == flags ? 0 : -1;
+}
+
+Lib_Image::Lib_Image(InitLibs init)
+    : BaseWrapper(initialize(init), "Failed to Initialize SDL2 Image")
+{}
+
+Lib_Image::~Lib_Image()
+{
+    IMG_Quit();
+}
+
 Window::Window(std::string const& title, Rect const& rect, WindowState const& winState)
     : PointerWrapper(SDL_CreateWindow(title.c_str(), rect.x, rect.y, rect.w, rect.h, winState), "Failed to Create SDL-Window")
 {}
 
 Window::~Window()
 {
-    SDL_DestroyWindow(pointer);
+    if (pointer != nullptr) {
+        SDL_DestroyWindow(pointer);
+    }
 }
 
 Renderer::Renderer(SDL_Window* sdlWindow, RenderState const& renState)
@@ -39,11 +73,17 @@ Renderer::Renderer(SDL_Window* sdlWindow, RenderState const& renState)
 
 Renderer::~Renderer()
 {
-    SDL_DestroyRenderer(pointer);
+    if (pointer != nullptr) {
+        SDL_DestroyRenderer(pointer);
+    }
 }
 
-Surface::Surface(SDL::TTFont& font, std::string const& message, Color const& ink)
-    : PointerWrapper(TTF_RenderUTF8_Solid(font, message.c_str(), SDL_Color{ink.r, ink.b, ink.g, ink.alpha}), "Failed to Create SDL-Surface")
+Surface::Surface()
+    : PointerWrapper()
+{}
+
+Surface::Surface(SDL_Surface* surface, char const* message)
+    : PointerWrapper(surface, message)
 {}
 
 Surface::~Surface()
