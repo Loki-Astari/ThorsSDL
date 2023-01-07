@@ -254,6 +254,35 @@ TEST(ApplicationTest, QuitSubSystemWithTTF)
     EXPECT_EQ(1, actions.count[countSDL_Quit]);
     EXPECT_EQ(1, actions.count[countTTF_Init]);
     EXPECT_EQ(1, actions.count[countTTF_Quit]);
+    EXPECT_EQ(0, actions.count[countIMG_Quit]);
+    EXPECT_EQ(0, actions.count[countIMG_Quit]);
+}
+
+TEST(ApplicationTest, QuitSubSystemWithImages)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+
+    auto action = [&actions]()
+    {
+        ThorsAnvil::UI::Application     application(ThorsAnvil::UI::Images);
+        EXPECT_EQ(1, actions.count[countIMG_Init]);
+
+        EXPECT_EQ(0, actions.count[countIMG_Quit]);
+        application.quitSubSystem(ThorsAnvil::UI::Images);
+        EXPECT_EQ(1, actions.count[countIMG_Quit]);
+    };
+
+    EXPECT_NO_THROW(
+        action()
+    );
+
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(0, actions.count[countTTF_Init]);
+    EXPECT_EQ(0, actions.count[countTTF_Quit]);
+    EXPECT_EQ(1, actions.count[countIMG_Quit]);
+    EXPECT_EQ(1, actions.count[countIMG_Quit]);
 }
 
 TEST(ApplicationTest, QuitSubSystemWithTTFWhenNotInitted)
