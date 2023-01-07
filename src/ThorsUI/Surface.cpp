@@ -18,7 +18,7 @@ Sint64 streamSeekThorRead(SDL_RWops* input, Sint64 dist, int dir)
     data->stream.clear();
     std::ios_base::seekdir  direction = convertSDLDirectionThor(dir);
     data->stream.seekg(dist, direction);
-    return data->stream ? 0 : -1;
+    return data->stream ? static_cast<Sint64>(data->stream.tellg()) : -1;
 }
 
 Sint64 streamSeekThorWrite(SDL_RWops* input, Sint64 dist, int dir)
@@ -27,7 +27,7 @@ Sint64 streamSeekThorWrite(SDL_RWops* input, Sint64 dist, int dir)
     data->stream.clear();
     std::ios_base::seekdir  direction = convertSDLDirectionThor(dir);
     data->stream.seekp(dist, direction);
-    return data->stream ? 0 : -1;
+    return data->stream ? static_cast<Sint64>(data->stream.tellp()) : -1;
 }
 
 size_t streamReadThor(SDL_RWops* input, void* dst, size_t size, size_t num)
