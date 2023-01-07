@@ -28,6 +28,10 @@ MOCK_SYSTEM_FUNC(SDL_RenderDrawLines)
 MOCK_SYSTEM_FUNC(SDL_RenderFillRects)
 MOCK_SYSTEM_FUNC(SDL_RenderDrawRects)
 
+MOCK_SYSTEM_FUNC(SDL_GetKeyboardState)
+MOCK_SYSTEM_FUNC(SDL_StartTextInput)
+MOCK_SYSTEM_FUNC(SDL_StopTextInput)
+
 MOCK_SYSTEM_FUNC(SDL_CreateTextureFromSurface)
 MOCK_SYSTEM_FUNC(SDL_DestroyTexture)
 
