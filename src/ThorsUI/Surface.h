@@ -38,6 +38,7 @@ class Surface
 {
     friend class SurfaceToPNG;
     friend class SurfaceToJPG;
+    friend class Texture;
     SDL::Surface    surface;
     public:
         Surface();

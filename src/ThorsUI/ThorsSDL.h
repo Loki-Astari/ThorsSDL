@@ -34,9 +34,15 @@ inline InitValue operator|(InitValue lhs, InitValue rhs)
 
 enum InitLibs : Uint32
 {
-    NoLibs  = 0,
-    Fonts   = 1,
-    Images  = 2
+    NoLibs      = 0,
+    Fonts       = 1,
+    ImageJpg    = 2,    // IMG_INIT_JPG
+    ImagePng    = 4,    // IMG_INIT_PNG
+    ImageTif    = 8,    // IMG_INIT_TIF
+    ImageWebp   = 16,   // IMG_INIT_WEBP
+    ImageJxl    = 32,   // IMG_INIT_JXL
+    ImageAvif   = 64,   // IMG_INIT_AVIF
+    Images      = ImageJpg | ImagePng | ImageTif | ImageWebp | ImageJxl | ImageAvif
 };
 
 inline InitLibs operator|(InitLibs lhs, InitLibs rhs)
@@ -163,6 +169,7 @@ struct PointerWrapper: public BaseWrapper
     T*      pointer;
     PointerWrapper()
         : BaseWrapper(0, "")
+        , pointer(nullptr)
     {}
     PointerWrapper(T* pointer, char const* message)
         : BaseWrapper(pointer == nullptr ? -1 : 0, message)
@@ -204,8 +211,10 @@ struct Lib_TTF: public BaseWrapper
 
 struct Lib_Image: public BaseWrapper
 {
-    Lib_Image();
+    Lib_Image(InitLibs init);
     ~Lib_Image();
+
+    static int initialize(InitLibs init);
 };
 
 struct Window: public PointerWrapper<SDL_Window>

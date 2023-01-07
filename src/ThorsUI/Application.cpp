@@ -93,7 +93,7 @@ void Application::initSubSystem(InitLibs init)
         sdl2ttf = std::make_unique<SDL::Lib_TTF>();
     }
     if (init & Images) {
-        sdl2image = std::make_unique<SDL::Lib_Image>();
+        sdl2image = std::make_unique<SDL::Lib_Image>(init);
     }
 }
 

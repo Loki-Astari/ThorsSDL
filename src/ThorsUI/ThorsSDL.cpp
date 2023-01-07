@@ -1,4 +1,5 @@
 #include "ThorsSDL.h"
+#include <map>
 
 
 using namespace ThorsAnvil::UI::SDL;
@@ -24,9 +25,30 @@ Lib_TTF::~Lib_TTF()
     TTF_Quit();
 }
 
-auto const IMG_ALL = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP | IMG_INIT_JXL | IMG_INIT_AVIF;
-Lib_Image::Lib_Image()
-    : BaseWrapper(IMG_Init(IMG_ALL) == IMG_ALL ? 0 : -1, "Failed to Initialize SDL2 Image")
+int Lib_Image::initialize(InitLibs init)
+{
+    static std::map<InitLibs, int>  mapToSDLImageLibs =
+    {
+        {ImageJpg,  IMG_INIT_JPG},
+        {ImagePng,  IMG_INIT_PNG},
+        {ImageTif,  IMG_INIT_TIF},
+        {ImageWebp, IMG_INIT_WEBP},
+        {ImageJxl,  IMG_INIT_JXL},
+        {ImageAvif, IMG_INIT_AVIF}
+    };
+    int flags   = 0;
+    for (auto const& item: mapToSDLImageLibs)
+    {
+        if (item.first & init) {
+            flags |= item.second;
+        }
+    }
+    int result  = IMG_Init(flags);
+    return (result & flags) == flags ? 0 : -1;
+}
+
+Lib_Image::Lib_Image(InitLibs init)
+    : BaseWrapper(initialize(init), "Failed to Initialize SDL2 Image")
 {}
 
 Lib_Image::~Lib_Image()
