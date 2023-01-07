@@ -1,5 +1,6 @@
 #include "Pen.h"
 #include "DrawContext.h"
+#include "Surface.h"
 #include <map>
 #include <filesystem>
 
@@ -116,6 +117,7 @@ TextPen::TextPen(std::string const& fontName, int point, Color ink, Color fill)
 
 Texture TextPen::createTextureFromString(DrawContext& drawContext, char const* message) const
 {
-    SDL::Surface       surface(TTF_RenderUTF8_Solid(*font, message, SDL_Color{ink.r, ink.b, ink.g, ink.alpha}), "Failed to Create SDL-Surface");
-    return Texture{drawContext, *surface};
+    SDL::Surface        rawSurface(TTF_RenderUTF8_Solid(*font, message, SDL_Color{ink.r, ink.b, ink.g, ink.alpha}), "Failed to Create SDL-Surface");
+    Surface             surface(std::move(rawSurface));
+    return Texture{drawContext, surface};
 }
