@@ -43,8 +43,19 @@ int Lib_Image::initialize(InitLibs init)
             flags |= item.second;
         }
     }
-    int result  = IMG_Init(flags);
-    return (result & flags) == flags ? 0 : -1;
+    int initValue  = IMG_Init(flags);
+    // Note: IMG_Init is not symmetric.
+    //       A failure here will cause an exception to be thrown
+    //       which will prevent the destructor not to be called.
+    //
+    //       IMG_Init() may init some img-sub-systems but this function
+    //       will fail if not all requested img-sub-systems are correctly initialized.
+    //       so we need call IMG_Quit() to make sure that it is tidied up correctly.
+    int result = (initValue & flags) == flags ? 0 : -1;
+    if (result == -1) {
+        IMG_Quit();
+    }
+    return result;
 }
 
 Lib_Image::Lib_Image(InitLibs init)

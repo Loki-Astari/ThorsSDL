@@ -66,6 +66,28 @@ TEST(ApplicationTest, CreateAnApplicationInitImages)
     EXPECT_EQ(1, actions.count[countIMG_Quit]);
 }
 
+TEST(ApplicationTest, CreateAnApplicationInitImagesFail)
+{
+    MocksSDLActions     actions{.mockIMG_Init = [](int){return 1;}};
+    MockSDL             mockActivate(actions);
+
+    auto action = []()
+    {
+        ThorsAnvil::UI::Application     application(ThorsAnvil::UI::Images);
+    };
+
+    EXPECT_THROW(
+        action(),
+        std::runtime_error
+    );
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(0, actions.count[countTTF_Init]);
+    EXPECT_EQ(0, actions.count[countTTF_Quit]);
+    EXPECT_EQ(1, actions.count[countIMG_Init]);
+    EXPECT_EQ(1, actions.count[countIMG_Quit]);
+}
+
 TEST(ApplicationTest, CreateTwoApplication)
 {
     MocksSDLActions     actions;
