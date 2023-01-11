@@ -4,31 +4,6 @@
 #include "ThorsSDLConfig.h"
 #include "ThorsSDL.h"
 
-extern "C"
-{
-    Sint64 streamSizeThors(SDL_RWops*);
-    Sint64 streamSeekThorRead(SDL_RWops*, Sint64, int);
-    Sint64 streamSeekThorWrite(SDL_RWops*, Sint64, int);
-    size_t streamReadThor(SDL_RWops*, void*, size_t, size_t);
-    size_t streamReadThorBad(SDL_RWops*, void*, size_t, size_t);
-    size_t streamWriteThor(SDL_RWops*, const void*, size_t, size_t);
-    size_t streamWriteThorBad(SDL_RWops*, const void*, size_t, size_t);
-    int streamCloseThor(SDL_RWops*);
-}
-
-struct ThorsSDLRWopsRead: public SDL_RWops
-{
-    std::istream&   stream;
-
-    ThorsSDLRWopsRead(std::istream& stream);
-};
-struct ThorsSDLRWopsWrite: public SDL_RWops
-{
-    std::ostream&   stream;
-
-    ThorsSDLRWopsWrite(std::ostream& stream);
-};
-
 namespace ThorsAnvil::UI
 {
 
