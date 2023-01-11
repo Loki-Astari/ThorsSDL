@@ -29,6 +29,10 @@ enum {
     , countSDL_RenderFillRects
     , countSDL_RenderDrawRects
 
+    , countSDL_GetKeyboardState
+    , countSDL_StartTextInput
+    , countSDL_StopTextInput
+
     , countSDL_CreateTextureFromSurface
     , countSDL_DestroyTexture
 
@@ -91,6 +95,10 @@ struct MocksSDLActions
     std::function<int(SDL_Renderer*, SDL_Rect const*, int)>             mockSDL_RenderFillRects     = [](SDL_Renderer*, SDL_Rect const*, int){return 0;};
     std::function<int(SDL_Renderer*, SDL_Rect const*, int)>             mockSDL_RenderDrawRects     = [](SDL_Renderer*, SDL_Rect const*, int){return 0;};
 
+    std::function<Uint8*(int*)>                                         mockSDL_GetKeyboardState    = [](int* key){static Uint8 keys[255];(*key)=255;return keys;};
+    std::function<void(void)>                                           mockSDL_StartTextInput      = [](){};
+    std::function<void(void)>                                           mockSDL_StopTextInput       = [](){};
+
     std::function<SDL_Texture*(SDL_Renderer*, SDL_Surface*)>            mockSDL_CreateTextureFromSurface    = [](SDL_Renderer*, SDL_Surface*) -> SDL_Texture* {return reinterpret_cast<SDL_Texture*>(1);};
     std::function<void(SDL_Texture*)>                                   mockSDL_DestroyTexture              = [](SDL_Texture*){};
 
@@ -106,7 +114,7 @@ struct MocksSDLActions
     std::function<TTF_Font*(char const*, int)>                          mockTTF_OpenFont            = [](char const*, int)  {return reinterpret_cast<TTF_Font*>(1);};
     std::function<void(TTF_Font*)>                                      mockTTF_CloseFont           = [](TTF_Font*)         {};
 
-    std::function<int(int)>                                             mockIMG_Init                = [](int)                                   {return 0;};
+    std::function<int(int)>                                             mockIMG_Init                = [](int x)                                 {return x;};
     std::function<void()>                                               mockIMG_Quit                = []()                                      {};
     std::function<SDL_Surface*(SDL_RWops*, int)>                        mockIMG_Load_RW             = [](SDL_RWops*, int)                       {return reinterpret_cast<SDL_Surface*>(1);};
     std::function<int(SDL_Surface*, SDL_RWops*, int)>                   mockIMG_SavePNG_RW          = [](SDL_Surface*, SDL_RWops*, int)         {return 0;};
@@ -137,6 +145,10 @@ class MockSDL
     MOCK_MEM_DECL(SDL_RenderDrawRect);
     MOCK_MEM_DECL(SDL_RenderFillRects);
     MOCK_MEM_DECL(SDL_RenderDrawRects);
+
+    MOCK_MEM_DECL(SDL_GetKeyboardState);
+    MOCK_MEM_DECL(SDL_StartTextInput);
+    MOCK_MEM_DECL(SDL_StopTextInput);
 
     MOCK_MEM_DECL(SDL_CreateTextureFromSurface);
     MOCK_MEM_DECL(SDL_DestroyTexture);
@@ -183,6 +195,10 @@ class MockSDL
             , MOCK_MEM_INIT(SDL_RenderDrawRect,     [&action](SDL_Renderer* r, SDL_Rect const* rp)                  {++action.count[countSDL_RenderDrawRect];return action.mockSDL_RenderDrawRect(r, rp);})
             , MOCK_MEM_INIT(SDL_RenderFillRects,    [&action](SDL_Renderer* r, SDL_Rect const* rp, int c)           {++action.count[countSDL_RenderFillRects];return action.mockSDL_RenderFillRects(r, rp, c);})
             , MOCK_MEM_INIT(SDL_RenderDrawRects,    [&action](SDL_Renderer* r, SDL_Rect const* rp, int c)           {++action.count[countSDL_RenderDrawRects];return action.mockSDL_RenderDrawRects(r, rp, c);})
+
+            , MOCK_MEM_INIT(SDL_GetKeyboardState,   [&action](int* count)                                           {++action.count[countSDL_GetKeyboardState];return action.mockSDL_GetKeyboardState(count);})
+            , MOCK_MEM_INIT(SDL_StartTextInput,     [&action]()                                                     {++action.count[countSDL_StartTextInput];return action.mockSDL_StartTextInput();})
+            , MOCK_MEM_INIT(SDL_StopTextInput,      [&action]()                                                     {++action.count[countSDL_StopTextInput];return action.mockSDL_StopTextInput();})
 
             , MOCK_MEM_INIT(SDL_CreateTextureFromSurface,   [&action](SDL_Renderer* r, SDL_Surface* s)              {++action.count[countSDL_CreateTextureFromSurface];return action.mockSDL_CreateTextureFromSurface(r, s);})
             , MOCK_MEM_INIT(SDL_DestroyTexture,     [&action](SDL_Texture* t)                                       {++action.count[countSDL_DestroyTexture];return action.mockSDL_DestroyTexture(t);})

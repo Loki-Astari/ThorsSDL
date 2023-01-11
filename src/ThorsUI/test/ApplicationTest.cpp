@@ -41,6 +41,51 @@ TEST(ApplicationTest, CreateAnApplicationInitFont)
     EXPECT_EQ(1, actions.count[countSDL_Quit]);
     EXPECT_EQ(1, actions.count[countTTF_Init]);
     EXPECT_EQ(1, actions.count[countTTF_Quit]);
+    EXPECT_EQ(0, actions.count[countIMG_Init]);
+    EXPECT_EQ(0, actions.count[countIMG_Quit]);
+}
+
+TEST(ApplicationTest, CreateAnApplicationInitImages)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+
+    auto action = []()
+    {
+        ThorsAnvil::UI::Application     application(ThorsAnvil::UI::Images);
+    };
+
+    EXPECT_NO_THROW(
+        action()
+    );
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(0, actions.count[countTTF_Init]);
+    EXPECT_EQ(0, actions.count[countTTF_Quit]);
+    EXPECT_EQ(1, actions.count[countIMG_Init]);
+    EXPECT_EQ(1, actions.count[countIMG_Quit]);
+}
+
+TEST(ApplicationTest, CreateAnApplicationInitImagesFail)
+{
+    MocksSDLActions     actions{.mockIMG_Init = [](int){return 1;}};
+    MockSDL             mockActivate(actions);
+
+    auto action = []()
+    {
+        ThorsAnvil::UI::Application     application(ThorsAnvil::UI::Images);
+    };
+
+    EXPECT_THROW(
+        action(),
+        std::runtime_error
+    );
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(0, actions.count[countTTF_Init]);
+    EXPECT_EQ(0, actions.count[countTTF_Quit]);
+    EXPECT_EQ(1, actions.count[countIMG_Init]);
+    EXPECT_EQ(1, actions.count[countIMG_Quit]);
 }
 
 TEST(ApplicationTest, CreateTwoApplication)
@@ -231,6 +276,35 @@ TEST(ApplicationTest, QuitSubSystemWithTTF)
     EXPECT_EQ(1, actions.count[countSDL_Quit]);
     EXPECT_EQ(1, actions.count[countTTF_Init]);
     EXPECT_EQ(1, actions.count[countTTF_Quit]);
+    EXPECT_EQ(0, actions.count[countIMG_Quit]);
+    EXPECT_EQ(0, actions.count[countIMG_Quit]);
+}
+
+TEST(ApplicationTest, QuitSubSystemWithImages)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+
+    auto action = [&actions]()
+    {
+        ThorsAnvil::UI::Application     application(ThorsAnvil::UI::Images);
+        EXPECT_EQ(1, actions.count[countIMG_Init]);
+
+        EXPECT_EQ(0, actions.count[countIMG_Quit]);
+        application.quitSubSystem(ThorsAnvil::UI::Images);
+        EXPECT_EQ(1, actions.count[countIMG_Quit]);
+    };
+
+    EXPECT_NO_THROW(
+        action()
+    );
+
+    EXPECT_EQ(1, actions.count[countSDL_Init]);
+    EXPECT_EQ(1, actions.count[countSDL_Quit]);
+    EXPECT_EQ(0, actions.count[countTTF_Init]);
+    EXPECT_EQ(0, actions.count[countTTF_Quit]);
+    EXPECT_EQ(1, actions.count[countIMG_Quit]);
+    EXPECT_EQ(1, actions.count[countIMG_Quit]);
 }
 
 TEST(ApplicationTest, QuitSubSystemWithTTFWhenNotInitted)
@@ -419,5 +493,124 @@ TEST(ApplicationTest, ApplicationWithWindowThatNeedsDrawing)
     EXPECT_NO_THROW(
         action()
     );
+}
+
+TEST(ApplicationTest, ApplicationGetHardware)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+
+    int     count;
+    Uint8*  keys = actions.mockSDL_GetKeyboardState(&count);
+    ASSERT_EQ(0, actions.count[countSDL_GetKeyboardState]);
+    ASSERT_NE(nullptr, keys);
+    ASSERT_TRUE(SDL_SCANCODE_Q < count);
+    keys[SDL_SCANCODE_Q] = 1;
+
+    bool qPressed = false;
+    bool wPressed = false;
+    auto action = [&qPressed, &wPressed]()
+    {
+        ThorsAnvil::UI::Application             application;
+        ThorsAnvil::UI::Hardware const&         hardware = application.getHardwareInfo();
+        ThorsAnvil::UI::KeyboardState const&    keyboard = hardware.getKeyboardState();
+
+        qPressed = keyboard.isPressed(SDL_SCANCODE_Q);
+        wPressed = keyboard.isPressed(SDL_SCANCODE_W);
+    };
+
+    EXPECT_NO_THROW(
+        action();
+    );
+
+    ASSERT_EQ(1, actions.count[countSDL_GetKeyboardState]);
+    ASSERT_TRUE(qPressed);
+    ASSERT_FALSE(wPressed);
+}
+
+TEST(ApplicationTest, ApplicationStart1Stop0Text)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+    ThorsAnvil::UI::Application             application;
+
+    auto action = [&application]()
+    {
+        application.enableTextInput(true);
+    };
+
+    EXPECT_NO_THROW(
+        action();
+    );
+
+    ASSERT_EQ(1, actions.count[countSDL_StartTextInput]);
+    ASSERT_EQ(0, actions.count[countSDL_StopTextInput]);
+    application.enableTextInput(false);
+}
+
+TEST(ApplicationTest, ApplicationStart2Stop0Text)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+    ThorsAnvil::UI::Application             application;
+
+    auto action = [&application]()
+    {
+        application.enableTextInput(true);
+        application.enableTextInput(true);
+    };
+
+    EXPECT_NO_THROW(
+        action();
+    );
+
+    ASSERT_EQ(1, actions.count[countSDL_StartTextInput]);
+    ASSERT_EQ(0, actions.count[countSDL_StopTextInput]);
+    application.enableTextInput(false);
+    application.enableTextInput(false);
+}
+
+TEST(ApplicationTest, ApplicationStart2Stop1Text)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+    ThorsAnvil::UI::Application             application;
+
+    auto action = [&application]()
+    {
+        application.enableTextInput(true);
+        application.enableTextInput(true);
+        application.enableTextInput(false);
+    };
+
+    EXPECT_NO_THROW(
+        action();
+    );
+
+    ASSERT_EQ(1, actions.count[countSDL_StartTextInput]);
+    ASSERT_EQ(0, actions.count[countSDL_StopTextInput]);
+    application.enableTextInput(false);
+}
+
+TEST(ApplicationTest, ApplicationStart2Stop2Text)
+{
+    MocksSDLActions     actions;
+    MockSDL             mockActivate(actions);
+    ThorsAnvil::UI::Application             application;
+
+    auto action = [&application]()
+    {
+        application.enableTextInput(true);
+        application.enableTextInput(true);
+        application.enableTextInput(false);
+        application.enableTextInput(false);
+    };
+
+    EXPECT_NO_THROW(
+        action();
+    );
+
+    ASSERT_EQ(1, actions.count[countSDL_StartTextInput]);
+    ASSERT_EQ(1, actions.count[countSDL_StopTextInput]);
 }
 
