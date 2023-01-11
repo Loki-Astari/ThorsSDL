@@ -26,7 +26,6 @@ std::istream& Surface::loadFromStream(std::istream& stream)
         catch (std::exception const& e)
         {
             stream.setstate(std::ios::failbit);
-            std::cerr << "Stream Error: " << e.what() << "\n";
         }
     }
     return stream;

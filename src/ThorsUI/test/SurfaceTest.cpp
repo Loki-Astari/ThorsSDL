@@ -60,6 +60,26 @@ TEST(SurfaceTest, SurfaceLoadFromFile)
     );
 }
 
+TEST(SurfaceTest, SurfaceLoadFromFileFail)
+{
+    MocksSDLActions     actions{.mockIMG_Load_RW = [](SDL_RWops*, int){return nullptr;}};
+    MockSDL             mockActivate(actions);
+
+    auto action = []()
+    {
+        std::ifstream   input("test/data/Apple.jpg");
+        ThorsAnvil::UI::Surface         surface;
+        input >> surface;
+
+        ASSERT_FALSE(input.eof());
+        ASSERT_TRUE(input.fail());
+    };
+
+    EXPECT_NO_THROW(
+            action()
+    );
+}
+
 TEST(SurfaceTest, SurfaceSaveToFileJPG)
 {
     auto action = []()
@@ -79,6 +99,27 @@ TEST(SurfaceTest, SurfaceSaveToFileJPG)
     );
 }
 
+TEST(SurfaceTest, SurfaceSaveToFileJPGFail)
+{
+    MocksSDLActions     actions{.mockIMG_SaveJPG_RW = [](SDL_Surface*, SDL_RWops*, int, int) {return -1;}};
+    MockSDL             mockActivate(actions);
+    auto action = []()
+    {
+        std::ifstream   input("test/data/Apple.jpg");
+        ThorsAnvil::UI::Surface         surface;
+        input >> surface;
+
+        std::ofstream   output("/tmp/test.jpg");
+        output << ThorsAnvil::UI::SurfaceToJPG(surface);
+
+        ASSERT_TRUE(output.fail());
+    };
+
+    EXPECT_NO_THROW(
+        action();
+    );
+}
+
 TEST(SurfaceTest, SurfaceSaveToFilePNG)
 {
     auto action = []()
@@ -91,6 +132,27 @@ TEST(SurfaceTest, SurfaceSaveToFilePNG)
         output << ThorsAnvil::UI::SurfaceToPNG(surface);
 
         ASSERT_TRUE(output.good());
+    };
+
+    EXPECT_NO_THROW(
+        action();
+    );
+}
+
+TEST(SurfaceTest, SurfaceSaveToFilePNGFail)
+{
+    MocksSDLActions     actions{.mockIMG_SavePNG_RW = [](SDL_Surface*, SDL_RWops*, int) {return -1;}};
+    MockSDL             mockActivate(actions);
+    auto action = []()
+    {
+        std::ifstream   input("test/data/Apple.jpg");
+        ThorsAnvil::UI::Surface         surface;
+        input >> surface;
+
+        std::ofstream   output("/tmp/test.png");
+        output << ThorsAnvil::UI::SurfaceToPNG(surface);
+
+        ASSERT_TRUE(output.fail());
     };
 
     EXPECT_NO_THROW(
