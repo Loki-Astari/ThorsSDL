@@ -14,10 +14,15 @@ class Surface
     friend class SurfaceToPNG;
     friend class SurfaceToJPG;
     friend class Texture;
-    SDL::Surface    surface;
+    SDL_Surface*    sdlSurface;
     public:
         Surface();
-        Surface(SDL::Surface&& surface);
+        Surface(SDL_Surface* sdlSurface, char const* errorMessage);
+        Surface(Surface&& src) noexcept;
+        Surface& operator=(Surface&& src) noexcept;
+        ~Surface();
+        void swap(Surface& other) noexcept;
+        friend void swap(Surface& lhs, Surface& rhs){lhs.swap(rhs);}
 
     private:
         std::istream& loadFromStream(std::istream& stream);

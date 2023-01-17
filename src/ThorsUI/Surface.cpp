@@ -5,12 +5,39 @@
 using namespace ThorsAnvil::UI;
 
 Surface::Surface()
-    : surface()
+    : sdlSurface(nullptr)
 {}
 
-Surface::Surface(SDL::Surface&& surface)
-    : surface(std::move(surface))
+Surface::Surface(SDL_Surface* sdlSurface, char const* errorMessage)
+    : sdlSurface(sdlSurface)
+{
+    if (sdlSurface == nullptr) {
+        throw std::runtime_error(errorMessage);
+    }
+}
+
+Surface::Surface(Surface&& src) noexcept
+    : sdlSurface(std::exchange(src.sdlSurface, nullptr))
 {}
+
+Surface& Surface::operator=(Surface&& src) noexcept
+{
+    SDL_FreeSurface(sdlSurface);
+    sdlSurface = std::exchange(src.sdlSurface, nullptr);
+    return *this;
+}
+
+Surface::~Surface()
+{
+    if (sdlSurface) {
+        SDL_FreeSurface(sdlSurface);
+    }
+}
+
+void Surface::swap(Surface& other) noexcept
+{
+    std::swap(sdlSurface, other.sdlSurface);
+}
 
 std::istream& Surface::loadFromStream(std::istream& stream)
 {
@@ -19,9 +46,8 @@ std::istream& Surface::loadFromStream(std::istream& stream)
         try
         {
             ThorSDLStreamRead   streamWrapper(stream);
-            SDL_Surface*        newSurface = IMG_Load_RW(&streamWrapper, 0);
-            SDL::Surface        tmp(newSurface, "Failed to load image from stream");
-            std::swap(surface, tmp);
+            Surface             tmp(IMG_Load_RW(&streamWrapper, 0), "Failed to Create SDL-Surface from image file.");
+            swap(tmp);
         }
         catch (std::exception const& e)
         {
@@ -40,7 +66,7 @@ std::ostream& SurfaceToPNG::saveToStream(std::ostream& stream) const
     if (stream)
     {
         ThorSDLStreamWrite  streamWrapper(stream);
-        int status = IMG_SavePNG_RW(surface.surface, &streamWrapper, 0);
+        int status = IMG_SavePNG_RW(surface.sdlSurface, &streamWrapper, 0);
         if (status != 0) {
             stream.setstate(std::ios::failbit);
         }
@@ -58,7 +84,7 @@ std::ostream& SurfaceToJPG::saveToStream(std::ostream& stream) const
     if (stream)
     {
         ThorSDLStreamWrite  streamWrapper(stream);
-        int status = IMG_SaveJPG_RW(surface.surface, &streamWrapper, 0, quality);
+        int status = IMG_SaveJPG_RW(surface.sdlSurface, &streamWrapper, 0, quality);
         if (status != 0) {
             stream.setstate(std::ios::failbit);
         }

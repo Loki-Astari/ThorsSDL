@@ -117,7 +117,6 @@ TextPen::TextPen(std::string const& fontName, int point, Color ink, Color fill)
 
 Texture TextPen::createTextureFromString(DrawContext& drawContext, char const* message) const
 {
-    SDL::Surface        rawSurface(TTF_RenderUTF8_Solid(*font, message, SDL_Color{ink.r, ink.b, ink.g, ink.alpha}), "Failed to Create SDL-Surface");
-    Surface             surface(std::move(rawSurface));
+    Surface surface(TTF_RenderUTF8_Solid(*font, message, SDL_Color{ink.r, ink.b, ink.g, ink.alpha}), "Failed to Create SDL-Surface from TTF font.");
     return Texture{drawContext, surface};
 }

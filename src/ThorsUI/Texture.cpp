@@ -11,7 +11,7 @@ Texture::Texture()
 
 Texture::Texture(DrawContext& drawContext, Surface& surface)
     : drawContext(&drawContext)
-    , texture(SDL_CreateTextureFromSurface(drawContext.getRenderer(), surface.surface), [](SDL_Texture* t){if (t){SDL_DestroyTexture(t);}})
+    , texture(SDL_CreateTextureFromSurface(drawContext.getRenderer(), surface.sdlSurface), [](SDL_Texture* t){if (t){SDL_DestroyTexture(t);}})
 {
     if (!texture) {
         throw std::runtime_error("Failed to Create Texture");
